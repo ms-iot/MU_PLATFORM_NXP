@@ -1,0 +1,91 @@
+#/* @file
+#
+#  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
+#
+#  This program and the accompanying materials
+#  are licensed and made available under the terms and conditions of the BSD License
+#  which accompanies this distribution.  The full text of the license may be found at
+#  http://opensource.org/licenses/bsd-license.php
+#
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+#*/
+
+[Defines]
+  INF_VERSION                    = 0x0001001A
+  BASE_NAME                      = iMX6BoardLib
+  FILE_GUID                      = 736343a0-1d96-11e0-aaaa-0002a5d5c51b
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = ArmPlatformLib
+  DEFINE BOARD_LIB_COMMON_DIR    = iMX6Pkg/Library/iMX6BoardLib
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  ArmPlatformPkg/ArmPlatformPkg.dec
+  EmbeddedPkg/EmbeddedPkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  MdePkg/MdePkg.dec
+  Microsoft/OpteeClientPkg/OpteeClientPkg.dec
+  iMX6Pkg/iMX6Pkg.dec
+  iMXPlatformPkg/iMXPlatformPkg.dec
+  StdLib/StdLib.dec
+
+[LibraryClasses]
+  ArmLib
+  iMX6ClkPwrLib
+  iMX6UsbPhyLib
+  IoLib
+  MemoryAllocationLib
+  SerialPortLib
+
+[Sources.common]
+  $(BOARD_LIB_COMMON_DIR)/iMX6BoardHelper.S    | GCC
+  $(BOARD_LIB_COMMON_DIR)/iMX6BoardMem.c
+  $(BOARD_LIB_COMMON_DIR)/iMX6Common.c
+  $(BOARD_LIB_COMMON_DIR)/iMX6QBoardCoreDef.c
+  iMX6BoardInit.c
+
+[FeaturePcd]
+  giMX6TokenSpaceGuid.PcdGpuEnable
+  giMX6TokenSpaceGuid.PcdLvdsEnable
+
+[FixedPcd]
+  gArmTokenSpaceGuid.PcdArmPrimaryCore
+  gArmTokenSpaceGuid.PcdArmPrimaryCoreMask
+  gArmTokenSpaceGuid.PcdFdBaseAddress
+  gArmTokenSpaceGuid.PcdFdSize
+  gArmTokenSpaceGuid.PcdGicInterruptInterfaceBase
+  gArmTokenSpaceGuid.PcdSystemMemoryBase
+  gArmTokenSpaceGuid.PcdSystemMemorySize
+  gArmPlatformTokenSpaceGuid.PcdCoreCount
+
+  giMX6TokenSpaceGuid.PcdFrameBufferBase
+  giMX6TokenSpaceGuid.PcdFrameBufferSize
+  giMX6TokenSpaceGuid.PcdSrcBase
+
+  giMXPlatformTokenSpaceGuid.PcdGpioBankMemoryRange
+
+  #
+  # TPM2 control area
+  #
+  gOpteeClientPkgTokenSpaceGuid.PcdTpm2AcpiBufferBase
+  gOpteeClientPkgTokenSpaceGuid.PcdTpm2AcpiBufferSize
+  #
+  # TrustZone private memory
+  # This memory is managed privately by the OpTEE OS.
+  # It must match OpTEE optee_os/core/arch/arm/plat-imx/platform_config.h:
+  #    CFG_DDR_TEETZ_RESERVED_START & CFG_DDR_TEETZ_RESERVED_START
+  #
+  gOpteeClientPkgTokenSpaceGuid.PcdTrustZonePrivateMemoryBase
+  gOpteeClientPkgTokenSpaceGuid.PcdTrustZonePrivateMemorySize
+
+  #
+  # TrustZone shared memory
+  # This memory is manager by the normal world but shared with the OpTEE OS.
+  # It must match OpTEE optee_os/core/arch/arm/plat-imx/platform_config.h:
+  #    CFG_SHMEM_START & CFG_SHMEM_SIZE
+  #
+  gOpteeClientPkgTokenSpaceGuid.PcdTrustZoneSharedMemoryBase
+  gOpteeClientPkgTokenSpaceGuid.PcdTrustZoneSharedMemorySize
