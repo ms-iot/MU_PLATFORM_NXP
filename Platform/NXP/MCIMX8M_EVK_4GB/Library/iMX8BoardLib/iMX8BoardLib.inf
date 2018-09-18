@@ -1,0 +1,71 @@
+#
+#  Copyright (c) 2018, Microsoft Corporation. All rights reserved.
+#  Copyright (c) 2013-2018, ARM Limited. All rights reserved.
+#
+#  This program and the accompanying materials
+#  are licensed and made available under the terms and conditions of the BSD License
+#  which accompanies this distribution.  The full text of the license may be found at
+#  http://opensource.org/licenses/bsd-license.php
+#
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = iMX8BoardLib
+  FILE_GUID                      = 5189D094-42CF-06DB-02A0-25943364EC9E
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = ArmPlatformLib
+  DEFINE BOARD_LIB_COMMON_DIR    = Silicon/NXP/iMX8Pkg/Library/iMX8BoardLib
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  EmbeddedPkg/EmbeddedPkg.dec
+  ArmPkg/ArmPkg.dec
+  ArmPlatformPkg/ArmPlatformPkg.dec
+  Silicon/NXP/iMXPlatformPkg/iMXPlatformPkg.dec
+  Silicon/NXP/iMX8Pkg/iMX8Pkg.dec
+
+[LibraryClasses]
+  ArmLib
+  HobLib
+  IoLib
+  MemoryAllocationLib
+  SerialPortLib
+  iMX8ClkPwrLib
+  iMXIoMuxLib
+
+[Sources.common]
+  $(BOARD_LIB_COMMON_DIR)/iMX8Mem.c
+  iMX8BoardInit.c
+
+[Sources.AARCH64]
+  $(BOARD_LIB_COMMON_DIR)/AArch64/iMX8Helper.S
+
+[FixedPcd]
+  gArmTokenSpaceGuid.PcdSystemMemoryBase
+  gArmTokenSpaceGuid.PcdSystemMemorySize
+  gArmTokenSpaceGuid.PcdFvBaseAddress
+
+  gArmTokenSpaceGuid.PcdArmPrimaryCoreMask
+
+  giMX8TokenSpaceGuid.PcdPcieControlBaseAddress
+  giMX8TokenSpaceGuid.PcdPciConfigurationSpaceBaseAddress
+  giMX8TokenSpaceGuid.PcdPciConfigurationSpaceSize
+
+  giMXPlatformTokenSpaceGuid.PcdGlobalDataBaseAddress
+  giMXPlatformTokenSpaceGuid.PcdGlobalDataSize
+  giMXPlatformTokenSpaceGuid.PcdGpioBankMemoryRange
+
+  # Framebuffer Memory
+  gArmPlatformTokenSpaceGuid.PcdArmLcdDdrFrameBufferBase
+  gArmPlatformTokenSpaceGuid.PcdArmLcdDdrFrameBufferSize
+
+  gArmPlatformTokenSpaceGuid.PcdCoreCount
+
+[Ppis]
+  gArmMpCoreInfoPpiGuid
+
