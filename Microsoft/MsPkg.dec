@@ -1,0 +1,39 @@
+#/** @file
+#
+#  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
+#
+#  This program and the accompanying materials
+#  are licensed and made available under the terms and conditions of the BSD License
+#  which accompanies this distribution.  The full text of the license may be found at
+#  http://opensource.org/licenses/bsd-license.php
+#
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+#**/
+
+[Defines]
+  DEC_SPECIFICATION              = 0x0001001A
+  PACKAGE_NAME                   = MsPkg
+  PACKAGE_GUID                   = DC909FB7-F45E-4D7F-BF10-327BD9BFA21C
+  PACKAGE_VERSION                = 0.1
+
+[Includes.common]
+  Include                        # Root include for the package
+
+[LibraryClasses.common]
+
+[Guids.common]
+  gMsPkgTokenSpaceGuid = { 0x3ecb4bb9, 0xb80a, 0x4efd, { 0x92, 0xb8, 0x3a, 0x16, 0xe0, 0xc8, 0x19, 0xb } }
+
+[PcdsFixedAtBuild.common]
+  gMsPkgTokenSpaceGuid.PcdSecureBootEnable|FALSE|BOOLEAN|0x00
+
+  # The DevicePath to a partition on a writeable media used for logging and misc
+  # storage purposes. SD card DevicePath example:
+  # gMsPkgTokenSpaceGuid.PcdStorageMediaPartitionDevicePath|L"VenHw(AAFB8DAA-7340-43AC-8D49-0CCE14812489,03000000)/SD(0x0)/HD(1,MBR,0xAE420040,0x1000,0x20000)"
+  gMsPkgTokenSpaceGuid.PcdStorageMediaPartitionDevicePath|L""|VOID*|0x03
+
+[Protocols.common]
+  gEfiRpmbIoProtocolGuid = { 0xfbaee5b2, 0x8b0, 0x41b8, { 0xb0, 0xb0, 0x86, 0xb7, 0x2e, 0xed, 0x1b, 0xb6 } }
+  gEfiSdhcProtocolGuid = { 0x46055b0f, 0x992a, 0x4ad7, { 0x8f, 0x81, 0x14, 0x81, 0x86, 0xff, 0xdf, 0x72 } }

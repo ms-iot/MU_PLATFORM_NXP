@@ -1,0 +1,49 @@
+## @file
+#  Optee Client API Test Driver
+#
+#  Copyright (c) 2015, Microsoft Corporation. All rights reserved.
+#
+#  This program and the accompanying materials are
+#  licensed and made available under the terms and conditions of the BSD License
+#  which accompanies this distribution.  The full text of the license may be found at
+#  http://opensource.org/licenses/bsd-license.php
+#
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010006
+  BASE_NAME                      = OpteeClientApiTest
+  FILE_GUID                      = 814EA9F7-4DEE-4817-B0B9-224EBA8126E9
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = UefiMain
+
+[Sources]
+  OpteeClientApiTest.c
+
+[Packages]
+  ShellPkg/ShellPkg.dec
+  MdePkg/MdePkg.dec
+  Microsoft/MsPkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  Microsoft/OpteeClientPkg/OpteeClientPkg.dec
+  StdLib/StdLib.dec
+
+[LibraryClasses]
+  UefiLib
+  BaseLib
+  DebugLib
+  ShellCEntryLib
+  PcdLib
+  DxeServicesLib
+  OpteeClientApiLib
+
+[Guids]
+  gOpteeHelloWorldTaGuid
+
+[Pcd]
+  gOpteeClientPkgTokenSpaceGuid.PcdTrustZoneSharedMemoryBase
+  gOpteeClientPkgTokenSpaceGuid.PcdTrustZoneSharedMemorySize

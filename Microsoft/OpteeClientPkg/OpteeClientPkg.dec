@@ -1,0 +1,82 @@
+## @file
+#   OP-TEE Client Libraries for the client side use in EDKII services implemented
+#   in Trusted Applications running in the secure world OP-TEE OS.
+#
+#   Copyright (c) 2015, Microsoft Corporation. All rights reserved.
+#
+#   This program and the accompanying materials are licensed and made available under
+#   the terms and conditions of the BSD License which accompanies this distribution.
+#   The full text of the license may be found at
+#   http://opensource.org/licenses/bsd-license.
+#
+#   THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+##
+
+[Defines]
+  DEC_SPECIFICATION              = 0x00010006
+  PACKAGE_NAME                   = OpteeClientPkg
+  PACKAGE_GUID                   = 77416fcb-10ec-4693-bdc0-1bdd74ec9595
+  PACKAGE_VERSION                = 0.01
+
+[Includes]
+  Include
+  Include/Internal
+
+[LibraryClasses]
+  ##  @libraryclass  OP-TEE Client API library
+  OpteeClientApiLib|Include/Library/OpteeClientApiLib.h
+
+[Guids]
+  gOpteeClientPkgTokenSpaceGuid   = { 0x04ad34ca, 0xdd25, 0x4156, { 0x90, 0xf5, 0x16, 0xf9, 0x40, 0xd0, 0x49, 0xe3 }}
+
+  ## Guid used for accessing the SecureBoot signature database (db) binary blob in the FV.
+  # 27A9C9E7-4B7A-4C7E-A8F5-77DB38D7100A
+  #  Include/Guid/SecureBootAutoConfig.h
+  gEfiSecureBootDbImageGuid           = { 0x27a9c9e7, 0x4b7a, 0x4c7e, { 0xa8, 0xf5, 0x77, 0xdb, 0x38, 0xd7, 0x10, 0xa } }
+
+  ## Guid used for accessing the SecureBoot revoked signature database (dbx) binary blob in the FV.
+  # 1EFBFEEA-9D86-4B0B-9F12-2063AD533BB4
+  #  Include/Guid/SecureBootAutoConfig.h
+  gEfiSecureBootDbxImageGuid          = { 0x1efbfeea, 0x9d86, 0x4b0b, { 0x9f, 0x12, 0x20, 0x63, 0xad, 0x53, 0x3b, 0xb4 } }
+
+  ## Guid used for accessing the SecureBoot Platform Key (PK) binary blob in the FV.
+  # 442FF1AA-7891-4A79-88E3-75EC4409B059
+  #  Include/Guid/SecureBootAutoConfig.h
+  gEfiSecureBootPkImageGuid          = { 0x442ff1aa, 0x7891, 0x4a79, { 0x88, 0xe3, 0x75, 0xec, 0x44, 0x9, 0xb0, 0x59 } }
+
+  ## Guid used for accessing the SecureBoot Key Enrollment Key database (KEK) binary blob in the FV.
+  # 33630B18-7705-468B-92BD-FEBE27799EDB
+  #  Include/Guid/SecureBootAutoConfig.h
+  gEfiSecureBootKekImageGuid          = { 0x33630b18, 0x7705, 0x468b, { 0x92, 0xbd, 0xfe, 0xbe, 0x27, 0x79, 0x9e, 0xdb } }
+
+  # OPTEE expects the TA UUIDs to have its first 3 fields in big-endian format while
+  # the other fields are in little-endian. However, will store them in the UEFI
+  # image in their EFI_GUID format in which all fields are little-endian. It is
+  # the responsibility of the UEFI TEEC (aka OpteeClientApiLib) to convert the
+  # endianess of the UUIDs to match OPTEE expectations before send them off.
+
+  # Hello World Test TA UUID: 8aaaf200-2450-11e4-abe2-0002a5d5c51b
+  gOpteeHelloWorldTaGuid = { 0x8aaaf200, 0x2450, 0x11e4, { 0xab, 0xe2, 0x00, 0x02, 0xa5, 0xd5, 0xc5, 0x1b }}
+
+  # fTPM Service TA UUID in UEFI format: bc50d971-d4c9-42c4-82cb-343fb7f37896
+  gOpteeFtpmTaGuid = { 0xbc50d971, 0xd4c9, 0x42c4, { 0x82, 0xcb, 0x34, 0x3f, 0xb7, 0xf3, 0x78, 0x96 }}
+  
+[PcdsFixedAtBuild]
+
+  ## The base address of the Trust Zone OpTEE OS private memory region
+  # This memory is manager privately by the OpTEE OS.
+  gOpteeClientPkgTokenSpaceGuid.PcdTrustZonePrivateMemoryBase|0xDEAD1|UINT64|0x00000001
+
+  ## The size of the Trust Zone OpTEE OS private memory region
+  gOpteeClientPkgTokenSpaceGuid.PcdTrustZonePrivateMemorySize|55|UINT64|0x00000002
+
+  ## The base address of the Trust Zone OpTEE OS shared memory region
+  gOpteeClientPkgTokenSpaceGuid.PcdTrustZoneSharedMemoryBase|0xDEAD2|UINT64|0x00000003
+
+  ## The size of the Trust Zone OpTEE OS shared memory region
+  gOpteeClientPkgTokenSpaceGuid.PcdTrustZoneSharedMemorySize|0xAA|UINT64|0x00000004
+
+  gOpteeClientPkgTokenSpaceGuid.PcdTpm2AcpiBufferBase|0|UINT64|0x00000005
+  gOpteeClientPkgTokenSpaceGuid.PcdTpm2AcpiBufferSize|0|UINT32|0x00000006
+

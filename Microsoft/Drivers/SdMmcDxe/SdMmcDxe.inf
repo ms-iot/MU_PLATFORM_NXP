@@ -1,0 +1,50 @@
+#
+#  Copyright (c) Microsoft Corporation. All rights reserved.
+#
+#  This program and the accompanying materials
+#  are licensed and made available under the terms and conditions of the BSD License
+#  which accompanies this distribution.  The full text of the license may be found at
+#  http://opensource.org/licenses/bsd-license.php
+#
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = SdMmcDxe
+  FILE_GUID                      = 16738C4A-8044-4DD8-B68E-58A53CEFF5D9
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+
+  ENTRY_POINT                    = SdMmcDxeInitialize
+
+[Sources.common]
+  SdMmc.c
+  BlockIo.c
+  Debug.c
+  Protocol.c
+  RpmbIo.c
+
+[Packages]
+  EmbeddedPkg/EmbeddedPkg.dec
+  MdePkg/MdePkg.dec
+  Microsoft/MsPkg.dec
+  Microsoft/OpteeClientPkg/OpteeClientPkg.dec
+
+[LibraryClasses]
+  BaseLib
+  UefiLib
+  UefiDriverEntryPoint
+  BaseMemoryLib
+  TimerLib
+
+[Protocols]
+  gEfiDiskIoProtocolGuid
+  gEfiBlockIoProtocolGuid
+  gEfiDevicePathProtocolGuid
+  gEfiSdhcProtocolGuid
+  gEfiRpmbIoProtocolGuid
+
+[Depex]
+  TRUE
