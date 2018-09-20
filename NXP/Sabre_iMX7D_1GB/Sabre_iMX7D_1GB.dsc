@@ -27,7 +27,7 @@
   DEFINE IMX_CHIP_TYPE    = DUAL
   DEFINE CONFIG_USB       = FALSE
   DEFINE CONFIG_HEADLESS  = TRUE
-  BOARD_DIR               = Platform/NXP/$(BOARD_NAME)
+  BOARD_DIR               = NXP/$(BOARD_NAME)
   FLASH_DEFINITION        = $(BOARD_DIR)/$(BOARD_NAME).fdf
 
 ################################################################################
@@ -35,7 +35,7 @@
 # Platform Description
 #
 ################################################################################
-!include Silicon/NXP/iMX7Pkg/iMX7CommonDsc.inc
+!include iMX7Pkg/iMX7CommonDsc.inc
 
 ################################################################################
 #

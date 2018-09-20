@@ -21,7 +21,7 @@
   FILE_GUID                      = 7E374E25-8E01-4FEE-87F2-390C23C606CD
   MODULE_TYPE                    = USER_DEFINED
   VERSION_STRING                 = 1.0
-  DEFINE COMMON_ACPI_DIR         = Silicon/NXP/iMX6Pkg/AcpiTables
+  DEFINE COMMON_ACPI_DIR         = iMX6Pkg/AcpiTables
 
 #
 # The following information is for reference only and not required by the build tools.
@@ -43,11 +43,11 @@
   EmbeddedPkg/EmbeddedPkg.dec
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
-  Silicon/NXP/iMX6Pkg/iMX6Pkg.dec
-  Silicon/NXP/iMXPlatformPkg/iMXPlatformPkg.dec
+  iMX6Pkg/iMX6Pkg.dec
+  iMXPlatformPkg/iMXPlatformPkg.dec
   ArmPlatformPkg/ArmPlatformPkg.dec
   SecurityPkg/SecurityPkg.dec
-  Platform/Microsoft/OpteeClientPkg/OpteeClientPkg.dec
+  Microsoft/OpteeClientPkg/OpteeClientPkg.dec
 
 [FixedPcd]
   giMX6TokenSpaceGuid.PcdPcieHostConfigBase

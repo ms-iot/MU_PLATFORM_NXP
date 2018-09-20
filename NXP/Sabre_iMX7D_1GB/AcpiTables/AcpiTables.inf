@@ -21,7 +21,7 @@
   FILE_GUID                      = 7E374E25-8E01-4FEE-87F2-390C23C606CD
   MODULE_TYPE                    = USER_DEFINED
   VERSION_STRING                 = 1.0
-  DEFINE COMMON_ACPI_DIR         = Silicon/NXP/iMX7Pkg/AcpiTables
+  DEFINE COMMON_ACPI_DIR         = iMX7Pkg/AcpiTables
 
 #
 # The following information is for reference only and not required by the build tools.
@@ -44,8 +44,8 @@
   EmbeddedPkg/EmbeddedPkg.dec
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
-  Silicon/NXP/iMX7Pkg/iMX7Pkg.dec
-  Platform/Microsoft/OpteeClientPkg/OpteeClientPkg.dec
+  iMX7Pkg/iMX7Pkg.dec
+  Microsoft/OpteeClientPkg/OpteeClientPkg.dec
 
 [FixedPcd]
   gArmPlatformTokenSpaceGuid.PcdCoreCount

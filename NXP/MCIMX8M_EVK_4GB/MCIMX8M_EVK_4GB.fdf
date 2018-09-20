@@ -115,7 +115,7 @@ FvNameGuid         = B73FE497-B92E-416e-8326-45AD0D270092
   #
   INF MdeModulePkg/Universal/Acpi/AcpiTableDxe/AcpiTableDxe.inf
   INF MdeModulePkg/Universal/Acpi/AcpiPlatformDxe/AcpiPlatformDxe.inf
-  INF RuleOverride=ACPITABLE Platform/NXP/MCIMX8M_EVK_4GB/AcpiTables/AcpiTables.inf
+  INF RuleOverride=ACPITABLE NXP/MCIMX8M_EVK_4GB/AcpiTables/AcpiTables.inf
 
   INF MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
 
@@ -129,7 +129,7 @@ FvNameGuid         = B73FE497-B92E-416e-8326-45AD0D270092
   INF MdeModulePkg/Universal/SerialDxe/SerialDxe.inf
 
   # Versatile Express FileSystem
-  INF Platform/ARM/Drivers/BootMonFs/BootMonFs.inf
+  INF ARM/Drivers/BootMonFs/BootMonFs.inf
 
   #
   # FAT filesystem + GPT/MBR partitioning
@@ -138,8 +138,8 @@ FvNameGuid         = B73FE497-B92E-416e-8326-45AD0D270092
   INF MdeModulePkg/Universal/Disk/PartitionDxe/PartitionDxe.inf
   INF FatBinPkg/EnhancedFatDxe/Fat.inf
   INF MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
-  INF Silicon/NXP/iMXPlatformPkg/Drivers/SdhcDxe/SdhcDxe.inf
-  INF Platform/Microsoft/Drivers/SdMmcDxe/SdMmcDxe.inf
+  INF iMXPlatformPkg/Drivers/SdhcDxe/SdhcDxe.inf
+  INF Microsoft/Drivers/SdMmcDxe/SdMmcDxe.inf
 
   # FV FileSystem
   INF MdeModulePkg/Universal/FvSimpleFileSystemDxe/FvSimpleFileSystemDxe.inf
@@ -169,13 +169,13 @@ FvNameGuid         = B73FE497-B92E-416e-8326-45AD0D270092
   #
   # iMX8M platform driver
   #
-  INF Silicon/NXP/iMX8Pkg/Drivers/iMX8Dxe/iMX8Dxe.inf
+  INF iMX8Pkg/Drivers/iMX8Dxe/iMX8Dxe.inf
 
   #
   # SMBIOS/DMI
   #
   INF MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
-  INF Platform/NXP/MCIMX8M_EVK_4GB/Drivers/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
+  INF NXP/MCIMX8M_EVK_4GB/Drivers/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 
   #
   # Bds

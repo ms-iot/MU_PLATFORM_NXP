@@ -32,18 +32,18 @@
   SUPPORTED_ARCHITECTURES = AARCH64
   BUILD_TARGETS           = DEBUG|RELEASE
   SKUID_IDENTIFIER        = DEFAULT
-  BOARD_DIR               = Platform/NXP/$(BOARD_NAME)
+  BOARD_DIR               = NXP/$(BOARD_NAME)
   FLASH_DEFINITION        = $(BOARD_DIR)/$(BOARD_NAME).fdf
 
 # Include common peripherals
-!include Silicon/NXP/iMX8Pkg/iMX8CommonDsc.inc
+!include Silicon/SM_NXP/iMX8Pkg/iMX8CommonDsc.inc
 
 [LibraryClasses.common]
   ArmLib|ArmPkg/Library/ArmLib/ArmBaseLib.inf
   ArmMmuLib|ArmPkg/Library/ArmMmuLib/ArmMmuBaseLib.inf
-  ArmPlatformLib|Platform/NXP/MCIMX8M_EVK_4GB/Library/iMX8BoardLib/iMX8BoardLib.inf
+  ArmPlatformLib|NXP/MCIMX8M_EVK_4GB/Library/iMX8BoardLib/iMX8BoardLib.inf
   ArmSmcLib|ArmPkg/Library/ArmSmcLib/ArmSmcLib.inf
-  RealTimeClockLib|Silicon/NXP/iMXPlatformPkg/Library/VirtualRealTimeClockLib/VirtualRealTimeClockLib.inf
+  RealTimeClockLib|iMXPlatformPkg/Library/VirtualRealTimeClockLib/VirtualRealTimeClockLib.inf
 
   CapsuleLib|MdeModulePkg/Library/DxeCapsuleLibNull/DxeCapsuleLibNull.inf
   CustomizedDisplayLib|MdeModulePkg/Library/CustomizedDisplayLib/CustomizedDisplayLib.inf
@@ -53,7 +53,7 @@
 
 !ifndef CONFIG_HEADLESS
   LcdHwLib|ArmPlatformPkg/Library/LcdHwNullLib/LcdHwNullLib.inf
-  LcdPlatformLib|Silicon/NXP/iMX8Pkg/Library/HdLcdiMX8Lib/HdLcdiMX8Lib.inf
+  LcdPlatformLib|iMX8Pkg/Library/HdLcdiMX8Lib/HdLcdiMX8Lib.inf
 !endif
 
 [LibraryClasses.common.SEC]
@@ -148,7 +148,7 @@
   gArmTokenSpaceGuid.PcdGicDistributorBase|0x38800000
   gArmTokenSpaceGuid.PcdGicRedistributorsBase|0x38880000
 
-!if 0
+!if TRUE == FALSE
   #
   # Watchdog
   #
@@ -240,8 +240,8 @@
   FatBinPkg/EnhancedFatDxe/Fat.inf
   MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
   MdeModulePkg/Universal/Disk/PartitionDxe/PartitionDxe.inf
-  Platform/Microsoft/Drivers/SdMmcDxe/SdMmcDxe.inf
-  Silicon/NXP/iMXPlatformPkg/Drivers/SdhcDxe/SdhcDxe.inf
+  Microsoft/Drivers/SdMmcDxe/SdMmcDxe.inf
+  iMXPlatformPkg/Drivers/SdhcDxe/SdhcDxe.inf
 
   # Unicode support (required)
   MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
@@ -249,7 +249,7 @@
   #
   # iMX8 platform driver
   #
-  Silicon/NXP/iMX8Pkg/Drivers/iMX8Dxe/iMX8Dxe.inf
+  iMX8Pkg/Drivers/iMX8Dxe/iMX8Dxe.inf
 
   #
   # GOP driver
@@ -262,7 +262,7 @@
   # SMBIOS/DMI
   #
   MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
-  Platform/NXP/MCIMX8M_EVK_4GB/Drivers/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
+  NXP/MCIMX8M_EVK_4GB/Drivers/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 
   #
   # Bds

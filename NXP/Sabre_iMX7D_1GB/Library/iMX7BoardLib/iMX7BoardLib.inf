@@ -19,7 +19,7 @@
   MODULE_TYPE                    = BASE
   VERSION_STRING                 = 1.0
   LIBRARY_CLASS                  = ArmPlatformLib
-  DEFINE BOARD_LIB_COMMON_DIR    = Silicon/NXP/iMX7Pkg/Library/iMX7BoardLib
+  DEFINE BOARD_LIB_COMMON_DIR    = iMX7Pkg/Library/iMX7BoardLib
 
 [Packages]
   MdePkg/MdePkg.dec
@@ -27,9 +27,9 @@
   EmbeddedPkg/EmbeddedPkg.dec
   ArmPkg/ArmPkg.dec
   ArmPlatformPkg/ArmPlatformPkg.dec
-  Silicon/NXP/iMXPlatformPkg/iMXPlatformPkg.dec
-  Silicon/NXP/iMX7Pkg/iMX7Pkg.dec
-  Platform/Microsoft/OpteeClientPkg/OpteeClientPkg.dec
+  iMXPlatformPkg/iMXPlatformPkg.dec
+  iMX7Pkg/iMX7Pkg.dec
+  Microsoft/OpteeClientPkg/OpteeClientPkg.dec
 
 [LibraryClasses]
   IoLib

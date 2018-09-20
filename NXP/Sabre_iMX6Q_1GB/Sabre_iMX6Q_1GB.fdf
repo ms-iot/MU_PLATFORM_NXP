@@ -103,14 +103,14 @@ READ_LOCK_STATUS   = TRUE
     #
     INF $(BOARD_DIR)/Drivers/GraphicsOutputDxe/GraphicsOutputDxe.inf
   !else
-    INF Silicon/NXP/iMX6Pkg/Drivers/GopDxe/GopDxe.inf
+    INF iMX6Pkg/Drivers/GopDxe/GopDxe.inf
   !endif
 !endif
 
   #
   # SMBIOS Support
   #
-  INF Silicon/NXP/iMX6Pkg/Drivers/PlatformSmbiosDxe/PlatformSmbiosDxe.inf
+  INF iMX6Pkg/Drivers/PlatformSmbiosDxe/PlatformSmbiosDxe.inf
   INF MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
 
-!include Silicon/NXP/iMX6Pkg/iMX6CommonFdf.inc
+!include iMX6Pkg/iMX6CommonFdf.inc

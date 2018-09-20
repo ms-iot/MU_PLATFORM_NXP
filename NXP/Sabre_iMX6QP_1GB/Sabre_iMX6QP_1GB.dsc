@@ -26,7 +26,7 @@
   DEFINE IMX_CHIP_TYPE            = QUADPLUS
   DEFINE DRAM_SIZE                = DRAM_1GB
   DEFINE CONFIG_DUMP_SYMBOL_INFO  = TRUE
-  BOARD_DIR                       = Platform/NXP/$(BOARD_NAME)
+  BOARD_DIR                       = NXP/$(BOARD_NAME)
   FLASH_DEFINITION                = $(BOARD_DIR)/$(BOARD_NAME).fdf
 
 ################################################################################
@@ -34,7 +34,7 @@
 # Platform Description
 #
 ################################################################################
-!include Silicon/NXP/iMX6Pkg/iMX6CommonDsc.inc
+!include iMX6Pkg/iMX6CommonDsc.inc
 
 [LibraryClasses.common]
   ArmPlatformLib|$(BOARD_DIR)/Library/iMX6BoardLib/iMX6BoardLib.inf
@@ -51,7 +51,7 @@
     #
     $(BOARD_DIR)/Drivers/GraphicsOutputDxe/GraphicsOutputDxe.inf
   !else
-    Silicon/NXP/iMX6Pkg/Drivers/GopDxe/GopDxe.inf
+    iMX6Pkg/Drivers/GopDxe/GopDxe.inf
   !endif
 !endif
 
@@ -61,7 +61,7 @@
   $(BOARD_DIR)/AcpiTables/AcpiTables.inf
 
   # SMBIOS Support
-  Silicon/NXP/iMX6Pkg/Drivers/PlatformSmbiosDxe/PlatformSmbiosDxe.inf
+  iMX6Pkg/Drivers/PlatformSmbiosDxe/PlatformSmbiosDxe.inf
   MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
 
 ################################################################################

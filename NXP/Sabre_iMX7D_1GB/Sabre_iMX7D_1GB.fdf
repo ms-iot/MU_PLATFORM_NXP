@@ -11,4 +11,4 @@
 #  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #
 
-!include Silicon/NXP/iMX7Pkg/iMX7CommonFdf.inc
+!include iMX7Pkg/iMX7CommonFdf.inc
