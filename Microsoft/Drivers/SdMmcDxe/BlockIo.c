@@ -1,6 +1,6 @@
 /** @file
 *
-*  Copyright (c) Microsoft Corporation. All rights reserved.
+*  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
 *  Copyright (c) 2011-2014, ARM Limited. All rights reserved.
 *
 *  This program and the accompanying materials
@@ -17,17 +17,17 @@
 
 #include <Protocol/BlockIo.h>
 #include <Protocol/DevicePath.h>
-#include <Protocol/Sdhc.h>
 #include <Protocol/RpmbIo.h>
+#include <Protocol/Sdhc.h>
 
-#include <Library/DebugLib.h>
-#include <Library/UefiLib.h>
-#include <Library/TimerLib.h>
 #include <Library/BaseLib.h>
 #include <Library/BaseMemoryLib.h>
-#include <Library/MemoryAllocationLib.h>
-#include <Library/UefiBootServicesTableLib.h>
+#include <Library/DebugLib.h>
 #include <Library/DevicePathLib.h>
+#include <Library/MemoryAllocationLib.h>
+#include <Library/TimerLib.h>
+#include <Library/UefiBootServicesTableLib.h>
+#include <Library/UefiLib.h>
 
 #include "SdMmcHw.h"
 #include "SdMmc.h"
@@ -60,9 +60,11 @@ SortIoReadStatsByTotalTransferTime (
 {
   // Using the simple insertion sort
   UINT32 Idx;
+  UINT32 J;
+
   for (Idx = 1; Idx < NumEntries; ++Idx) {
     IoReadStatsEntry CurrEntry = Table[Idx];
-    UINT32 J = Idx;
+    J = Idx;
     while (J > 0 &&
            Table[J - 1].TotalTransferTimeUs < CurrEntry.TotalTransferTimeUs) {
       Table[J] = Table[J - 1];
@@ -83,21 +85,28 @@ BenchmarkIo (
 {
   ASSERT (Iterations > 0);
 
-  EFI_STATUS Status;
-  UINT32 BufferSizeKB = INT_DIV_ROUND (BufferSize, 1024);
-  VOID* Buffer = AllocateZeroPool (BufferSize);
+  VOID        *Buffer;
+  UINT32      BufferSizeKB;
+  UINT32      CurrIteration;
+  UINT64      EndTime;
+  UINT32      KBps;
+  UINT64      StartTime;
+  EFI_STATUS  Status;
+  UINT64      TotalTransfersTimeUs;
+
+  BufferSizeKB = INT_DIV_ROUND (BufferSize, 1024);
+  Buffer = AllocateZeroPool (BufferSize);
   if (Buffer == NULL) {
     LOG_ERROR ("BenchmarkIo() : No enough memory to allocate %dKB buffer", BufferSizeKB);
     Status = EFI_OUT_OF_RESOURCES;
     goto Exit;
   }
 
-  UINT32 CurrIteration = Iterations;
-  UINT64 TotalTransfersTimeUs = 0;
+  CurrIteration = Iterations;
+  TotalTransfersTimeUs = 0;
 
   while (CurrIteration--) {
-    UINT64 StartTime = GetPerformanceCounter ();
-
+    StartTime = GetPerformanceCounter ();
     Status = IoBlocks (
       This,
       TransferDirection,
@@ -110,11 +119,10 @@ BenchmarkIo (
       goto Exit;
     }
 
-    UINT64 EndTime = GetPerformanceCounter ();
+    EndTime = GetPerformanceCounter ();
     TotalTransfersTimeUs += (((EndTime - StartTime) * 1000000UL) / gHpcTicksPerSeconds);
   }
 
-  UINT32 KBps;
   KBps = (UINT32) (((UINT64) BufferSizeKB * (UINT64) Iterations * 1000000UL) / TotalTransfersTimeUs);
   LOG_INFO (
     "- BenchmarkIo(%a, %dKB)\t: Xfr Avg:%dus\t%dKBps\t%dMBps",
@@ -140,10 +148,15 @@ IoBlocks (
   IN OUT VOID               *Buffer
   )
 {
-  SDHC_INSTANCE *HostInst;
-  EFI_STATUS Status;
-  CONST SD_COMMAND *Cmd;
-  UINT32 BlockCount;
+  CONST SD_COMMAND  *Cmd;
+  VOID              *CurrentBuffer;
+  SDHC_INSTANCE     *HostInst;
+  UINT32            BlockCount;
+  UINT32            BytesRemaining;
+  UINTN             CurrentBufferSize;
+  UINT32            CurrentLba;
+  UINT32            Retry;
+  EFI_STATUS        Status;
 
   HostInst = SDHC_INSTANCE_FROM_BLOCK_IO_THIS (This);
   ASSERT (HostInst);
@@ -224,11 +237,9 @@ IoBlocks (
   CONST UINT32 DataCommandRetryCount = 3;
   CONST UINT32 MaxTransferSize =
     HostInst->HostCapabilities.MaximumBlockCount * This->Media->BlockSize;
-  UINT32 Retry;
-  UINT32 BytesRemaining = BufferSize;
-  UINTN CurrentBufferSize;
-  VOID *CurrentBuffer = Buffer;
-  UINT32 CurrentLba = (UINT32) Lba;
+  BytesRemaining = BufferSize;
+  CurrentBuffer = Buffer;
+  CurrentLba = (UINT32) Lba;
 
   for (; BytesRemaining > 0;) {
     if (BytesRemaining < MaxTransferSize) {
@@ -254,7 +265,6 @@ IoBlocks (
 
       // On SdhcSendDataCommand return, proper error recovery has been performed
       // and it should be safe to retry the same transfer.
-
       LOG_ERROR ("SdhcSendDataCommand failed on retry %d", Retry);
     }
 
@@ -300,9 +310,11 @@ BlockIoReset (
   IN BOOLEAN                ExtendedVerification
   )
 {
+  SDHC_INSTANCE   *HostInst;
+
   LOG_TRACE ("BlockIoReset()");
 
-  SDHC_INSTANCE *HostInst = SDHC_INSTANCE_FROM_BLOCK_IO_THIS (This);
+  HostInst = SDHC_INSTANCE_FROM_BLOCK_IO_THIS (This);
   return SoftReset (HostInst);
 }
 
@@ -343,12 +355,15 @@ BlockIoReadBlocks (
   LOG_TRACE ("BlockIoReadBlocks()");
 
 #if SDMMC_BENCHMARK_IO
-  static BOOLEAN BenchmarkDone = FALSE;
+  STATIC BOOLEAN  BenchmarkDone;
+  UINT32          CurrByteSize;
+
+  BenchmarkDone = FALSE;
   if (!BenchmarkDone) {
 
     LOG_INFO ("Benchmarking BlockIo Read");
 
-    UINT32 CurrByteSize = 512;
+    CurrByteSize = 512;
     CONST UINT32 MaxByteSize = 8388608; // 8MB Max
     for (; CurrByteSize <= MaxByteSize; CurrByteSize *= 2) {
       BenchmarkIo (This, SdTransferDirectionRead, MediaId, CurrByteSize, 10);
@@ -359,12 +374,20 @@ BlockIoReadBlocks (
 #endif // SDMMC_BENCHMARK_IO
 
 #if SDMMC_COLLECT_STATISTICS
-  UINT32 NumBlocks = BufferSize / This->Media->BlockSize;
-  SDHC_INSTANCE *HostInst = SDHC_INSTANCE_FROM_BLOCK_IO_THIS (This);
+  SDHC_INSTANCE   *HostInst;
+  UINT32          BlockIdx;
+  UINT64          EndTime;
+  UINT32          NumBlocks;
+  UINT64          StartTime;
+  EFI_STATUS      Status;
+  UINT32          TotalReadBlocksCount;
+  UINT32          TotalReadTimeUs;
+
+  NumBlocks = BufferSize / This->Media->BlockSize;
+  HostInst = SDHC_INSTANCE_FROM_BLOCK_IO_THIS (This);
   CONST UINT32 TableSize = ARRAYSIZE (HostInst->IoReadStats);
   IoReadStatsEntry *CurrentReadEntry = NULL;
 
-  UINT32 BlockIdx;
   for (BlockIdx = 0; BlockIdx < TableSize; ++BlockIdx) {
     IoReadStatsEntry *Entry = HostInst->IoReadStats + BlockIdx;
     // Reached end of table and didn't find a match, append an entry
@@ -381,9 +404,9 @@ BlockIoReadBlocks (
   }
   ASSERT (BlockIdx < TableSize);
 
-  UINT64 StartTime = GetPerformanceCounter ();
+  StartTime = GetPerformanceCounter ();
 
-  EFI_STATUS Status = IoBlocks (
+  Status = IoBlocks (
     This,
     SdTransferDirectionRead,
     MediaId,
@@ -395,23 +418,21 @@ BlockIoReadBlocks (
     goto Exit;
   }
 
-  UINT64 EndTime = GetPerformanceCounter ();
+  EndTime = GetPerformanceCounter ();
 
   ASSERT (CurrentReadEntry != NULL);
   CurrentReadEntry->TotalTransferTimeUs +=
     (UINT32) (((EndTime - StartTime) * 1000000UL) / gHpcTicksPerSeconds);
 
-  //
   // Run statistics and dump updates
-  //
   SortIoReadStatsByTotalTransferTime (
     HostInst->IoReadStats,
     HostInst->IoReadStatsNumEntries);
 
   IoReadStatsEntry *MaxNumBlocksEntry = HostInst->IoReadStats;
   IoReadStatsEntry *MaxCountEntry = HostInst->IoReadStats;
-  UINT32 TotalReadTimeUs = 0;
-  UINT32 TotalReadBlocksCount = 0;
+  TotalReadTimeUs = 0;
+  TotalReadBlocksCount = 0;
 
   LOG_INFO (" #Blks\tCnt\tAvg(us)\tAll(us)");
 

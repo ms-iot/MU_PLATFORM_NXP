@@ -1,6 +1,6 @@
 /** @file
 *
-*  Copyright (c) Microsoft Corporation. All rights reserved.
+*  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
 *  Copyright (c) 2011-2014, ARM Limited. All rights reserved.
 *
 *  This program and the accompanying materials
@@ -17,17 +17,17 @@
 
 #include <Protocol/BlockIo.h>
 #include <Protocol/DevicePath.h>
-#include <Protocol/Sdhc.h>
 #include <Protocol/RpmbIo.h>
+#include <Protocol/Sdhc.h>
 
-#include <Library/DebugLib.h>
-#include <Library/UefiLib.h>
-#include <Library/TimerLib.h>
 #include <Library/BaseLib.h>
 #include <Library/BaseMemoryLib.h>
-#include <Library/MemoryAllocationLib.h>
-#include <Library/UefiBootServicesTableLib.h>
+#include <Library/DebugLib.h>
 #include <Library/DevicePathLib.h>
+#include <Library/MemoryAllocationLib.h>
+#include <Library/TimerLib.h>
+#include <Library/UefiBootServicesTableLib.h>
+#include <Library/UefiLib.h>
 
 #include "SdMmcHw.h"
 #include "SdMmc.h"
@@ -43,51 +43,52 @@ PrintCid (
   IN SDHC_INSTANCE  *HostInst
   )
 {
+  MMC_CID   *MmcCid;
+  SD_CID    *SdCid;
+
   LOG_INFO ("- PrintCid");;
 
   if (HostInst->CardInfo.CardFunction == CardFunctionSd) {
-    SD_CID *Cid;
-    Cid = &HostInst->CardInfo.Registers.Sd.Cid;
-    LOG_INFO ("\t- Manufacturer ID: 0x%x", (UINT32) Cid->MID);
-    LOG_INFO ("\t- OEM ID: 0x%x", (UINT32) Cid->OID);
+    SdCid = &HostInst->CardInfo.Registers.Sd.Cid;
+    LOG_INFO ("\t- Manufacturer ID: 0x%x", (UINT32) SdCid->MID);
+    LOG_INFO ("\t- OEM ID: 0x%x", (UINT32) SdCid->OID);
     LOG_INFO (
       "\t- Product name: %c%c%c%c%c",
-      Cid->PNM[4],
-      Cid->PNM[3],
-      Cid->PNM[2],
-      Cid->PNM[1],
-      Cid->PNM[0]);
+      SdCid->PNM[4],
+      SdCid->PNM[3],
+      SdCid->PNM[2],
+      SdCid->PNM[1],
+      SdCid->PNM[0]);
 
     LOG_INFO (
       "\t- Manufacturing date: %d/%d",
-      (UINT32) (Cid->MDT & 0xF),
-      (UINT32) (((Cid->MDT >> 4) & 0x3F) + 2000));
-    LOG_INFO ("\t- Product serial number: 0x%X", Cid->PSN);
-    LOG_INFO ("\t- Product revision: %d", (UINT32) Cid->PRV);
+      (UINT32) (SdCid->MDT & 0xF),
+      (UINT32) (((SdCid->MDT >> 4) & 0x3F) + 2000));
+    LOG_INFO ("\t- Product serial number: 0x%X", SdCid->PSN);
+    LOG_INFO ("\t- Product revision: %d", (UINT32) SdCid->PRV);
 
-    LOG_INFO ("\t- OEM ID: 0x%x", (UINT32) Cid->OID);
-    LOG_INFO ("\t- Manufacturer ID: 0x%x", (UINT32) Cid->MID);
+    LOG_INFO ("\t- OEM ID: 0x%x", (UINT32) SdCid->OID);
+    LOG_INFO ("\t- Manufacturer ID: 0x%x", (UINT32) SdCid->MID);
   } else {
-    MMC_CID *Cid;
-    Cid = &HostInst->CardInfo.Registers.Mmc.Cid;
-    LOG_INFO ("\t- Manufacturer ID: 0x%x", (UINT32) Cid->MID);
-    LOG_INFO ("\t- OEM ID: 0x%x", (UINT32) Cid->OID);
+    MmcCid = &HostInst->CardInfo.Registers.Mmc.Cid;
+    LOG_INFO ("\t- Manufacturer ID: 0x%x", (UINT32) MmcCid->MID);
+    LOG_INFO ("\t- OEM ID: 0x%x", (UINT32) MmcCid->OID);
     LOG_INFO (
       "\t- Product name: %c%c%c%c%c%c\n",
-      Cid->PNM[5],
-      Cid->PNM[4],
-      Cid->PNM[3],
-      Cid->PNM[2],
-      Cid->PNM[1],
-      Cid->PNM[0]);
+      MmcCid->PNM[5],
+      MmcCid->PNM[4],
+      MmcCid->PNM[3],
+      MmcCid->PNM[2],
+      MmcCid->PNM[1],
+      MmcCid->PNM[0]);
 
     LOG_INFO (
       "\t- Manufacturing date: %d/%d",
-      (UINT32) (Cid->MDT >> 4),
-      (UINT32) (Cid->MDT & 0xF) + 1997);
+      (UINT32) (MmcCid->MDT >> 4),
+      (UINT32) (MmcCid->MDT & 0xF) + 1997);
 
-    LOG_INFO ("\t- Product serial number: 0x%X", Cid->PSN);
-    LOG_INFO ("\t- Product revision: %d", (UINT32) Cid->PRV);
+    LOG_INFO ("\t- Product serial number: 0x%X", MmcCid->PSN);
+    LOG_INFO ("\t- Product revision: %d", (UINT32) MmcCid->PRV);
   }
 }
 
@@ -96,9 +97,12 @@ PrintCsd (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  LOG_INFO ("- PrintCsd");
+  MMC_CSD   *MmcCsd;
+  MMC_EXT_CSD *MmcExtCsd;
+  SD_CSD    *SdCsd;
+  UINT32    CardSizeGB;
 
-  UINT32 CardSizeGB;
+  LOG_INFO ("- PrintCsd");
   CardSizeGB =
     (UINT32) INT_DIV_ROUND (HostInst->CardInfo.ByteCapacity, (UINT64) (1024 * 1024 * 1024));
 
@@ -110,10 +114,10 @@ PrintCsd (
     (UINT32) HostInst->BlockIo.Media->LastBlock);
 
   if (HostInst->CardInfo.CardFunction == CardFunctionSd) {
-    SD_CSD *Csd = &HostInst->CardInfo.Registers.Sd.Csd;
-    if (Csd->CSD_STRUCTURE == 0) {
+    SdCsd = &HostInst->CardInfo.Registers.Sd.Csd;
+    if (SdCsd->CSD_STRUCTURE == 0) {
       LOG_INFO ("- SD CSD Version 1.01-1.10/Version 2.00/Standard Capacity");
-    } else if (Csd->CSD_STRUCTURE == 1) {
+    } else if (SdCsd->CSD_STRUCTURE == 1) {
       LOG_INFO ("- SD CSD Version 2.00/High Capacity");
     } else {
       LOG_INFO ("- SD CSD Version Higher than v3.3");
@@ -121,33 +125,33 @@ PrintCsd (
 
     LOG_INFO (
       "\t- SW Write Protect: Temp:%d Permanent:%d",
-      (UINT32) Csd->TMP_WRITE_PROTECT,
-      (UINT32) Csd->PERM_WRITE_PROTECT);
+      (UINT32) SdCsd->TMP_WRITE_PROTECT,
+      (UINT32) SdCsd->PERM_WRITE_PROTECT);
 
-    LOG_INFO ("\t- Supported card command class: 0x%X", Csd->CCC);
+    LOG_INFO ("\t- Supported card command class: 0x%X", SdCsd->CCC);
 
     LOG_INFO (
       "\t- Speed: %a %a (TRAN_SPEED:%x)",
-      mStrValue[(Csd->TRAN_SPEED >> 3) & 0xF],
-      mStrUnit[Csd->TRAN_SPEED & 7],
-      (UINT32) Csd->TRAN_SPEED);
+      mStrValue[(SdCsd->TRAN_SPEED >> 3) & 0xF],
+      mStrUnit[SdCsd->TRAN_SPEED & 7],
+      (UINT32) SdCsd->TRAN_SPEED);
 
     LOG_INFO (
       "\t- Maximum Read Data Block: %d (READ_BL_LEN:%x)",
-      (UINT32) (1 << Csd->READ_BL_LEN),
-      (UINT32) Csd->READ_BL_LEN);
+      (UINT32) (1 << SdCsd->READ_BL_LEN),
+      (UINT32) SdCsd->READ_BL_LEN);
 
     LOG_INFO (
       "\t- Maximum Write Data Block: %d (WRITE_BL_LEN:%x)",
-      (UINT32) (1 << Csd->WRITE_BL_LEN),
-      (UINT32) Csd->WRITE_BL_LEN);
+      (UINT32) (1 << SdCsd->WRITE_BL_LEN),
+      (UINT32) SdCsd->WRITE_BL_LEN);
 
-    if (!Csd->FILE_FORMAT_GRP) {
-      if (Csd->FILE_FORMAT == 0) {
+    if (!SdCsd->FILE_FORMAT_GRP) {
+      if (SdCsd->FILE_FORMAT == 0) {
         LOG_INFO ("\t- Format (0): Hard disk-like file system with partition table");
-      } else if (Csd->FILE_FORMAT == 1) {
+      } else if (SdCsd->FILE_FORMAT == 1) {
         LOG_INFO ("\t- Format (1): DOS FAT (floppy-like) with boot sector only (no partition table)");
-      } else if (Csd->FILE_FORMAT == 2) {
+      } else if (SdCsd->FILE_FORMAT == 2) {
         LOG_INFO ("\t- Format (2): Universal File Format");
       } else {
         LOG_INFO ("\t- Format (3): Others/Unknown");
@@ -156,55 +160,55 @@ PrintCsd (
       LOG_INFO ("\t- Format: Reserved");
     }
   } else {
-    MMC_CSD *Csd = &HostInst->CardInfo.Registers.Mmc.Csd;
-    MMC_EXT_CSD *ExtCsd = &HostInst->CardInfo.Registers.Mmc.ExtCsd;
+    MmcCsd = &HostInst->CardInfo.Registers.Mmc.Csd;
+    MmcExtCsd = &HostInst->CardInfo.Registers.Mmc.ExtCsd;
 
-    if (ExtCsd->CardType & MmcExtCsdCardTypeNormalSpeed) {
+    if (MmcExtCsd->CardType & MmcExtCsdCardTypeNormalSpeed) {
       LOG_INFO ("\t- Normal-Speed MMC @ 26MHz");
     }
 
-    if (ExtCsd->CardType & MmcExtCsdCardTypeHighSpeed) {
+    if (MmcExtCsd->CardType & MmcExtCsdCardTypeHighSpeed) {
       LOG_INFO ("\t- High-Speed MMC @ 52MHz");
     }
 
-    if (ExtCsd->CardType & MmcExtCsdCardTypeDdr1v8) {
+    if (MmcExtCsd->CardType & MmcExtCsdCardTypeDdr1v8) {
       LOG_INFO ("\t- High-Speed DDR MMC @ 52MHz - 1.8V or 3V I/O");
     }
 
-    if (ExtCsd->CardType & MmcExtCsdCardTypeDdr1v2) {
+    if (MmcExtCsd->CardType & MmcExtCsdCardTypeDdr1v2) {
       LOG_INFO ("\t- High-Speed DDR MMC @ 52MHz - 1.2VI/O");
     }
 
     LOG_INFO (
       "\t- SW Write Protect: Temp:%d Permenant:%d",
-      (UINT32) Csd->TMP_WRITE_PROTECT,
-      (UINT32) Csd->PERM_WRITE_PROTECT);
+      (UINT32) MmcCsd->TMP_WRITE_PROTECT,
+      (UINT32) MmcCsd->PERM_WRITE_PROTECT);
 
-    LOG_INFO ("\t- SpecVersion: %d.x", (UINT32) Csd->SPEC_VERS);
-    LOG_INFO ("\t- Supported card command class: 0x%X", Csd->CCC);
+    LOG_INFO ("\t- SpecVersion: %d.x", (UINT32) MmcCsd->SPEC_VERS);
+    LOG_INFO ("\t- Supported card command class: 0x%X", MmcCsd->CCC);
 
     LOG_INFO (
       "\t- Current Max Speed: %a %a (TRAN_SPEED:%x)",
-      mStrValue[(Csd->TRAN_SPEED >> 3) & 0xF],
-      mStrUnit[Csd->TRAN_SPEED & 7],
-      (UINT32) Csd->TRAN_SPEED);
+      mStrValue[(MmcCsd->TRAN_SPEED >> 3) & 0xF],
+      mStrUnit[MmcCsd->TRAN_SPEED & 7],
+      (UINT32) MmcCsd->TRAN_SPEED);
 
     LOG_INFO (
       "\t- Maximum Read Data Block: %d (READ_BL_LEN:%x)",
-      (UINT32) (1 << Csd->READ_BL_LEN),
-      (UINT32) Csd->READ_BL_LEN);
+      (UINT32) (1 << MmcCsd->READ_BL_LEN),
+      (UINT32) MmcCsd->READ_BL_LEN);
 
     LOG_INFO (
       "\t- Maximum Write Data Block: %d (WRITE_BL_LEN:%x)",
-      (UINT32) (1 << Csd->WRITE_BL_LEN),
-      (UINT32) Csd->WRITE_BL_LEN);
+      (UINT32) (1 << MmcCsd->WRITE_BL_LEN),
+      (UINT32) MmcCsd->WRITE_BL_LEN);
 
-    if (!Csd->FILE_FORMAT_GRP) {
-      if (Csd->FILE_FORMAT == 0) {
+    if (!MmcCsd->FILE_FORMAT_GRP) {
+      if (MmcCsd->FILE_FORMAT == 0) {
         LOG_INFO ("\t- Format (0): Hard disk-like file system with partition table");
-      } else if (Csd->FILE_FORMAT == 1) {
+      } else if (MmcCsd->FILE_FORMAT == 1) {
         LOG_INFO ("\t- Format (1): DOS FAT (floppy-like) with boot sector only (no partition table)");
-      } else if (Csd->FILE_FORMAT == 2) {
+      } else if (MmcCsd->FILE_FORMAT == 2) {
         LOG_INFO ("\t- Format (2): Universal File Format");
       } else {
         LOG_INFO ("\t- Format (3): Others/Unknown");
@@ -223,9 +227,7 @@ GetAndPrintCardStatus (
   CARD_STATUS CardStatus;
   EFI_STATUS Status;
 
-  //
   // If the card has not been selected, then we can't get its status
-  //
   if (HostInst->CardInfo.RCA == 0x0) {
     return;
   }
