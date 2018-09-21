@@ -104,6 +104,10 @@
   # FirmwareRevision 0.1
   gEfiMdeModulePkgTokenSpaceGuid.PcdFirmwareRevision|0x00000001
 
+  # System memory size (4GB)
+  # Limit to 3GB of DRAM at the top of the 32bit address space
+  gArmTokenSpaceGuid.PcdSystemMemorySize|0xC0000000
+
   #
   # NV Storage PCDs. Use base of 0x30370000 for SNVS?
   #
