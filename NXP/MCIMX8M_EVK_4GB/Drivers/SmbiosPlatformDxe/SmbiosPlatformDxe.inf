@@ -1,5 +1,5 @@
 ## @file
-#  This driver installs SMBIOS information for ArmJuno
+#  This driver installs SMBIOS information for NXP MCIMX8MQ EVK board
 #
 #  Copyright (c) 2011, Bei Guan <gbtju85@gmail.com>
 #  Copyright (c) 2011, Intel Corporation. All rights reserved.
