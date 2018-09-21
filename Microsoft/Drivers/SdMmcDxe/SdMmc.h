@@ -1,6 +1,6 @@
 /** @file
 *
-*  Copyright (c) Microsoft Corporation. All rights reserved.
+*  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
 *  Copyright (c) 2011-2014, ARM Limited. All rights reserved.
 *
 *  This program and the accompanying materials

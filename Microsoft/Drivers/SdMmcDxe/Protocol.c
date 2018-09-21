@@ -1,6 +1,6 @@
 /** @file
 *
-*  Copyright (c) Microsoft Corporation. All rights reserved.
+*  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
 *  Copyright (c) 2011-2014, ARM Limited. All rights reserved.
 *
 *  This program and the accompanying materials
@@ -17,17 +17,17 @@
 
 #include <Protocol/BlockIo.h>
 #include <Protocol/DevicePath.h>
-#include <Protocol/Sdhc.h>
 #include <Protocol/RpmbIo.h>
+#include <Protocol/Sdhc.h>
 
-#include <Library/DebugLib.h>
-#include <Library/UefiLib.h>
-#include <Library/TimerLib.h>
 #include <Library/BaseLib.h>
 #include <Library/BaseMemoryLib.h>
-#include <Library/MemoryAllocationLib.h>
-#include <Library/UefiBootServicesTableLib.h>
+#include <Library/DebugLib.h>
 #include <Library/DevicePathLib.h>
+#include <Library/MemoryAllocationLib.h>
+#include <Library/TimerLib.h>
+#include <Library/UefiBootServicesTableLib.h>
+#include <Library/UefiLib.h>
 
 #include "SdMmcHw.h"
 #include "SdMmc.h"
@@ -38,23 +38,24 @@ InitializeDevice (
   IN SDHC_INSTANCE  *HostInst
   )
 {
+  EFI_SDHC_PROTOCOL   *HostExt;
+  EFI_STATUS          Status;
+
   LOG_TRACE ("InitializDevice()");
   ASSERT (!HostInst->SlotInitialized);
 
 #if SDMMC_BENCHMARK_IO
-  UINT64 InitializationStartTime = HpcTimerStart ();
+  UINT64              InitializationStartTime;
+  InitializationStartTime = HpcTimerStart ();
 #endif // SDMMC_BENCHMARK_IO
 
-  EFI_SDHC_PROTOCOL *HostExt = HostInst->HostExt;
+  HostExt = HostInst->HostExt;
   ASSERT (HostExt);
-  EFI_STATUS Status;
-
   ASSERT (HostInst->BlockIo.Media->MediaPresent);
 
   ZeroMem (&HostInst->CardInfo, sizeof (HostInst->CardInfo));
-  //
+
   // SD/MMC cards on reset start in default normal speed mode
-  //
   HostInst->CardInfo.CurrentSpeedMode = CardSpeedModeNormalSpeed;
 
   Status = HostExt->SoftwareReset (HostExt, SdhcResetTypeAll);
@@ -117,21 +118,18 @@ InitializeDevice (
     HostInst->BlockIo.Media->RemovableMedia = TRUE;
     HostInst->BlockIo.Media->MediaId = HostInst->CardInfo.Registers.Sd.Cid.PSN;
   } else {
-    //
     // Assume BGA form factor eMMC
-    //
     HostInst->BlockIo.Media->RemovableMedia = FALSE;
 
-    //
     // Use the card product serial number as MediaId
-    //
     HostInst->BlockIo.Media->MediaId = HostInst->CardInfo.Registers.Mmc.Cid.PSN;
   }
 
   HostInst->SlotInitialized = TRUE;
 
 #if SDMMC_BENCHMARK_IO
-  UINT64 ElapsedTimeMs = HpcTimerElapsedMilliseconds (InitializationStartTime);
+  UINT64 ElapsedTimeMs;
+  ElapsedTimeMs = HpcTimerElapsedMilliseconds (InitializationStartTime);
   LOG_INFO ("Initialization completed in %ldms", ElapsedTimeMs);
 #endif // SDMMC_BENCHMARK_IO
 
@@ -280,9 +278,9 @@ SdhcRecoverFromErrors (
   IN CONST SD_COMMAND   *Cmd
   )
 {
-  EFI_STATUS Status;
-  CARD_STATUS CardStatus;
-  EFI_SDHC_PROTOCOL *HostExt;
+  EFI_SDHC_PROTOCOL   *HostExt;
+  CARD_STATUS         CardStatus;
+  EFI_STATUS          Status;
 
   LOG_TRACE (
     "*** %cCMD%d Error recovery sequence start ***",
@@ -341,10 +339,8 @@ SdhcRecoverFromErrors (
         goto Exit;
       }
 
-      //
       // Multi read/write failure reason will be written in the STOP_TRANSMISSION
       // response as part of the card status error flags.
-      //
       CardStatus.AsUint32 = HostInst->CmdResponse[0];
       PrintCardStatus (HostInst, CardStatus);
     }
@@ -383,12 +379,14 @@ SdhcSendCommandHelper (
   IN SD_COMMAND_XFR_INFO  *XfrInfo
   )
 {
-  EFI_SDHC_PROTOCOL *HostExt = HostInst->HostExt;
-  EFI_STATUS Status;
-  CARD_STATUS CardStatus;
+  EFI_SDHC_PROTOCOL   *HostExt;
+  CARD_STATUS         CardStatus;
+  UINT32              CmdAppArg;
+  EFI_STATUS          Status;
 
+  HostExt = HostInst->HostExt;
   if (Cmd->Class == SdCommandClassApp) {
-    UINT32 CmdAppArg = HostInst->CardInfo.RCA << 16;
+    CmdAppArg = HostInst->CardInfo.RCA << 16;
     Status = HostExt->SendCommand (HostExt, &CmdAppSd, CmdAppArg, NULL);
     if (EFI_ERROR (Status)) {
       LOG_ERROR (
@@ -421,7 +419,7 @@ SdhcSendCommandHelper (
   }
 
   if ((Cmd->ResponseType == SdResponseTypeR1) ||
-    (Cmd->ResponseType == SdResponseTypeR1B)) {
+      (Cmd->ResponseType == SdResponseTypeR1B)) {
 
     CardStatus.AsUint32 = HostInst->CmdResponse[0];
 
@@ -459,11 +457,9 @@ SdhcSendCommand (
     return Status;
   }
 
-  //
   // SWITCH command can change card state to prog, we should wait the card to
   // transfer back to tran state and rais the READY_FOR_DATA flag to make sure
   // that switch operation was completed successfully
-  //
   if (CmdsAreEqual (Cmd, &CmdSwitchMmc) ||
       CmdsAreEqual (Cmd, &CmdSwitchSd)) {
     Status = SdhcWaitForTranStateAndReadyForData (HostInst);
@@ -488,10 +484,11 @@ SdhcSendDataCommand (
   IN VOID               *Buffer
   )
 {
-  EFI_SDHC_PROTOCOL *HostExt = HostInst->HostExt;
-  SD_COMMAND_XFR_INFO XfrInfo;
-  EFI_STATUS Status;
+  EFI_SDHC_PROTOCOL     *HostExt;
+  EFI_STATUS            Status;
+  SD_COMMAND_XFR_INFO   XfrInfo;
 
+  HostExt = HostInst->HostExt;
   ASSERT (BufferByteSize % SD_BLOCK_LENGTH_BYTES == 0);
   XfrInfo.BlockCount = BufferByteSize / SD_BLOCK_LENGTH_BYTES;
   XfrInfo.BlockSize = SD_BLOCK_LENGTH_BYTES;
@@ -529,11 +526,9 @@ SdhcSendDataCommand (
     }
   }
 
-  //
   // If this is an open-ended multi-block read/write then explicitly send
   // STOP_TRANSMISSION. A multi-block read/write with pre-defined block count
   // will be preceeded with SET_BLOCK_COUNT.
-  //
   if ((CmdsAreEqual (Cmd, &CmdWriteMultiBlock) ||
        CmdsAreEqual (Cmd, &CmdReadMultiBlock)) &&
        ((HostInst->LastSuccessfulCmd == NULL) ||
@@ -552,7 +547,6 @@ SdhcSendDataCommand (
   }
 
 Exit:
-
   if (EFI_ERROR (Status)) {
     LOG_ERROR ("Send data command failed. %r", Status);
     SdhcRecoverFromErrors (HostInst, Cmd);
@@ -574,7 +568,9 @@ SdhcQueryCardType (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  EFI_STATUS Status = SdhcGoIdleState (HostInst);
+  EFI_STATUS Status;
+
+  Status = SdhcGoIdleState (HostInst);
   if (EFI_ERROR (Status)) {
     return Status;
   }
@@ -589,9 +585,7 @@ SdhcQueryCardType (
   Status = SdhcSendOpCondSdio (HostInst);
   if (!EFI_ERROR (Status)) {
     if (HostInst->CardInfo.CardFunction == CardFunctionSd) {
-      //
       // SD/SDIO Combo Device
-      //
       HostInst->CardInfo.CardFunction = CardFunctionComboSdSdio;
     } else {
       HostInst->CardInfo.CardFunction = CardFunctionSdio;
@@ -624,9 +618,9 @@ SdhcWaitForTranStateAndReadyForData (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  EFI_STATUS Status;
-  UINT32 Retry;
-  CARD_STATUS CardStatus;
+  CARD_STATUS     CardStatus;
+  UINT32          Retry;
+  EFI_STATUS      Status;
 
   Status = SdhcSendStatus (HostInst, &CardStatus);
   if (EFI_ERROR (Status)) {
@@ -636,9 +630,8 @@ SdhcWaitForTranStateAndReadyForData (
   Retry = SDMMC_POLL_WAIT_COUNT;
 
   while (((!CardStatus.Fields.READY_FOR_DATA && Retry) ||
-    (CardStatus.Fields.CURRENT_STATE != CardStateTran)) &&
-         Retry) {
-
+           (CardStatus.Fields.CURRENT_STATE != CardStateTran)) &&
+            Retry) {
     gBS->Stall (SDMMC_POLL_WAIT_TIME_US);
     --Retry;
 
@@ -662,9 +655,12 @@ SdhcSendCid (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  UINT32 CmdArg = HostInst->CardInfo.RCA << 16;
+  UINT32      CmdArg;
+  EFI_STATUS  Status;
 
-  EFI_STATUS Status = SdhcSendCommand (HostInst, &CmdSendCid, CmdArg);
+  CmdArg = HostInst->CardInfo.RCA << 16;
+
+  Status = SdhcSendCommand (HostInst, &CmdSendCid, CmdArg);
   if (EFI_ERROR (Status)) {
     return Status;
   }
@@ -696,15 +692,25 @@ SdhcSendCsd (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  UINT32 CmdArg = HostInst->CardInfo.RCA << 16;
+  MMC_CSD     *MmcCsd;
+  SD_CSD      *SdCsd;
+  SD_CSD_2    *SdCsd2;
+  UINT32      BlockNr;
+  UINT64      ByteCapacity;
+  UINT32      CmdArg;
+  UINT32      DeviceSize;
+  UINT32      MaxBlockLen;
+  UINT32      Mult;
+  UINT64      NumBlocks;
+  EFI_STATUS  Status;
 
-  EFI_STATUS Status = SdhcSendCommand (HostInst, &CmdSendCsd, CmdArg);
+  CmdArg = HostInst->CardInfo.RCA << 16;
+  Status = SdhcSendCommand (HostInst, &CmdSendCsd, CmdArg);
   if (EFI_ERROR (Status)) {
     return Status;
   }
 
-  UINT32 MaxBlockLen;
-  UINT64 ByteCapacity = 0;
+  ByteCapacity = 0;
 
   if (HostInst->CardInfo.CardFunction == CardFunctionSd) {
     gBS->CopyMem (
@@ -712,39 +718,36 @@ SdhcSendCsd (
       (VOID*) HostInst->CmdResponse,
       sizeof (SD_CSD));
     if (HostInst->CardInfo.Registers.Sd.Csd.CSD_STRUCTURE == 0) {
-      SD_CSD* Csd = (SD_CSD*) &HostInst->CardInfo.Registers.Sd.Csd;
-      UINT32 DeviceSize = ((Csd->C_SIZEHigh10 << 2) | Csd->C_SIZELow2);
-      UINT32 MULT = 1 << (Csd->C_SIZE_MULT + 2);
-      UINT32 BLOCKNR = (DeviceSize + 1) * MULT;
-      MaxBlockLen = 1 << Csd->READ_BL_LEN;
-      ByteCapacity = BLOCKNR * MaxBlockLen;
+      SdCsd = (SD_CSD*) &HostInst->CardInfo.Registers.Sd.Csd;
+      DeviceSize = ((SdCsd->C_SIZEHigh10 << 2) | SdCsd->C_SIZELow2);
+      Mult = 1 << (SdCsd->C_SIZE_MULT + 2);
+      BlockNr = (DeviceSize + 1) * Mult;
+      MaxBlockLen = 1 << SdCsd->READ_BL_LEN;
+      ByteCapacity = BlockNr * MaxBlockLen;
     } else {
-      SD_CSD_2* Csd2 = (SD_CSD_2*) &HostInst->CardInfo.Registers.Sd.Csd;
-      MaxBlockLen = 1 << Csd2->READ_BL_LEN;
-      ByteCapacity = (UINT64) (Csd2->C_SIZE + 1) * 512llu * 1024llu;
+      SdCsd2 = (SD_CSD_2*) &HostInst->CardInfo.Registers.Sd.Csd;
+      MaxBlockLen = 1 << SdCsd2->READ_BL_LEN;
+      ByteCapacity = (UINT64) (SdCsd2->C_SIZE + 1) * 512llu * 1024llu;
     }
   } else if (HostInst->CardInfo.CardFunction == CardFunctionMmc) {
     gBS->CopyMem (
       (VOID*) &HostInst->CardInfo.Registers.Mmc.Csd,
       (VOID*) HostInst->CmdResponse,
       sizeof (MMC_CSD));
-    //
     // HighCapacity MMC requires reading EXT_CSD to calculate capacity
-    //
     if (!HostInst->CardInfo.HighCapacity) {
-      MMC_CSD* Csd = (MMC_CSD*) &HostInst->CardInfo.Registers.Mmc.Csd;
-      UINT32 DeviceSize = ((Csd->C_SIZEHigh10 << 2) | Csd->C_SIZELow2);
-      UINT32 MULT = 1 << (Csd->C_SIZE_MULT + 2);
-      UINT32 BLOCKNR = (DeviceSize + 1) * MULT;
-      MaxBlockLen = 1 << Csd->READ_BL_LEN;
-      ByteCapacity = BLOCKNR * MaxBlockLen;
+      MmcCsd = (MMC_CSD*) &HostInst->CardInfo.Registers.Mmc.Csd;
+      DeviceSize = ((MmcCsd->C_SIZEHigh10 << 2) | MmcCsd->C_SIZELow2);
+      Mult = 1 << (MmcCsd->C_SIZE_MULT + 2);
+      BlockNr = (DeviceSize + 1) * Mult;
+      MaxBlockLen = 1 << MmcCsd->READ_BL_LEN;
+      ByteCapacity = BlockNr * MaxBlockLen;
     }
   }
 
   HostInst->CardInfo.ByteCapacity = ByteCapacity;
   HostInst->BlockIo.Media->BlockSize = SD_BLOCK_LENGTH_BYTES;
-  UINT64 NumBlocks = (ByteCapacity / SD_BLOCK_LENGTH_BYTES);
-
+  NumBlocks = (ByteCapacity / SD_BLOCK_LENGTH_BYTES);
   if (NumBlocks > 0) {
     HostInst->BlockIo.Media->LastBlock = (NumBlocks - 1);
   } else {
@@ -759,7 +762,9 @@ SdhcSelectDevice (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  UINT32 CmdArg = HostInst->CardInfo.RCA << 16;
+  UINT32 CmdArg;
+
+  CmdArg = HostInst->CardInfo.RCA << 16;
   return SdhcSendCommand (HostInst, &CmdSelect, CmdArg);
 }
 
@@ -776,7 +781,9 @@ SdhcSendAppCmd (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  UINT32 CmdArg = HostInst->CardInfo.RCA << 16;
+  UINT32 CmdArg;
+
+  CmdArg = HostInst->CardInfo.RCA << 16;
   return SdhcSendCommand (HostInst, &CmdAppSd, CmdArg);
 }
 
@@ -785,7 +792,9 @@ SdhcStopTransmission (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  UINT32 CmdArg = HostInst->CardInfo.RCA << 16;
+  UINT32 CmdArg;
+
+  CmdArg = HostInst->CardInfo.RCA << 16;
   return SdhcSendCommand (HostInst, &CmdStopTransmission, CmdArg);
 }
 
@@ -802,18 +811,18 @@ SdhcSendRelativeAddr (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  UINT32 CmdArg = 0;
+  UINT32      CmdArg;
+  EFI_STATUS  Status;
 
-  //
+  CmdArg = 0;
   // Unlike SD memory, MMC cards don't publish their RCA, instead it should be
   // manually assigned by the SDHC
-  //
   if (HostInst->CardInfo.CardFunction == CardFunctionMmc) {
     HostInst->CardInfo.RCA = 0xCCCC;
     CmdArg = HostInst->CardInfo.RCA << 16;
   }
 
-  EFI_STATUS Status = SdhcSendCommand (HostInst, &CmdSendRelativeAddr, CmdArg);
+  Status = SdhcSendCommand (HostInst, &CmdSendRelativeAddr, CmdArg);
   if (EFI_ERROR (Status)) {
     return Status;
   }
@@ -831,21 +840,24 @@ CalculateCardMaxFreq (
   OUT UINT32* MaxClkFreqHz
   )
 {
+  UINT32    TimeValue;
+  UINT32    TranSpeed;
+  UINT32    TransferRateBitPerSecond;
+
   ASSERT (HostInst != NULL);
   ASSERT (MaxClkFreqHz != NULL);
 
-  UINT32 TransferRateBitPerSecond = 0;
-  UINT32 TimeValue = 0;
-  UINT32 TRAN_SPEED;
+  TransferRateBitPerSecond = 0;
+  TimeValue = 0;
 
   if (HostInst->CardInfo.CardFunction == CardFunctionSd) {
-    TRAN_SPEED = HostInst->CardInfo.Registers.Sd.Csd.TRAN_SPEED;
+    TranSpeed = HostInst->CardInfo.Registers.Sd.Csd.TRAN_SPEED;
   } else {
-    TRAN_SPEED = HostInst->CardInfo.Registers.Mmc.Csd.TRAN_SPEED;
+    TranSpeed = HostInst->CardInfo.Registers.Mmc.Csd.TRAN_SPEED;
   }
 
   // Calculate Transfer rate unit (Bits 2:0 of TRAN_SPEED)
-  switch (TRAN_SPEED & 0x7) { // 2
+  switch (TranSpeed & 0x7) { // 2
   case 0: // 100kbit/s
     TransferRateBitPerSecond = 100 * 1000;
     break;
@@ -869,7 +881,7 @@ CalculateCardMaxFreq (
   }
 
   //Calculate Time value (Bits 6:3 of TRAN_SPEED)
-  switch ((TRAN_SPEED >> 3) & 0xF) { // 6
+  switch ((TranSpeed >> 3) & 0xF) { // 6
   case 0x1:
     TimeValue = 10;
     break;
@@ -948,7 +960,7 @@ CalculateCardMaxFreq (
 
   LOG_TRACE (
     "TransferRateUnitId=%d TimeValue*10=%d, CardFrequency=%dKHz",
-    TRAN_SPEED & 0x7,
+    TranSpeed & 0x7,
     TimeValue,
     *MaxClkFreqHz / 1000);
 
@@ -960,13 +972,14 @@ SdhcSetMaxClockFrequency (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  EFI_SDHC_PROTOCOL *HostExt = HostInst->HostExt;
-  EFI_STATUS Status;
-  UINT32 MaxClkFreqHz = 0;
+  EFI_SDHC_PROTOCOL   *HostExt;
+  UINT32              MaxClkFreqHz;
+  EFI_STATUS          Status;
 
-  //
+  HostExt = HostInst->HostExt;
+  MaxClkFreqHz = 0;
+
   // Currently only NormalSpeed and HighSpeed supported
-  //
   ASSERT (HostInst->CardInfo.CurrentSpeedMode == CardSpeedModeNormalSpeed ||
           HostInst->CardInfo.CurrentSpeedMode == CardSpeedModeHighSpeed);
 
@@ -1019,12 +1032,8 @@ SdhcSetBlockCount (
     BlockCount,
     ReliableWrite);
 
-  //
   // JEDEC Standard No. 84-A441, Page 76
-  //
   // Set bit[31] as 1 to indicate Reliable Write type of programming access.
-  //
-
   if (ReliableWrite) {
     CmdArg = BlockCount | (1 << 31);
   } else {
@@ -1040,13 +1049,12 @@ SdhcSendStatus (
   OUT CARD_STATUS   *CardStatus
   )
 {
-  EFI_STATUS Status;
-  UINT32 CmdArg;
+  UINT32      CmdArg;
+  EFI_STATUS  Status;
 
   LOG_TRACE ("SdhcSendStatus()");
 
   CmdArg = HostInst->CardInfo.RCA << 16;
-
   Status = SdhcSendCommand (HostInst, &CmdSendStatus, CmdArg);
   if (EFI_ERROR (Status)) {
     return Status;
@@ -1057,19 +1065,17 @@ SdhcSendStatus (
   return EFI_SUCCESS;
 }
 
-//
 // SD Specific Functions
-//
-
 EFI_STATUS
 SdhcSendScrSd (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  UINT32 CmdArg = HostInst->CardInfo.RCA << 16;
-  EFI_STATUS Status;
-  SD_SCR *Scr;
+  SD_SCR      *Scr;
+  UINT32      CmdArg;
+  EFI_STATUS  Status;
 
+  CmdArg = HostInst->CardInfo.RCA << 16;
   Status = SdhcSendDataCommand (
     HostInst,
     &CmdAppSendScrSd,
@@ -1108,26 +1114,23 @@ SdhcSendIfCondSd (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  SEND_IF_COND_ARG CmdArg = { 0 };
+  SEND_IF_COND_ARG            CmdArg;
+  SEND_IF_COND_CMD_RESPONSE   CmdStatus;
+  EFI_STATUS                  Status;
 
-  //
+  CmdArg.AsUint32 = 0;
   // Recommended check pattern per SD Specs
-  //
   CmdArg.Fields.CheckPattern = 0xAA;
 
-  //
   // Our current implementation does not support more than HighSpeed voltage 2V7-3V6 (i.e no 1V8)
-  //
   CmdArg.Fields.VoltageSupplied = SD_CMD8_VOLTAGE_27_36;
 
-  EFI_STATUS Status = SdhcSendCommand (HostInst, &CmdSendIfCondSd, CmdArg.AsUint32);
+  Status = SdhcSendCommand (HostInst, &CmdSendIfCondSd, CmdArg.AsUint32);
   if (EFI_ERROR (Status)) {
     return Status;
   }
 
-  SEND_IF_COND_CMD_RESPONSE CmdStatus;
   CmdStatus.AsUint32 = HostInst->CmdResponse[0];
-
   if (CmdStatus.Fields.CheckPattern != CmdArg.Fields.CheckPattern ||
       CmdStatus.Fields.VoltageSupplied != CmdArg.Fields.VoltageSupplied) {
     return EFI_UNSUPPORTED;
@@ -1143,11 +1146,13 @@ SdhcSendOpCondSd (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  EFI_STATUS Status;
+  SD_OCR_EX             *OcrEx;
+  SD_SEND_OP_COND_ARG   CmdArg;
+  SD_OCR                Ocr;
+  UINT32                Retry;
+  EFI_STATUS            Status;
 
-  //
   // With arg set to 0, it means read OCR
-  //
   Status = SdhcSendCommand (HostInst, &CmdAppSendOpCondSd, 0);
   if (EFI_ERROR (Status)) {
     return Status;
@@ -1155,17 +1160,12 @@ SdhcSendOpCondSd (
 
   HostInst->CardInfo.Registers.Sd.Ocr.AsUint32 = HostInst->CmdResponse[0];
 
-  SD_SEND_OP_COND_ARG CmdArg = { 0 };
-  UINT32 Retry = SDMMC_POLL_WAIT_COUNT;
-  SD_OCR Ocr;
-  SD_OCR_EX *OcrEx;
+  CmdArg.AsUint32 = 0;
+  Retry = SDMMC_POLL_WAIT_COUNT;
 
   CmdArg.Fields.VoltageWindow = HostInst->CardInfo.Registers.Sd.Ocr.Fields.VoltageWindow;
-  //
   // Host support for High Capacity is assumed
-  //
   CmdArg.Fields.HCS = 1;
-
   while (Retry) {
     Status = SdhcSendCommand (HostInst, &CmdAppSendOpCondSd, CmdArg.AsUint32);
     if (EFI_ERROR (Status)) {
@@ -1173,7 +1173,6 @@ SdhcSendOpCondSd (
     }
 
     Ocr.AsUint32 = HostInst->CmdResponse[0];
-
     if (Ocr.Fields.PowerUp) {
       LOG_TRACE ("SD Card PowerUp Complete");
       if (HostInst->CardInfo.HasExtendedOcr) {
@@ -1199,21 +1198,16 @@ SdhcSendOpCondSd (
   return EFI_SUCCESS;
 }
 
-
 EFI_STATUS
 SdhcSwitchBusWidthSd (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  EFI_SDHC_PROTOCOL *HostExt = HostInst->HostExt;
-  EFI_STATUS Status;
+  EFI_SDHC_PROTOCOL *HostExt;
   UINT32 CmdArg;
+  EFI_STATUS Status;
 
-  //Status = SdhcSendScrSd(HostInst);
-  //if (EFI_ERROR(Status)) {
-  //    return Status;
-  //}
-
+  HostExt = HostInst->HostExt;
   CmdArg = 0x2; // 4-bit
   Status = SdhcSendCommand (HostInst, &CmdAppSetBusWidthSd, CmdArg);
   if (EFI_ERROR (Status)) {
@@ -1236,10 +1230,7 @@ SdhcSwitchSpeedModeSd (
   return EFI_SUCCESS;
 }
 
-//
 // SDIO Specific Functions
-//
-
 EFI_STATUS
 SdhcSendOpCondSdio (
   IN SDHC_INSTANCE  *HostInst
@@ -1248,23 +1239,22 @@ SdhcSendOpCondSdio (
   return SdhcSendCommand (HostInst, &CmdSendOpCondSdio, 0);
 }
 
-//
 // Mmc Specific Functions
-//
-
 EFI_STATUS
 SdhcSendOpCondMmc (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  EFI_STATUS Status;
-  MMC_SEND_OP_COND_ARG CmdArg = { 0 };
-  UINT32 Retry = SDMMC_POLL_WAIT_COUNT;
-  MMC_OCR *Ocr = &HostInst->CardInfo.Registers.Mmc.Ocr;
+  MMC_OCR               *Ocr;
+  MMC_SEND_OP_COND_ARG  CmdArg;
+  UINT32                Retry;
+  EFI_STATUS            Status;
 
+  CmdArg.AsUint32 = 0;
+  Retry = SDMMC_POLL_WAIT_COUNT;
+  Ocr = &HostInst->CardInfo.Registers.Mmc.Ocr;
   CmdArg.Fields.VoltageWindow = SD_OCR_HIGH_VOLTAGE_WINDOW;
   CmdArg.Fields.AccessMode = SdOcrAccessSectorMode;
-
   while (Retry) {
     Status = SdhcSendCommand (HostInst, &CmdSendOpCondMmc, CmdArg.AsUint32);
     if (EFI_ERROR (Status)) {
@@ -1272,7 +1262,6 @@ SdhcSendOpCondMmc (
     }
 
     HostInst->CardInfo.Registers.Mmc.Ocr.AsUint32 = HostInst->CmdResponse[0];
-
     if (Ocr->Fields.PowerUp) {
       LOG_TRACE ("MMC Card PowerUp Complete");
       if (Ocr->Fields.AccessMode == SdOcrAccessSectorMode) {
@@ -1290,7 +1279,6 @@ SdhcSendOpCondMmc (
           (UINT32) Ocr->Fields.VoltageWindow);
         return EFI_UNSUPPORTED;
       }
-
       break;
     }
     gBS->Stall (SDMMC_POLL_WAIT_TIME_US);
@@ -1309,23 +1297,24 @@ SdhcSwitchBusWidthMmc (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  EFI_SDHC_PROTOCOL *HostExt = HostInst->HostExt;
-  EFI_STATUS Status;
-  UINT32 CmdArg;
-  SD_BUS_WIDTH BusWidth = SdBusWidth8Bit;
-  MMC_EXT_CSD *ExtCsd = &HostInst->CardInfo.Registers.Mmc.ExtCsd;
-  UINT8 ExtCsdPowerClass;
-  MMC_SWITCH_CMD_ARG SwitchCmdArg;
+  MMC_EXT_CSD         *ExtCsd;
+  EFI_SDHC_PROTOCOL   *HostExt;
+  SD_BUS_WIDTH        BusWidth;
+  UINT32              CmdArg;
+  UINT8               ExtCsdPowerClass;
+  EFI_STATUS          Status;
+  MMC_SWITCH_CMD_ARG  SwitchCmdArg;
 
+  HostExt = HostInst->HostExt;
+  BusWidth = SdBusWidth8Bit;
+  ExtCsd = &HostInst->CardInfo.Registers.Mmc.ExtCsd;
   Status = SdhcSendExtCsdMmc (HostInst);
   if (EFI_ERROR (Status)) {
     return Status;
   }
 
-  //
   // Figure out current requirements for target bus width. An inrease in current consumption
   // may require switching the card to a higher power class
-  //
   if (BusWidth == SdBusWidth8Bit) {
     if (HostInst->CardInfo.CurrentSpeedMode == CardSpeedModeHighSpeed) {
       ExtCsdPowerClass = MMC_EXT_CSD_POWER_CLASS_8BIT (ExtCsd->PowerClass52Mhz36V);
@@ -1342,10 +1331,8 @@ SdhcSwitchBusWidthMmc (
     return EFI_UNSUPPORTED;
   }
 
-  //
   // Only do power class switch if the target bus width requires more current than the
   // allowed by the current power class in EXT_CSD
-  //
   if (ExtCsdPowerClass > HostInst->CardInfo.Registers.Mmc.ExtCsd.PowerClass) {
     CmdArg = ExtCsdPowerClass;
     CmdArg <<= 8;
@@ -1364,9 +1351,7 @@ SdhcSwitchBusWidthMmc (
       return Status;
     }
 
-    //
     // Sanity check that wanted power-class are set per requested
-    //
     if (HostInst->CardInfo.Registers.Mmc.ExtCsd.PowerClass != ExtCsdPowerClass) {
       LOG_ERROR (
         "MMC EXT_CSD not reporting correct PowerClass after switch. Expected:%x Actual:%x",
@@ -1376,9 +1361,7 @@ SdhcSwitchBusWidthMmc (
     }
   }
 
-  //
   // Switch bus width
-  //
   SwitchCmdArg.AsUint32 = 0;
   SwitchCmdArg.Fields.Access = MmcSwitchCmdAccessTypeWriteByte;
   SwitchCmdArg.Fields.Index = MmcExtCsdBitIndexBusWidth;
@@ -1411,8 +1394,8 @@ SdhcSwitchSpeedModeMmc (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  EFI_STATUS Status;
-  MMC_SWITCH_CMD_ARG CmdArg;
+  MMC_SWITCH_CMD_ARG  CmdArg;
+  EFI_STATUS          Status;
 
   CmdArg.AsUint32 = 0;
   CmdArg.Fields.Access = MmcSwitchCmdAccessTypeWriteByte;
@@ -1448,13 +1431,12 @@ SdhcSendExtCsdMmc (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  EFI_STATUS Status;
-  UINT32 CmdArg;
-  MMC_EXT_CSD *ExtCsd;
+  MMC_EXT_CSD   *ExtCsd;
+  UINT32        CmdArg;
+  EFI_STATUS    Status;
 
   CmdArg = HostInst->CardInfo.RCA << 16;
   ExtCsd = &HostInst->CardInfo.Registers.Mmc.ExtCsd;
-
   Status = SdhcSendDataCommand (
     HostInst,
     &CmdSendExtCsdMmc,
@@ -1466,10 +1448,8 @@ SdhcSendExtCsdMmc (
   }
 
   gBS->CopyMem (ExtCsd, HostInst->BlockBuffer, sizeof (MMC_EXT_CSD));
-
   HostInst->CardInfo.ByteCapacity = (UINT64) ExtCsd->SectorCount * 512llu;
   HostInst->BlockIo.Media->LastBlock = ExtCsd->SectorCount - 1;
-
   HostInst->RpmbIo.ReliableSectorCount = ExtCsd->ReliableWriteSectorCount;
   HostInst->RpmbIo.RpmbSizeMult = ExtCsd->RpmbSizeMult;
 
@@ -1482,9 +1462,9 @@ SdhcSwitchPartitionMmc (
   IN MMC_EXT_CSD_PARTITION_ACCESS   Partition
   )
 {
-  EFI_STATUS Status;
-  MMC_SWITCH_CMD_ARG CmdArg;
-  MMC_EXT_CSD_PARTITION_CONFIG PartConfig;
+  MMC_SWITCH_CMD_ARG            CmdArg;
+  MMC_EXT_CSD_PARTITION_CONFIG  PartConfig;
+  EFI_STATUS                    Status;
 
   LOG_TRACE (
     "SdhcSwitchPartitionMmc(Partition=%a)",
@@ -1493,10 +1473,7 @@ SdhcSwitchPartitionMmc (
   PartConfig.AsUint8 = HostInst->CardInfo.Registers.Mmc.ExtCsd.PartitionConfig;
   PartConfig.Fields.PARTITION_ACCESS = Partition;
 
-  //
   // Write the partition type to EXT_CSD[PARTITION_CONFIG].PARTITION_ACCESS
-  //
-
   ZeroMem (&CmdArg, sizeof (MMC_SWITCH_CMD_ARG));
   CmdArg.Fields.Access = MmcSwitchCmdAccessTypeWriteByte;
   CmdArg.Fields.Index = MmcExtCsdBitIndexPartitionConfig;
@@ -1508,9 +1485,7 @@ SdhcSwitchPartitionMmc (
     return Status;
   }
 
-  //
   // Re-read the EXT_CSD to verify the partition switch physically happenned
-  //
   Status = SdhcSendExtCsdMmc (HostInst);
   if (EFI_ERROR (Status)) {
     return Status;
@@ -1537,238 +1512,264 @@ SdhcSwitchPartitionMmc (
   return EFI_SUCCESS;
 }
 
-//
 // SD command definitions
-//
+CONST SD_COMMAND CmdGoIdleState = {
+  0,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeNone,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdGoIdleState =
-{ 0,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeNone,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdSendOpCondMmc = {
+  1,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR3,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSendOpCondMmc =
-{ 1,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR3,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdSendCidAll = {
+  2,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR2,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSendCidAll =
-{ 2,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR2,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdSendRelativeAddr = {
+  3,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR6,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSendRelativeAddr =
-{ 3,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR6,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdSendOpCondSdio = {
+  5,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR4,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSendOpCondSdio =
-{ 5,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR4,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdSwitchSd = {
+  6,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1,
+  SdTransferTypeSingleBlock,
+  SdTransferDirectionRead
+};
 
-CONST SD_COMMAND CmdSwitchSd =
-{ 6,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1,
- SdTransferTypeSingleBlock,
- SdTransferDirectionRead };
+CONST SD_COMMAND CmdSwitchMmc = {
+  6,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1B,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSwitchMmc =
-{ 6,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1B,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdAppSetBusWidthSd = {
+  6,
+  SdCommandTypeUndefined,
+  SdCommandClassApp,
+  SdResponseTypeR1,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdAppSetBusWidthSd =
-{ 6,
- SdCommandTypeUndefined,
- SdCommandClassApp,
- SdResponseTypeR1,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdSelect = {
+  7,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1B,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSelect =
-{ 7,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1B,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdDeselect = {
+  7,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeNone,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdDeselect =
-{ 7,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeNone,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdSendIfCondSd = {
+  8,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR6,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSendIfCondSd =
-{ 8,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR6,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdSendExtCsdMmc = {
+  8,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1,
+  SdTransferTypeSingleBlock,
+  SdTransferDirectionRead
+};
 
-CONST SD_COMMAND CmdSendExtCsdMmc =
-{ 8,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1,
- SdTransferTypeSingleBlock,
- SdTransferDirectionRead };
+CONST SD_COMMAND CmdSendCsd = {
+  9,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR2,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSendCsd =
-{ 9,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR2,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdSendCid = {
+  10,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR2,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSendCid =
-{ 10,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR2,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdSwitchVoltageSd = {
+  11,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSwitchVoltageSd =
-{ 11,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdStopTransmission = {
+  12,
+  SdCommandTypeAbort,
+  SdCommandClassStandard,
+  SdResponseTypeR1B,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdStopTransmission =
-{ 12,
- SdCommandTypeAbort,
- SdCommandClassStandard,
- SdResponseTypeR1B,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdSendStatus = {
+  13,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSendStatus =
-{ 13,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdBusTestReadMmc = {
+  14,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1,
+  SdTransferTypeSingleBlock,
+  SdTransferDirectionRead
+};
 
-CONST SD_COMMAND CmdBusTestReadMmc =
-{ 14,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1,
- SdTransferTypeSingleBlock,
- SdTransferDirectionRead };
+CONST SD_COMMAND CmdSetBlockLength = {
+  16,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSetBlockLength =
-{ 16,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdReadSingleBlock = {
+  17,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1,
+  SdTransferTypeSingleBlock,
+  SdTransferDirectionRead
+};
 
-CONST SD_COMMAND CmdReadSingleBlock =
-{ 17,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1,
- SdTransferTypeSingleBlock,
- SdTransferDirectionRead };
+CONST SD_COMMAND CmdReadMultiBlock = {
+  18,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1,
+  SdTransferTypeMultiBlock,
+  SdTransferDirectionRead
+};
 
-CONST SD_COMMAND CmdReadMultiBlock =
-{ 18,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1,
- SdTransferTypeMultiBlock,
- SdTransferDirectionRead };
+CONST SD_COMMAND CmdBusTestWriteMmc = {
+  19,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1,
+  SdTransferTypeSingleBlock,
+  SdTransferDirectionWrite
+};
 
-CONST SD_COMMAND CmdBusTestWriteMmc =
-{ 19,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1,
- SdTransferTypeSingleBlock,
- SdTransferDirectionWrite };
+CONST SD_COMMAND CmdSetBlockCount = {
+  23,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdSetBlockCount =
-{ 23,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdWriteSingleBlock = {
+  24,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1,
+  SdTransferTypeSingleBlock,
+  SdTransferDirectionWrite
+};
 
-CONST SD_COMMAND CmdWriteSingleBlock =
-{ 24,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1,
- SdTransferTypeSingleBlock,
- SdTransferDirectionWrite };
+CONST SD_COMMAND CmdWriteMultiBlock = {
+  25,
+  SdCommandTypeUndefined,
+  SdCommandClassStandard,
+  SdResponseTypeR1,
+  SdTransferTypeMultiBlock,
+  SdTransferDirectionWrite
+};
 
-CONST SD_COMMAND CmdWriteMultiBlock =
-{ 25,
- SdCommandTypeUndefined,
- SdCommandClassStandard,
- SdResponseTypeR1,
- SdTransferTypeMultiBlock,
- SdTransferDirectionWrite };
+CONST SD_COMMAND CmdAppSendOpCondSd = {
+  41,
+  SdCommandTypeUndefined,
+  SdCommandClassApp,
+  SdResponseTypeR3,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdAppSendOpCondSd =
-{ 41,
- SdCommandTypeUndefined,
- SdCommandClassApp,
- SdResponseTypeR3,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdAppSetClrCardDetectSd = {
+  42,
+  SdCommandTypeUndefined,
+  SdCommandClassApp,
+  SdResponseTypeR1,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
 
-CONST SD_COMMAND CmdAppSetClrCardDetectSd =
-{ 42,
- SdCommandTypeUndefined,
- SdCommandClassApp,
- SdResponseTypeR1,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdAppSendScrSd = {
+  51,
+  SdCommandTypeUndefined,
+  SdCommandClassApp,
+  SdResponseTypeR1,
+  SdTransferTypeSingleBlock,
+  SdTransferDirectionRead
+};
 
-CONST SD_COMMAND CmdAppSendScrSd =
-{ 51,
- SdCommandTypeUndefined,
- SdCommandClassApp,
- SdResponseTypeR1,
- SdTransferTypeSingleBlock,
- SdTransferDirectionRead };
-
-CONST SD_COMMAND CmdAppSd =
-{ 55,
- SdCommandTypeUndefined,
- SdCommandClassApp,
- SdResponseTypeR1,
- SdTransferTypeNone,
- SdTransferDirectionUndefined };
+CONST SD_COMMAND CmdAppSd = {
+  55,
+  SdCommandTypeUndefined,
+  SdCommandClassApp,
+  SdResponseTypeR1,
+  SdTransferTypeNone,
+  SdTransferDirectionUndefined
+};
