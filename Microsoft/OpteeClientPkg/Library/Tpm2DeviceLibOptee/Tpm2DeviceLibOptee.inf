@@ -43,6 +43,7 @@
   UefiBootServicesTableLib
 
 [Guids]
+  gEfiEventExitBootServicesGuid                                 ## CONSUMES  ## EVENT
   gOpteeFtpmTaGuid
 
 [Pcd]
