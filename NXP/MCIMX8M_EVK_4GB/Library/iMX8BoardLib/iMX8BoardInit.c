@@ -25,8 +25,6 @@
 #include "iMX8ClkPwr.h"
 #include "iMX8IoMux.h"
 
-#define SERIAL_DEBUG_PORT_INIT_MSG "\nUEFI Debug Serial Port Init\n"
-
 ARM_CORE_INFO iMX8Ppi[] =
 {
   {
