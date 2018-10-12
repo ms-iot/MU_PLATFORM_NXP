@@ -1,6 +1,6 @@
 /** @file
 *
-*  Copyright (c) Microsoft Corporation. All rights reserved.
+*  Copyright (c) 2018, Microsoft Corporation. All rights reserved.
 *
 *  This program and the accompanying materials
 *  are licensed and made available under the terms and conditions of the BSD License
@@ -18,7 +18,7 @@
 extern EFI_HANDLE gDriverImageHandle;
 
 #ifndef C_ASSERT
-#define C_ASSERT(e) typedef char __C_ASSERT__[(e)?1:-1]
+#define C_ASSERT(e) _Static_assert(e, #e)
 #endif // C_ASSERT
 
 // Swap the byte order of a 16-bit (2-byte) value.
