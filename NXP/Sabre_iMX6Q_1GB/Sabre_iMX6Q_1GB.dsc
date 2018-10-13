@@ -147,7 +147,7 @@ giMX6TokenSpaceGuid.PcdMemoryDeviceLocation|L"On SoM"
   #
   giMXPlatformTokenSpaceGuid.PcdSdhc4Enable|TRUE
   giMXPlatformTokenSpaceGuid.PcdSdhc4CardDetectSignal|0xFF00
-  giMXPlatformTokenSpaceGuid.PcdSdhc4WriteProtectSignal|0xFF01
+  giMXPlatformTokenSpaceGuid.PcdSdhc4WriteProtectSignal|0xFF00
 
   #
   # GPIO reset pin

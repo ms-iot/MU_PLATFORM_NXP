@@ -61,18 +61,8 @@
   # uSDHC4 | N/A
   #
   giMXPlatformTokenSpaceGuid.PcdSdhc1Enable|TRUE
-  giMXPlatformTokenSpaceGuid.PcdSdhc2Enable|FALSE
-  giMXPlatformTokenSpaceGuid.PcdSdhc3Enable|FALSE
-  giMXPlatformTokenSpaceGuid.PcdSdhc4Enable|FALSE
-
   giMXPlatformTokenSpaceGuid.PcdSdhc1CardDetectSignal|0xFF00
-  giMXPlatformTokenSpaceGuid.PcdSdhc1WriteProtectSignal|0xFF01
-  giMXPlatformTokenSpaceGuid.PcdSdhc2CardDetectSignal|0xFF00
-  giMXPlatformTokenSpaceGuid.PcdSdhc2WriteProtectSignal|0xFF01
-  giMXPlatformTokenSpaceGuid.PcdSdhc3CardDetectSignal|0xFF00
-  giMXPlatformTokenSpaceGuid.PcdSdhc3WriteProtectSignal|0xFF01
-  giMXPlatformTokenSpaceGuid.PcdSdhc4CardDetectSignal|0xFF00
-  giMXPlatformTokenSpaceGuid.PcdSdhc4WriteProtectSignal|0xFF01
+  giMXPlatformTokenSpaceGuid.PcdSdhc1WriteProtectSignal|0xFF00
 
   # UART1
   giMXPlatformTokenSpaceGuid.PcdSerialRegisterBase|0x30860000
