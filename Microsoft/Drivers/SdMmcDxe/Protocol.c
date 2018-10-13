@@ -296,8 +296,6 @@ SdhcRecoverFromErrors (
     goto Exit;
   }
 
-  GetAndPrintCardStatus (HostInst);
-
   LOG_TRACE ("Reseting CMD line ...");
   Status = HostExt->SoftwareReset (HostExt, SdhcResetTypeCmd);
   if (EFI_ERROR (Status)) {
