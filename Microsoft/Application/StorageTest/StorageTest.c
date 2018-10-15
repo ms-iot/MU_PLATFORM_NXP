@@ -1,6 +1,6 @@
 /** @file
 *
-*  Copyright (c) Microsoft Corporation. All rights reserved.
+*  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
 *
 *  This program and the accompanying materials
 *  are licensed and made available under the terms and conditions of the BSD License
@@ -12,23 +12,23 @@
 *
 **/
 
-#include <stdio.h>
-#include <wchar.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stddef.h>
-#include <setjmp.h>
-#include <time.h>
-#include <Uefi.h>
+#include "EdkTest.h"
 #include <Library/DebugLib.h>
-#include <Library/TimerLib.h>
-#include <Library/UefiLib.h>
 #include <Library/DevicePathLib.h>
 #include <Library/MemoryAllocationLib.h>
-#include <Protocol/SimpleFileSystem.h>
+#include <Library/TimerLib.h>
 #include <Library/UefiBootServicesTableLib.h>
+#include <Library/UefiLib.h>
 #include <Protocol/ShellParameters.h>
-#include "EdkTest.h"
+#include <Protocol/SimpleFileSystem.h>
+#include <setjmp.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <Uefi.h>
+#include <wchar.h>
 
 MODULE ("Storage FAT media functional tests");
 
@@ -73,11 +73,12 @@ VerifyAreEqualBytes (
   ASSERT (LeftBuffer != NULL);
   ASSERT (RightBuffer != NULL);
 
-  for (Index = 0; Index < BufferSize; ++Index) {
-    if (*LeftBuffer++ != *RightBuffer++) {
+  for (Index = 0; Index < BufferSize; ++Index, LeftBuffer++, RightBuffer++) {
+    if (*LeftBuffer != *RightBuffer) {
       VERIFY_IS_TRUE (
         FALSE,
-        "Buffers don't match at byte 0x%p. (Left Byte = %02x, Right Byte = %02x)",
+        "Buffers don't match at byte 0x%p. "
+        "(Left Byte = %02x, Right Byte = %02x)",
         Index,
         *LeftBuffer,
         *RightBuffer);
@@ -91,7 +92,9 @@ TestRandomWriteRead (
   )
 {
   static CONST UINTN BufferSizes[] = {
-    1, 2, 3, 4, 8, 16, 32, 64, 128, 512, SIZE_1KB, SIZE_4KB, SIZE_8KB, SIZE_64KB, SIZE_1MB };
+    1, 2, 3, 4, 8, 16, 32, 64, 128, 512, SIZE_1KB, SIZE_4KB, SIZE_8KB,
+    SIZE_64KB, SIZE_1MB
+  };
 
   UINTN i;
   UINTN j;
@@ -104,7 +107,9 @@ TestRandomWriteRead (
                                   RootVolume,
                                   &File,
                                   L"StorageTest.bin",
-                                  EFI_FILE_MODE_READ | EFI_FILE_MODE_WRITE | EFI_FILE_MODE_CREATE,
+                                  EFI_FILE_MODE_READ |
+                                    EFI_FILE_MODE_WRITE |
+                                    EFI_FILE_MODE_CREATE,
                                   0));
 
   for (i = 0; i < ARRAY_SIZE (BufferSizes); ++i) {
@@ -160,7 +165,7 @@ TestRandomWriteRead (
 BOOLEAN
 TestSetup (
   VOID
-)
+  )
 {
   File = NULL;
   WriteBuffer = NULL;
@@ -272,7 +277,9 @@ TestModuleSetup (
                   EFI_OPEN_PROTOCOL_GET_PROTOCOL);
 
   if (EFI_ERROR(Status)) {
-    LOG_ERROR ("gBS->OpenProtocol(gEfiSimpleFileSystemProtocolGuid) failed. (Status=%r)", Status);
+    LOG_ERROR (
+      "gBS->OpenProtocol(gEfiSimpleFileSystemProtocolGuid) failed. (Status=%r)",
+       Status);
     return FALSE;
   }
 

@@ -1,5 +1,5 @@
 #
-#  Copyright (c) Microsoft Corporation. All rights reserved.
+#  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
 #
 #  This program and the accompanying materials
 #  are licensed and made available under the terms and conditions of the BSD License
@@ -11,7 +11,7 @@
 #
 
 [Defines]
-  INF_VERSION                    = 0x00010005
+  INF_VERSION                    = 0x0001001A
   BASE_NAME                      = StorageTest
   FILE_GUID                      = E80B4024-8EFD-4065-8083-C0532759741A
   MODULE_TYPE                    = UEFI_APPLICATION
@@ -22,13 +22,13 @@
   StorageTest.c
 
 [Packages]
-  StdLib/StdLib.dec
-  ShellPkg/ShellPkg.dec
   MdePkg/MdePkg.dec
   Microsoft/MsPkg.dec
+  ShellPkg/ShellPkg.dec
+  StdLib/StdLib.dec
 
 [LibraryClasses]
+  DebugLib
   LibC
   LibStdio
   UefiLib
-  DebugLib
