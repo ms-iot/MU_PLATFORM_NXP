@@ -22,15 +22,12 @@ Device (ENET)
     {
         Return(0xF)
     }
-    Method (_CRS, 0x0, NotSerialized) {
-        Name (RBUF, ResourceTemplate () {
-            MEMORY32FIXED(ReadWrite, 0x02188000, 0x4000, )                      // ENET MAC Core Base address
-            Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 150 }   // ENET MAC 0 Core IRQ
-            Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 151 }   // ENET MAC 0 1588 Timer interrupt
-            GpioInt (Level, ActiveHigh, Shared, PullDefault, 0, "\\_SB.GPIO",) { 6 }  // Errata ERR006687: workaround for GPIO interrupt to connect Enet interrupt to the GPC
-        })
-        Return(RBUF)
-    }
+    Name (_CRS, ResourceTemplate () {
+        MEMORY32FIXED(ReadWrite, 0x02188000, 0x4000, )                      // ENET MAC Core Base address
+        Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 150 }   // ENET MAC 0 Core IRQ
+        Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 151 }   // ENET MAC 0 1588 Timer interrupt
+        GpioInt (Level, ActiveHigh, Shared, PullDefault, 0, "\\_SB.GPIO",) { 6 }  // Errata ERR006687: workaround for GPIO interrupt to connect Enet interrupt to the GPC
+    })
     Name (MAC, Buffer (6) {})
     CreateDWordField(MAC, 0x00, MACL)
     CreateWordField(MAC, 0x04, MACH)

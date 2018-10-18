@@ -21,10 +21,7 @@ Device (ACDK)
    {
        Return(0xf)
    }
-   Method (_CRS, 0x0, NotSerialized) {
-       Name (RBUF, ResourceTemplate () {
-           I2CSerialBus(0x1a, ControllerInitiated, 400000, AddressingMode7Bit, "\\_SB.I2C1", 0, ResourceConsumer)
-       })
-       Return(RBUF)
-   }
+    Name (_CRS, ResourceTemplate () {
+        I2CSerialBus(0x1a, ControllerInitiated, 400000, AddressingMode7Bit, "\\_SB.I2C1", 0, ResourceConsumer)
+    })
 }

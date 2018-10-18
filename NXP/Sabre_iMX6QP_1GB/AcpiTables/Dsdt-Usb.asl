@@ -33,31 +33,28 @@ Device(URS0)
        Return(0xf)
    }
 
-   Method (_CRS, 0x0, NotSerialized) {
-       Name (RBUF, ResourceTemplate () {
-           //
-           // Controller register address space. URS driver would add 0x0100
-           // offset for host mode
-           //
-           MEMORY32FIXED(ReadWrite, 0x02184000, 0x200, )
+    Name (_CRS, ResourceTemplate () {
+        //
+        // Controller register address space. URS driver would add 0x0100
+        // offset for host mode
+        //
+        MEMORY32FIXED(ReadWrite, 0x02184000, 0x200, )
 
-           //
-           // USB_OTG_ID pin, needs to be declared as *Wake as this device is
-           // expected to be wakable. The USB PHY is capable to detect
-           // USB ID changes but the interrupt cannot be acknowledge
-           // and the behaviour is undefined based on NXP feedback. So
-           // the the only way to reliably detect USB ID changed is to
-           // either to share interrupts or assign a GPIO to detect.
-           // The URS driver does not properly handle level sensitive
-           // interrupts which can lead to an interrupt storm. Therefore we use
-           // an edge sensitive GPIO interrupt.
-           //
-           // USB_OTG_ID connected to ENET_RX_ER (GPIO1_IO24). Use 1ms debounce.
-           //
-           GpioInt (Edge, ActiveBoth, SharedAndWake, PullDefault, 100, "\\_SB.GPIO",) { 24 }
-       })
-       Return(RBUF)
-   }
+        //
+        // USB_OTG_ID pin, needs to be declared as *Wake as this device is
+        // expected to be wakable. The USB PHY is capable to detect
+        // USB ID changes but the interrupt cannot be acknowledge
+        // and the behaviour is undefined based on NXP feedback. So
+        // the the only way to reliably detect USB ID changed is to
+        // either to share interrupts or assign a GPIO to detect.
+        // The URS driver does not properly handle level sensitive
+        // interrupts which can lead to an interrupt storm. Therefore we use
+        // an edge sensitive GPIO interrupt.
+        //
+        // USB_OTG_ID connected to ENET_RX_ER (GPIO1_IO24). Use 1ms debounce.
+        //
+        GpioInt (Edge, ActiveBoth, SharedAndWake, PullDefault, 100, "\\_SB.GPIO",) { 24 }
+    })
 
    Name (OTGR, ResourceTemplate()
    {
@@ -175,12 +172,9 @@ Device(URS0)
        {
            Return(0xf)
        }
-       Method (_CRS, 0x0, NotSerialized) {
-           Name (RBUF, ResourceTemplate () {
-               Interrupt(ResourceConsumer, Level, ActiveHigh, SharedAndWake) { 75 }
-           })
-           Return(RBUF)
-       }
+        Name (_CRS, ResourceTemplate () {
+            Interrupt(ResourceConsumer, Level, ActiveHigh, SharedAndWake) { 75 }
+        })
 
        OperationRegion (OTGM, SystemMemory, 0x02184100, 0x100)
        Field (OTGM, WordAcc, NoLock, Preserve)
@@ -209,12 +203,9 @@ Device(URS0)
        //
        Name(_ADR, 0x1)
 
-       Method (_CRS, 0x0, NotSerialized) {
-           Name (RBUF, ResourceTemplate () {
-               Interrupt(ResourceConsumer, Level, ActiveHigh, SharedAndWake) { 75 }
-           })
-           Return(RBUF)
-       }
+        Name (_CRS, ResourceTemplate () {
+            Interrupt(ResourceConsumer, Level, ActiveHigh, SharedAndWake) { 75 }
+        })
 
        OperationRegion (OTGM, SystemMemory, 0x02184100, 0x100)
        Field (OTGM, WordAcc, NoLock, Preserve)
