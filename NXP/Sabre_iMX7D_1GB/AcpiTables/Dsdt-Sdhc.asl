@@ -25,13 +25,10 @@ Device (SDH1)
        Return(0xf) // Enabled
    }
 
-   Method (_CRS, 0x0, NotSerialized) {
-       Name (RBUF, ResourceTemplate () {
-           MEMORY32FIXED(ReadWrite, 0x30B40000, 0x4000, )
-           Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 54 }
-       })
-       Return(RBUF)
-   }
+    Name (_CRS, ResourceTemplate () {
+        MEMORY32FIXED(ReadWrite, 0x30B40000, 0x4000, )
+        Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 54 }
+    })
 
    //
    // Child node to represent the only SD/MMC slot on this SD/MMC bus

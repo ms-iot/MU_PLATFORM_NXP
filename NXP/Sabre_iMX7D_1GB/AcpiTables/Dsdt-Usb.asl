@@ -22,13 +22,10 @@ Device (USB2)
     {
         Return(0xf)
     }
-    Method (_CRS, 0x0, NotSerialized) {
-        Name (RBUF, ResourceTemplate () {
-            MEMORY32FIXED(ReadWrite, 0x30B20100, 0x100, )
-            Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 74 }
-        })
-        Return(RBUF)
-    }
+    Name (_CRS, ResourceTemplate () {
+        MEMORY32FIXED(ReadWrite, 0x30B20100, 0x100, )
+        Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 74 }
+    })
 
     OperationRegion (OTGM, SystemMemory, 0x30B20100, 0x100)
     Field (OTGM, WordAcc, NoLock, Preserve)

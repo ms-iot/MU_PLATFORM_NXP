@@ -31,13 +31,10 @@ Device (SDH2)
    Name (_S3D, 0x1)
    Name (_S4D, 0x1)
 
-   Method (_CRS, 0x0, NotSerialized) {
-       Name (RBUF, ResourceTemplate () {
-           MEMORY32FIXED(ReadWrite, 0x02194000, 0x4000, )
-           Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 55 }
-       })
-       Return(RBUF)
-   }
+    Name (_CRS, ResourceTemplate () {
+        MEMORY32FIXED(ReadWrite, 0x02194000, 0x4000, )
+        Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 55 }
+    })
 
    //
    // Child node to represent the only SD/MMC slot on this SD/MMC bus
@@ -81,24 +78,21 @@ Device (SDH3)
    Name (_S3D, 0x1)
    Name (_S4D, 0x1)
 
-   Method (_CRS, 0x0, NotSerialized) {
-       Name (RBUF, ResourceTemplate () {
-           MEMORY32FIXED(ReadWrite, 0x02198000, 0x4000, )
-           Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 56 }
+    Name (_CRS, ResourceTemplate () {
+        MEMORY32FIXED(ReadWrite, 0x02198000, 0x4000, )
+        Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 56 }
 
-           //
-           // Uncomment once the SD/GPIO boot load dependency is resolved, otherwise
-           // booting from SD will get stuck
-           //
-           // GPIO2_IO00 PAD_NAND_DATA00: Card Detect
-           //GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 32 } // 1 * 32 + 0
-           //GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 32 }
+        //
+        // Uncomment once the SD/GPIO boot load dependency is resolved, otherwise
+        // booting from SD will get stuck
+        //
+        // GPIO2_IO00 PAD_NAND_DATA00: Card Detect
+        //GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 32 } // 1 * 32 + 0
+        //GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 32 }
 
-           // GPIO2_IO01 PAD_NAND_DATA01: Write Protect
-           //GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 33 } // 1 * 32 + 1
-       })
-       Return(RBUF)
-   }
+        // GPIO2_IO01 PAD_NAND_DATA01: Write Protect
+        //GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 33 } // 1 * 32 + 1
+    })
 
    Device (SD0)
    {
@@ -132,13 +126,10 @@ Device (SDH4)
    Name (_S3D, 0x1)
    Name (_S4D, 0x1)
 
-   Method (_CRS, 0x0, NotSerialized) {
-       Name (RBUF, ResourceTemplate () {
-           MEMORY32FIXED(ReadWrite, 0x0219C000, 0x4000, )
-           Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 57 }
-       })
-       Return(RBUF)
-   }
+    Name (_CRS, ResourceTemplate () {
+        MEMORY32FIXED(ReadWrite, 0x0219C000, 0x4000, )
+        Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 57 }
+    })
 
    Device (SD0)
    {
