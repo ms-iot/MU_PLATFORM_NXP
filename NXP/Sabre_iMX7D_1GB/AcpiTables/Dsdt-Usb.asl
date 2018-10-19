@@ -39,8 +39,8 @@ Device (USB2)
   Name (REG, 0x0)
   Method (_UBF, 0x0, NotSerialized) {
     // Reset handled by driver so no reset required here
-    Store (0x03, DSBM);          // set host mode & little endian
-    Store (PTSC, REG);           // read PORTSC status
-    Store (OR (REG, 0x2), PTSC); // clear current PORTSC status
+    Store (0x03, DSBM)          // set host mode & little endian
+    Store (PTSC, REG)           // read PORTSC status
+    Store (OR (REG, 0x2), PTSC) // clear current PORTSC status
   }
 }
