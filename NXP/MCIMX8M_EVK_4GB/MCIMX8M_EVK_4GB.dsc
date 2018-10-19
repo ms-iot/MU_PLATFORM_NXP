@@ -36,7 +36,7 @@
   FLASH_DEFINITION        = $(BOARD_DIR)/$(BOARD_NAME).fdf
 
 # Include common peripherals
-!include Silicon/SM_NXP/iMX8Pkg/iMX8CommonDsc.inc
+!include Silicon/ARM/NXP/iMX8Pkg/iMX8CommonDsc.inc
 
 [LibraryClasses.common]
   DeviceBootManagerLib|iMXPlatformPkg/Library/DeviceBootManagerLib/DeviceBootManagerLib.inf
