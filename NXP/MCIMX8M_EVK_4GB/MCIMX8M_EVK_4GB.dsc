@@ -169,9 +169,6 @@
   gArmTokenSpaceGuid.PcdGenericWatchdogEl2IntrNum|110
 !endif
 
-  # List of Device Paths that support BootMonFs
-  gArmBootMonFsTokenSpaceGuid.PcdBootMonFsSupportedDevicePaths|L"VenHw(E7223039-5836-41E1-B542-D7EC736C5E59)"
-
   #
   # ARM Architectural Timer Frequency
   #
