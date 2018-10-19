@@ -1,9 +1,10 @@
+## @file
 #
 #  Component description file for iMX6 Sabre PlatformAcpiTables module.
 #
 #  ACPI table data and ASL sources required to boot the platform.
 #
-#  Copyright (c) Microsoft Corporation. All rights reserved.
+#  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
 #
 #  This program and the accompanying materials
 #  are licensed and made available under the terms and conditions of the BSD License
@@ -13,21 +14,15 @@
 #  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
 #  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #
-#
+##
 
 [Defines]
-  INF_VERSION                    = 0x00010005
+  INF_VERSION                    = 0x0001001A
   BASE_NAME                      = PlatformAcpiTables
   FILE_GUID                      = 7E374E25-8E01-4FEE-87F2-390C23C606CD
   MODULE_TYPE                    = USER_DEFINED
   VERSION_STRING                 = 1.0
   DEFINE COMMON_ACPI_DIR         = iMX6Pkg/AcpiTables
-
-#
-# The following information is for reference only and not required by the build tools.
-#
-#  VALID_ARCHITECTURES           = ARM
-#
 
 [Sources]
   DSDT.asl
@@ -40,21 +35,21 @@
 
 [Packages]
   ArmPkg/ArmPkg.dec
+  ArmPlatformPkg/ArmPlatformPkg.dec
   EmbeddedPkg/EmbeddedPkg.dec
-  MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
+  MdePkg/MdePkg.dec
+  Microsoft/OpteeClientPkg/OpteeClientPkg.dec
+  SecurityPkg/SecurityPkg.dec
   iMX6Pkg/iMX6Pkg.dec
   iMXPlatformPkg/iMXPlatformPkg.dec
-  ArmPlatformPkg/ArmPlatformPkg.dec
-  SecurityPkg/SecurityPkg.dec
-  Microsoft/OpteeClientPkg/OpteeClientPkg.dec
 
 [FixedPcd]
-  giMX6TokenSpaceGuid.PcdPcieHostConfigBase
-  giMX6TokenSpaceGuid.PcdPcieDeviceConfigBase
   gArmPlatformTokenSpaceGuid.PcdCoreCount
   gArmTokenSpaceGuid.PcdGicDistributorBase
   gArmTokenSpaceGuid.PcdGicInterruptInterfaceBase
+  giMX6TokenSpaceGuid.PcdPcieHostConfigBase
+  giMX6TokenSpaceGuid.PcdPcieDeviceConfigBase
   giMXPlatformTokenSpaceGuid.PcdKdUartInstance
   gOpteeClientPkgTokenSpaceGuid.PcdTpm2AcpiBufferBase
   gOpteeClientPkgTokenSpaceGuid.PcdTpm2AcpiBufferSize
