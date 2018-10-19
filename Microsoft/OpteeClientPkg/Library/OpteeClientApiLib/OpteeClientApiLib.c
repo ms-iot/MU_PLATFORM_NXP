@@ -3,7 +3,7 @@
  * Global Platform TEE Client API specification for the trusted OS normal world
  * client side interface.
  *
- * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Copyright (c) 2018, Microsoft Corporation. All rights reserved.
  *
  * This program and the accompanying materials are licensed and made available under
  * the terms and conditions of the BSD License which accompanies this distribution.
@@ -343,7 +343,7 @@ TEEC_OpenSession (
   }
 
   LOG_INFO (
-    "Openned Session[0x%x] with TA %g",
+    "Opened Session[0x%x] with TA %g",
     Session->session_id,
     &TaGuid);
 
