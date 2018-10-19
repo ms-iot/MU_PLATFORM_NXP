@@ -1,7 +1,8 @@
-/*
-* Ultra Secured Digital Host Controllers (uSDHC)
+/** @file
 *
-*  Copyright (c) Microsoft Corporation. All rights reserved.
+*  Ultra Secured Digital Host Controllers (uSDHC)
+*
+*  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
 *
 *  This program and the accompanying materials
 *  are licensed and made available under the terms and conditions of the BSD License
@@ -10,42 +11,34 @@
 *
 *  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
 *  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
-*/
+*
+**/
 
-//
-// uSDHC1
-//
 Device (SDH1)
 {
-   Name (_HID, "NXP0108")
-   Name (_UID, 0x1)
+  Name (_HID, "NXP0108")
+  Name (_UID, 0x1)
 
-   Method (_STA) // State
-   {
-       Return(0xf) // Enabled
-   }
+  Method (_STA) {
+    Return (0xf)
+  }
 
-    Name (_CRS, ResourceTemplate () {
-        MEMORY32FIXED(ReadWrite, 0x30B40000, 0x4000, )
-        Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 54 }
-    })
+  Name (_CRS, ResourceTemplate () {
+    MEMORY32FIXED (ReadWrite, 0x30B40000, 0x4000, )
+    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { 54 }
+  })
 
-   //
-   // Child node to represent the only SD/MMC slot on this SD/MMC bus
-   // In theory an SDHC can be connected to multiple SD/MMC slots at
-   // the same time, but only 1 device will be selected and active at
-   // a time
-   //
-   Device (SD0)
-   {
-       Method (_ADR) // Address
-       {
-         Return (0) // SD/MMC Slot 0
-       }
+  // Child node to represent the only SD/MMC slot on this SD/MMC bus
+  // In theory an SDHC can be connected to multiple SD/MMC slots at
+  // the same time, but only 1 device will be selected and active at
+  // a time
+  Device (SD0) {
+    Method (_ADR) {
+      Return (0)
+    }
 
-       Method (_RMV) // Remove
-       {
-         Return (0) // Fixed
-       }
-   }
+    Method (_RMV) {
+      Return (0)
+    }
+  }
 }
