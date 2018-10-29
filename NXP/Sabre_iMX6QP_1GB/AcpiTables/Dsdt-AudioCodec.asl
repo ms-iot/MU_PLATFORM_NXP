@@ -16,7 +16,7 @@
 
 Device (ACDK)
 {
-  Name (_HID, "WOLF8962")
+  Name (_HID, "WML8962")
   Name (_UID, 0x0)
 
   Method (_STA) {
