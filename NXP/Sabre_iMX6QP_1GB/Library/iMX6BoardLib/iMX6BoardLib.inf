@@ -38,6 +38,7 @@
   ArmLib
   MemoryAllocationLib
   SerialPortLib
+  iMX6AudioLib
   iMX6ClkPwrLib
   iMX6UsbPhyLib
 

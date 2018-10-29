@@ -24,6 +24,7 @@
 #include <Library/TimerLib.h>
 
 #include <iMX6.h>
+#include <iMX6Audio.h>
 #include <iMX6BoardLib.h>
 #include <iMX6ClkPwr.h>
 #include <iMX6IoMux.h>
@@ -686,6 +687,9 @@ VOID SetupAudio ()
     ImxPadConfig(IMX_PAD_CSI0_DAT5, IMX_PAD_CFG_CSI0_DATA05_AUD3_TXD);
     ImxPadConfig(IMX_PAD_CSI0_DAT6, IMX_PAD_CFG_CSI0_DATA06_AUD3_TXFS);
     ImxPadConfig(IMX_PAD_CSI0_DAT7, IMX_PAD_CFG_CSI0_DATA07_AUD3_RXD);
+
+    // Set up Audmux where Ssi port = 7 and external port = 3
+    InitializeAudmux (AUDMUX_PORT7, AUDMUX_PORT3);
 }
 
 /**

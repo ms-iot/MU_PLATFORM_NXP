@@ -20,7 +20,7 @@ Device (SSI1)
   Name (_UID, 0x1)
 
   Method (_STA) {
-    Return (0xf)
+    Return (0x0)
   }
 
   Name (_CRS, ResourceTemplate () {
@@ -35,7 +35,7 @@ Device (SSI2)
   Name (_UID, 0x2)
 
   Method (_STA) {
-    Return (0xf)
+    Return (0x0)
   }
 
   Name (_CRS, ResourceTemplate () {
