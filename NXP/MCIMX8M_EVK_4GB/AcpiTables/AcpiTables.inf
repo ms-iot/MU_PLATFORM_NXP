@@ -31,10 +31,11 @@
 
 [Sources]
   Dsdt.asl
+  $(COMMON_ACPI_DIR)/Csrt.aslc
   $(COMMON_ACPI_DIR)/Dbg2.aslc
   $(COMMON_ACPI_DIR)/Fadt.aslc
-  $(COMMON_ACPI_DIR)/Madt.aslc
   $(COMMON_ACPI_DIR)/Gtdt.aslc
+  $(COMMON_ACPI_DIR)/Madt.aslc
   $(COMMON_ACPI_DIR)/Tpm2.aslc
 
 [Packages]
