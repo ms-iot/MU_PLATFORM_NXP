@@ -16,7 +16,7 @@ import struct
 from datetime import datetime
 from datetime import date
 import time
-from UefiBuild import UefiBuilder
+from MuEnvironment.UefiBuild import UefiBuilder
 
 #--------------------------------------------------------------------------------------------------------
 # Subclass the UEFI builder and add platform specific functionality.
