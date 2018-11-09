@@ -5,7 +5,7 @@
 ## Copyright Microsoft Corporation, 2018
 ##
 import os, sys
-from MuEnvironemnt import CommonBuildEntry
+from MuEnvironment import CommonBuildEntry
 
 #
 #==========================================================================
