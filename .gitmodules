@@ -1,15 +1,22 @@
 [submodule "Common/MU"]
 	path = Common/MU
 	url = https://github.com/Microsoft/mu_plus.git
+	branch = release/201808
 [submodule "MU_BASECORE"]
 	path = MU_BASECORE
 	url = https://github.com/Microsoft/mu_basecore.git
+	branch = release/201808
 [submodule "Common/MU_TIANO"]
 	path = Common/MU_TIANO
 	url = https://github.com/Microsoft/mu_tiano_plus.git
+	branch = release/201808
 [submodule "Silicon/ARM/MU_TIANO"]
 	path = Silicon/ARM/MU_TIANO
 	url = https://github.com/Microsoft/mu_silicon_arm_tiano.git
 [submodule "Silicon/ARM/NXP"]
 	path = Silicon/ARM/NXP
 	url = https://github.com/ms-iot/MU_SILICON_NXP.git
+[submodule "MU_BUILD"]
+	path = MU_BUILD
+	url = https://github.com/Microsoft/mu_build.git
+	branch = release/201808
