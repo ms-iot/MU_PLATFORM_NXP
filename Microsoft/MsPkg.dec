@@ -26,6 +26,16 @@
 [Guids.common]
   gMsPkgTokenSpaceGuid = { 0x3ecb4bb9, 0xb80a, 0x4efd, { 0x92, 0xb8, 0x3a, 0x16, 0xe0, 0xc8, 0x19, 0xb } }
 
+  ## Guid used for accessing the SecureBoot Key Enrollment Key database (KEK) binary blob in the FV.
+  # 33630B18-7705-468B-92BD-FEBE27799EDB
+  #  Include/Guid/SecureBootAutoConfig.h
+  gEfiSecureBootKekImageGuid          = { 0x33630b18, 0x7705, 0x468b, { 0x92, 0xbd, 0xfe, 0xbe, 0x27, 0x79, 0x9e, 0xdb } }
+
+  ## Guid used for accessing the SecureBoot signature database (db) binary blob in the FV.
+  # 27A9C9E7-4B7A-4C7E-A8F5-77DB38D7100A
+  #  Include/Guid/SecureBootAutoConfig.h
+  gEfiSecureBootDbImageGuid           = { 0x27a9c9e7, 0x4b7a, 0x4c7e, { 0xa8, 0xf5, 0x77, 0xdb, 0x38, 0xd7, 0x10, 0xa } }
+
 [PcdsFixedAtBuild.common]
   gMsPkgTokenSpaceGuid.PcdSecureBootEnable|FALSE|BOOLEAN|0x00
 

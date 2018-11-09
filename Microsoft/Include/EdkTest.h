@@ -14,6 +14,16 @@
 #ifndef __EDKTEST__
 #define __EDKTEST__
 
+#include <Uefi.h>
+
+#include <Library/UefiLib.h>
+#include <Library/DebugLib.h>
+#include <Library/TimerLib.h>
+
+#include <setjmp.h>
+#include <stddef.h>
+#include <stdlib.h>
+
 #ifndef C_ASSERT
 #define C_ASSERT(e) _Static_assert(e, #e)
 #endif // C_ASSERT
@@ -103,7 +113,7 @@ extern UINT64 gHpcTicksPerSeconds__;
 #define LOG_ERROR(...) \
   do { \
     LOG_MSG (TestLogError, L## __VA_ARGS__); \
-    LOG_MSG (TestLogError, L" [File: %a, Function: %a, Line: %d]", __FILE__, __FUNCTION__, __LINE__); \
+    LOG_MSG (TestLogError, L" [File: %a, Function: %a, Line: %d]\n", __FILE__, __FUNCTION__, __LINE__); \
   } while (FALSE)
 
 #define SET_LOG_LEVEL(LVL) \
@@ -320,10 +330,11 @@ RunModule_ (
 
 // Verify Predicates
 
-#define ARE_EQUAL_PRED_(LEFT__, RIGHT__)          ((LEFT__) == (RIGHT__))
-#define SUCCEEDED_PRED_(STATUS__)                 (!EFI_ERROR(STATUS__))
-#define IS_TRUE_PRED_(VALUE__)                    ((VALUE__) != FALSE)
-#define IS_LESS_THAN_PRED_(LESSER__, GREATER__)   ((LESSER__) < (GREATER__))
+#define ARE_EQUAL_PRED_(LEFT__, RIGHT__)            ((LEFT__) == (RIGHT__))
+#define SUCCEEDED_PRED_(STATUS__)                   (!EFI_ERROR(STATUS__))
+#define IS_TRUE_PRED_(VALUE__)                      ((VALUE__) != FALSE)
+#define IS_LESS_THAN_PRED_(LESSER__, GREATER__)     ((LESSER__) < (GREATER__))
+#define IS_GREATER_THAN_PRED_(GREATER__, LESSER__)  ((GREATER__) > (LESSER__))
 
 // Verify Helpers
 
@@ -396,6 +407,16 @@ RunModule_ (
     T__, \
     IS_LESS_THAN_PRED_, \
     "IS_LESS_THAN", \
+    LESSER__, \
+    GREATER__ , \
+    TRUE, \
+    L"" __VA_ARGS__, "")
+
+#define VERIFY_IS_GREATER_THAN(T__, GREATER__, LESSER__, ...) \
+  VERIFY_BINARY_PREDICATE_HELPER_ ( \
+    T__, \
+    IS_GREATER_THAN_PRED_, \
+    "IS_GREATER_THAN", \
     LESSER__, \
     GREATER__ , \
     TRUE, \
