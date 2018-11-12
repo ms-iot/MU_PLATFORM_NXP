@@ -32,7 +32,6 @@
   SecurityPkg/SecurityPkg.dec
   Microsoft/OpteeClientPkg/OpteeClientPkg.dec
   Microsoft/MsPkg.dec
-  StdLib/StdLib.dec
 
 [LibraryClasses]
   BaseLib
