@@ -5,7 +5,6 @@
 ## Copyright Microsoft Corporation, 2018
 ##
 import os, sys
-from MuEnvironment import CommonBuildEntry
 
 #
 #==========================================================================
@@ -24,6 +23,11 @@ MODULE_PKG_PATHS = os.pathsep.join(os.path.join(WORKSPACE_PATH, pkg_name) for pk
 
 # Smallest 'main' possible. Please don't add unnecessary code.
 if __name__ == '__main__':
+  # If CommonBuildEntry is not found, the mu_environment pip module has not been installed correctly
+  try:
+    from MuEnvironment import CommonBuildEntry
+  except ImportError:
+    raise RuntimeError("Please run \"python -m install --upgrade mu_build\"\nContact MS Core UEFI team if you run into any problems");
 
   # Now that we have access to the entry, hand off to the common code.
   CommonBuildEntry.build_entry(SCRIPT_PATH, WORKSPACE_PATH, REQUIRED_REPOS, PROJECT_SCOPE, MODULE_PKGS, MODULE_PKG_PATHS)
