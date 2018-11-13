@@ -37,7 +37,6 @@
   ArmPlatformPkg/ArmPlatformPkg.dec
   MdeModulePkg/MdeModulePkg.dec
   MdePkg/MdePkg.dec
-  ARM/JunoPkg/ArmJuno.dec
 
 [LibraryClasses]
   ArmLib

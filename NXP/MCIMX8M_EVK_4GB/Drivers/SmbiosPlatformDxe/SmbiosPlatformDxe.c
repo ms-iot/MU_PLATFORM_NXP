@@ -27,7 +27,6 @@
   WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 
 **/
-#include <ArmPlatform.h>
 #include <IndustryStandard/SmBios.h>
 #include <Library/ArmLib.h>
 #include <Library/BaseLib.h>
