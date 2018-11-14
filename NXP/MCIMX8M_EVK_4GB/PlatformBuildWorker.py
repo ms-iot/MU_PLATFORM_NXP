@@ -1,6 +1,5 @@
 ##
-## Script to Build Kayak UEFI firmware
-## NOTE: Based on the Surface Ivanhoe platform.
+## Script to Build iMX8 UEFI firmware
 ##
 ##
 ## Copyright Microsoft Corporation, 2015

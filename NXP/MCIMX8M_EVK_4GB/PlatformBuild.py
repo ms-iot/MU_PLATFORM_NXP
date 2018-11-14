@@ -1,5 +1,5 @@
 ##
-## Script to Build Ivanhoe UEFI firmware
+## Script to Build iMX8 UEFI firmware
 ##
 ##
 ## Copyright Microsoft Corporation, 2018
