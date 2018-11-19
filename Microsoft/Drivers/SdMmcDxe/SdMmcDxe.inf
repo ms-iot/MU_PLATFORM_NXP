@@ -1,5 +1,5 @@
 #
-#  Copyright (c) Microsoft Corporation. All rights reserved.
+#  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
 #
 #  This program and the accompanying materials
 #  are licensed and made available under the terms and conditions of the BSD License
@@ -11,20 +11,19 @@
 #
 
 [Defines]
-  INF_VERSION                    = 0x00010005
+  INF_VERSION                    = 0x0001001A
   BASE_NAME                      = SdMmcDxe
   FILE_GUID                      = 16738C4A-8044-4DD8-B68E-58A53CEFF5D9
   MODULE_TYPE                    = DXE_DRIVER
   VERSION_STRING                 = 1.0
-
   ENTRY_POINT                    = SdMmcDxeInitialize
 
 [Sources.common]
-  SdMmc.c
   BlockIo.c
   Debug.c
-  Protocol.c
   RpmbIo.c
+  Protocol.c
+  SdMmc.c
 
 [Packages]
   EmbeddedPkg/EmbeddedPkg.dec
@@ -34,17 +33,17 @@
 
 [LibraryClasses]
   BaseLib
-  UefiLib
-  UefiDriverEntryPoint
   BaseMemoryLib
   TimerLib
+  UefiDriverEntryPoint
+  UefiLib
 
 [Protocols]
-  gEfiDiskIoProtocolGuid
   gEfiBlockIoProtocolGuid
   gEfiDevicePathProtocolGuid
-  gEfiSdhcProtocolGuid
+  gEfiDiskIoProtocolGuid
   gEfiRpmbIoProtocolGuid
+  gEfiSdhcProtocolGuid
 
 [Depex]
   TRUE

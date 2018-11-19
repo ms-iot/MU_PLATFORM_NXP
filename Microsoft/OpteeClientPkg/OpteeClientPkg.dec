@@ -30,26 +30,6 @@
 [Guids]
   gOpteeClientPkgTokenSpaceGuid   = { 0x04ad34ca, 0xdd25, 0x4156, { 0x90, 0xf5, 0x16, 0xf9, 0x40, 0xd0, 0x49, 0xe3 }}
 
-  ## Guid used for accessing the SecureBoot signature database (db) binary blob in the FV.
-  # 27A9C9E7-4B7A-4C7E-A8F5-77DB38D7100A
-  #  Include/Guid/SecureBootAutoConfig.h
-  gEfiSecureBootDbImageGuid           = { 0x27a9c9e7, 0x4b7a, 0x4c7e, { 0xa8, 0xf5, 0x77, 0xdb, 0x38, 0xd7, 0x10, 0xa } }
-
-  ## Guid used for accessing the SecureBoot revoked signature database (dbx) binary blob in the FV.
-  # 1EFBFEEA-9D86-4B0B-9F12-2063AD533BB4
-  #  Include/Guid/SecureBootAutoConfig.h
-  gEfiSecureBootDbxImageGuid          = { 0x1efbfeea, 0x9d86, 0x4b0b, { 0x9f, 0x12, 0x20, 0x63, 0xad, 0x53, 0x3b, 0xb4 } }
-
-  ## Guid used for accessing the SecureBoot Platform Key (PK) binary blob in the FV.
-  # 442FF1AA-7891-4A79-88E3-75EC4409B059
-  #  Include/Guid/SecureBootAutoConfig.h
-  gEfiSecureBootPkImageGuid          = { 0x442ff1aa, 0x7891, 0x4a79, { 0x88, 0xe3, 0x75, 0xec, 0x44, 0x9, 0xb0, 0x59 } }
-
-  ## Guid used for accessing the SecureBoot Key Enrollment Key database (KEK) binary blob in the FV.
-  # 33630B18-7705-468B-92BD-FEBE27799EDB
-  #  Include/Guid/SecureBootAutoConfig.h
-  gEfiSecureBootKekImageGuid          = { 0x33630b18, 0x7705, 0x468b, { 0x92, 0xbd, 0xfe, 0xbe, 0x27, 0x79, 0x9e, 0xdb } }
-
   # OPTEE expects the TA UUIDs to have its first 3 fields in big-endian format while
   # the other fields are in little-endian. However, will store them in the UEFI
   # image in their EFI_GUID format in which all fields are little-endian. It is
@@ -61,7 +41,7 @@
 
   # fTPM Service TA UUID in UEFI format: bc50d971-d4c9-42c4-82cb-343fb7f37896
   gOpteeFtpmTaGuid = { 0xbc50d971, 0xd4c9, 0x42c4, { 0x82, 0xcb, 0x34, 0x3f, 0xb7, 0xf3, 0x78, 0x96 }}
-  
+
 [PcdsFixedAtBuild]
 
   ## The base address of the Trust Zone OpTEE OS private memory region

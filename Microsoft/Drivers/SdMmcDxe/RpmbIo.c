@@ -1,6 +1,6 @@
 /** @file
 *
-*  Copyright (c) Microsoft Corporation. All rights reserved.
+*  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
 *
 *  This program and the accompanying materials
 *  are licensed and made available under the terms and conditions of the BSD License
@@ -16,17 +16,17 @@
 
 #include <Protocol/BlockIo.h>
 #include <Protocol/DevicePath.h>
-#include <Protocol/Sdhc.h>
 #include <Protocol/RpmbIo.h>
+#include <Protocol/Sdhc.h>
 
-#include <Library/DebugLib.h>
-#include <Library/UefiLib.h>
-#include <Library/TimerLib.h>
 #include <Library/BaseLib.h>
 #include <Library/BaseMemoryLib.h>
-#include <Library/MemoryAllocationLib.h>
-#include <Library/UefiBootServicesTableLib.h>
+#include <Library/DebugLib.h>
 #include <Library/DevicePathLib.h>
+#include <Library/MemoryAllocationLib.h>
+#include <Library/TimerLib.h>
+#include <Library/UefiBootServicesTableLib.h>
+#include <Library/UefiLib.h>
 
 #include "SdMmcHw.h"
 #include "SdMmc.h"
@@ -168,8 +168,8 @@ RpmbQueryResult (
   OUT EFI_RPMB_DATA_PACKET  *Response
   )
 {
-  EFI_STATUS Status;
-  EFI_RPMB_DATA_BUFFER ResponseBuffer;
+  EFI_RPMB_DATA_BUFFER  ResponseBuffer;
+  EFI_STATUS            Status;
 
   ResponseBuffer.PacketCount = 1;
   ResponseBuffer.Packets = Response;
@@ -190,8 +190,8 @@ RpmbProgramKeyRequest (
   OUT EFI_RPMB_DATA_PACKET  *Response
   )
 {
-  EFI_STATUS Status;
-  EFI_RPMB_DATA_BUFFER RequestBuffer;
+  EFI_RPMB_DATA_BUFFER  RequestBuffer;
+  EFI_STATUS            Status;
 
   RequestBuffer.PacketCount = 1;
   RequestBuffer.Packets = Request;
@@ -218,8 +218,8 @@ RpmbReadCounterRequest (
   OUT EFI_RPMB_DATA_PACKET  *Response
   )
 {
-  EFI_STATUS Status;
-  EFI_RPMB_DATA_BUFFER ResponseBuffer;
+  EFI_RPMB_DATA_BUFFER  ResponseBuffer;
+  EFI_STATUS            Status;
 
   ResponseBuffer.PacketCount = 1;
   ResponseBuffer.Packets = Response;
@@ -318,12 +318,12 @@ RpmbRequest (
   OUT EFI_RPMB_DATA_BUFFER  *Response
   )
 {
-  EFI_STATUS Status;
-  SDHC_INSTANCE *HostInst;
-  MMC_EXT_CSD_PARTITION_ACCESS CurrentPartition;
-  EFI_STATUS SwitchStatus;
-  BOOLEAN SwitchPartition;
-  UINT16 RequestType;
+  SDHC_INSTANCE                 *HostInst;
+  MMC_EXT_CSD_PARTITION_ACCESS  CurrentPartition;
+  UINT16                        RequestType;
+  EFI_STATUS                    Status;
+  BOOLEAN                       SwitchPartition;
+  EFI_STATUS                    SwitchStatus;
 
   SwitchPartition = FALSE;
   Status = EFI_SUCCESS;
@@ -338,10 +338,8 @@ RpmbRequest (
   ASSERT (HostInst->HostExt);
 
   CurrentPartition = HostInst->CurrentMmcPartition;
-
   SwitchStatus = SdhcSwitchPartitionMmc (HostInst, MmcExtCsdPartitionAccessRpmb);
   if (EFI_ERROR (SwitchStatus)) {
-
     LOG_ERROR (
       "SdhcSwitchPartitionMmc() failed. (SwitchStatus = %r)",
       SwitchStatus);
@@ -432,9 +430,9 @@ RpmbIoProgramKey (
   OUT EFI_RPMB_DATA_PACKET  *ResultResponse
   )
 {
-  EFI_STATUS Status;
-  EFI_RPMB_DATA_BUFFER RequestBuffer;
-  EFI_RPMB_DATA_BUFFER ResponseBuffer;
+  EFI_RPMB_DATA_BUFFER  RequestBuffer;
+  EFI_RPMB_DATA_BUFFER  ResponseBuffer;
+  EFI_STATUS            Status;
 
   LOG_TRACE ("RpmbIoProgramKey()");
 
@@ -482,9 +480,9 @@ RpmbIoReadCounter (
   OUT EFI_RPMB_DATA_PACKET  *ReadResponse
   )
 {
-  EFI_STATUS Status;
-  EFI_RPMB_DATA_BUFFER RequestBuffer;
-  EFI_RPMB_DATA_BUFFER ResponseBuffer;
+  EFI_RPMB_DATA_BUFFER  RequestBuffer;
+  EFI_RPMB_DATA_BUFFER  ResponseBuffer;
+  EFI_STATUS            Status;
 
   LOG_TRACE ("RpmbIoReadCounter()");
 
@@ -532,8 +530,8 @@ RpmbIoAuthenticatedWrite (
   OUT EFI_RPMB_DATA_PACKET  *Response
   )
 {
-  EFI_STATUS Status;
-  EFI_RPMB_DATA_BUFFER ResponseBuffer;
+  EFI_RPMB_DATA_BUFFER  ResponseBuffer;
+  EFI_STATUS            Status;
 
   LOG_TRACE ("RpmbIoAuthenticatedWrite()");
 
@@ -581,8 +579,8 @@ RpmbIoAuthenticatedRead (
   OUT EFI_RPMB_DATA_BUFFER  *ReadResponse
   )
 {
-  EFI_STATUS Status;
-  EFI_RPMB_DATA_BUFFER RequestBuffer;
+  EFI_RPMB_DATA_BUFFER  RequestBuffer;
+  EFI_STATUS            Status;
 
   LOG_TRACE ("RpmbIoAuthenticatedRead()");
 

@@ -31,6 +31,20 @@
 
 ################################################################################
 #
+# [BuildOptions] Section
+#
+################################################################################
+[BuildOptions]
+  GCC:*_*_*_CC_FLAGS = -D$(BOARD_NAME) -DCPU_$(IMX_FAMILY) -DSOCTYPE_$(IMX_CHIP_TYPE) -Wno-unused-local-typedefs
+
+[BuildOptions.common.EDKII.DXE_CORE,BuildOptions.common.EDKII.DXE_DRIVER,BuildOptions.common.EDKII.UEFI_DRIVER,BuildOptions.common.EDKII.UEFI_APPLICATION]
+  GCC:*_*_*_DLINK_FLAGS = -z common-page-size=0x1000
+
+[BuildOptions.common.EDKII.DXE_RUNTIME_DRIVER]
+  GCC:*_*_ARM_DLINK_FLAGS = -z common-page-size=0x1000
+
+################################################################################
+#
 # Platform Description
 #
 ################################################################################
@@ -147,7 +161,7 @@ giMX6TokenSpaceGuid.PcdMemoryDeviceLocation|L"On SoM"
   #
   giMXPlatformTokenSpaceGuid.PcdSdhc4Enable|TRUE
   giMXPlatformTokenSpaceGuid.PcdSdhc4CardDetectSignal|0xFF00
-  giMXPlatformTokenSpaceGuid.PcdSdhc4WriteProtectSignal|0xFF01
+  giMXPlatformTokenSpaceGuid.PcdSdhc4WriteProtectSignal|0xFF00
 
   #
   # GPIO reset pin
