@@ -17,7 +17,3 @@
 [submodule "Silicon/ARM/NXP"]
 	path = Silicon/ARM/NXP
 	url = https://github.com/ms-iot/MU_SILICON_NXP.git
-[submodule "MU_BUILD"]
-	path = MU_BUILD
-	url = https://github.com/Microsoft/mu_build.git
-	branch = release/201808

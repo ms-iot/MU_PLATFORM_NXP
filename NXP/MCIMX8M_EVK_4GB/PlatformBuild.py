@@ -12,7 +12,7 @@ import os, sys
 #
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 WORKSPACE_PATH = os.path.dirname(os.path.dirname(SCRIPT_PATH))
-REQUIRED_REPOS = ('MU_BASECORE','Silicon/ARM/NXP', 'Common/MU','Common/MU_TIANO', 'Silicon/ARM/MU_TIANO', 'MU_BUILD')
+REQUIRED_REPOS = ('MU_BASECORE','Silicon/ARM/NXP', 'Common/MU','Common/MU_TIANO', 'Silicon/ARM/MU_TIANO')
 PROJECT_SCOPE = ('imxfamily', 'imx8')
 
 MODULE_PKGS = ('MU_BASECORE','Silicon/ARM/NXP', 'Common/MU','Common/MU_TIANO', 'Silicon/ARM/MU_TIANO')
