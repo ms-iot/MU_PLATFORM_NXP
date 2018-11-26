@@ -1,5 +1,5 @@
 ##
-## Script to Build Ivanhoe UEFI firmware
+## Script to Build iMX8 UEFI firmware
 ##
 ##
 ## Copyright Microsoft Corporation, 2018
@@ -23,19 +23,11 @@ MODULE_PKG_PATHS = os.pathsep.join(os.path.join(WORKSPACE_PATH, pkg_name) for pk
 
 # Smallest 'main' possible. Please don't add unnecessary code.
 if __name__ == '__main__':
-  # Do a quick check to see whether we're trying to setup.
-  if "--SETUP" in (arg.upper() for arg in sys.argv):
-    sys.path.append(WORKSPACE_PATH)
-    import bootstrap_repo
-    bootstrap_repo.bootstrap()
-
-  # If we're not trying to setup, we should assume that we have
-  # the correct prerequisites and are good to go.
+  # If CommonBuildEntry is not found, the mu_environment pip module has not been installed correctly
   try:
-    sys.path.append(os.path.join(WORKSPACE_PATH, 'MU_BASECORE', 'UefiBuild'))
-    import CommonBuildEntry
+    from MuEnvironment import CommonBuildEntry
   except ImportError:
-    raise RuntimeError("Environment is not in a state to build! Please run '--SETUP'.")
+    raise RuntimeError("Please run \"python -m install --upgrade mu_build\"\nContact MS Core UEFI team if you run into any problems");
 
   # Now that we have access to the entry, hand off to the common code.
   CommonBuildEntry.build_entry(SCRIPT_PATH, WORKSPACE_PATH, REQUIRED_REPOS, PROJECT_SCOPE, MODULE_PKGS, MODULE_PKG_PATHS)
