@@ -18,7 +18,7 @@ This document will walkthrough the layout of a "typical" project Mu repo using i
 ## TL;DR
 
 From the root: 
-
+0. pip install mu_environment
 1. Run `git submodule update --init --recursive` to check out all the submodules.
 2. Run `python {Platform}/{Device}/PlatformBuild.py --setup` to set up the build environment. Includes fetching Nuget dependencies and synchronizing submodules.
 3. Run `python {Platform}/{Device}/PlatformBuild.py` to invoke the build process.
