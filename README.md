@@ -17,8 +17,6 @@ This document will walkthrough the layout of a "typical" project Mu repo using i
 
 ## TL;DR
 
-From the root: 
-0. pip install mu_environment
 1. Run `git submodule update --init --recursive` to check out all the submodules.
 2. Run `python {Platform}/{Device}/PlatformBuild.py --setup` to set up the build environment. Includes fetching Nuget dependencies and synchronizing submodules.
 3. Run `python {Platform}/{Device}/PlatformBuild.py` to invoke the build process.
@@ -81,10 +79,14 @@ Since mu_environment has a dependency on mu_python_library, it should be updated
 
 # Setup Info for iMX8
 
+- `sudo apt-get install gcc g++ make python3 python3-pip git`
+    - Minimum Python version is 3.6
+    - Minimum git version 2.11
+- Install pip modules for build:
+    - `pip3 install mu_environment`
 - `git clone https://windowspartners.visualstudio.com/MSCoreUEFI/MSCoreUEFI%20Team/_git/NXP_iMX_Platform`
 - Change into the directory you just cloned and run:
     - `git submodule update --init --recursive`
-- `sudo apt-get install gcc g++ make python3 python3-pip`
     - Python3 is not yet compatible with EDK2 in Linux
 - Download [Linaro AARCH 64 GCC 7.2.1](https://releases.linaro.org/components/toolchain/binaries/7.2-2017.11/aarch64-linux-gnu/)
     - Set GCC5_BIN to this path
@@ -92,11 +94,9 @@ Since mu_environment has a dependency on mu_python_library, it should be updated
 - Compile BaseTools:
     - `cd MU_BASECORE`
     - `make -C BaseTools`
-- Install pip modules for build:
-    - `pip3 install mu_environment`
-- `python NXP/MCIMX8M_EVK_4GB/PlatformBuild.py --setup`
+- `python3 NXP/MCIMX8M_EVK_4GB/PlatformBuild.py --setup`
     - This fetches any dependencies via NuGet and synchronizes submodules
-- `rm -r Build; rm -r Conf; python NXP/MCIMX8M_EVK_4GB/PlatformBuild.py TOOL_CHAIN_TAG=GCC5 BUILDREPORTING=TRUE BUILDREPORT_TYPES="PCD"`
+- `rm -r Build; rm -r Conf; python3 NXP/MCIMX8M_EVK_4GB/PlatformBuild.py TOOL_CHAIN_TAG=GCC5 BUILDREPORTING=TRUE BUILDREPORT_TYPES="PCD"`
     - Removing Build and Conf directories ensures that you aren't accidentally keeping around configuration files and autogen build files that need to be updated.
     - Specify the `TOOL_CHAIN_TAG` either here or in `NXP/Conf/Target.template.ms`
     - Build reports are placed in the `Build` folder on a successful build and contain a complete list of every module that was built and what the PCDs were set to.
