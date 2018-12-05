@@ -34,5 +34,5 @@ Device (GPIO)
     })
     Return(RBUF)
   }
-
+  OperationRegion (OTGP, GeneralPurposeIO, Zero, One)
 }
