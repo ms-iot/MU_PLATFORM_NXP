@@ -55,6 +55,10 @@ Device(URS0)
   Name (OTGR, ResourceTemplate() {
     GpioIO (Shared, PullDefault, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer,,) { 0 }
   })
+  Field (\_SB_.GPIO.OTGP, ByteAcc, NoLock, Preserve) {
+    Connection (OTGR),
+    OTGF, 1
+  }
 
   // Device Specific Method takes 4 args:
   //  Arg0 : Buffer containing a UUID [16 bytes]
@@ -62,6 +66,9 @@ Device(URS0)
   //  Arg2 : Integer containing the Function Index
   //  Arg3 : Package that contains function-specific arguments (Unused?)
   Method (_DSM, 0x4, Serialized) {
+    Name (RET, 0x0) // Declare return variable
+    Name (PVAL, 0x0) // Declare pin value variable
+
     // Check UUID
     if (LEqual(Arg0,ToUUID("14EB0A6A-79ED-4B37-A8C7-84604B55C5C3"))) {
       // Function index
