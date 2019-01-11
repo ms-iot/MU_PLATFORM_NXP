@@ -23,5 +23,6 @@ DefinitionBlock ("DSDT.aml", "DSDT", 5, "MSFT", "EDK2", 1)
     include("Dsdt-Gpio.asl")
     include("Dsdt-Usb.asl")
     include("Dsdt-Sdhc.asl")
+    include("Dsdt-Rhp.asl")
   } // \_SB_
 }
