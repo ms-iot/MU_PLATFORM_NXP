@@ -13,7 +13,7 @@
 *
 */
 
-OperationRegion(GLBL,SystemMemory,0x10817000,0x10)
+OperationRegion(GLBL,SystemMemory,0x80817000,0x10)
 Field(GLBL, AnyAcc, Nolock, Preserve)
 {
   Offset(0),        // Miscellaneous Dynamic Registers:
