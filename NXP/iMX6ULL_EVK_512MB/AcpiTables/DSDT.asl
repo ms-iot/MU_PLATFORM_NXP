@@ -13,7 +13,6 @@
 *
 */
 #include "Dsdt-Common.h"
-#define SOC_TYPE 0x00000065  // iMX6 ULL
 
 DefinitionBlock ("DSDT.aml", "DSDT", 5, "MSFT", "EDK2", 1)
 {
