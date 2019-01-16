@@ -16,8 +16,6 @@
 
 #include "Dsdt-Common.h"
 
-#define SOC_TYPE 0x00000069  // iMX6 Quad Plus
-
 DefinitionBlock ("DSDT.aml", "DSDT", 5, "MSFT", "EDK2", 1)
 {
   Scope (\_SB_)

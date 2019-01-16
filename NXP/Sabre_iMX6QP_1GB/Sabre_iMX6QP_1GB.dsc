@@ -22,8 +22,7 @@
 
 [Defines]
   DEFINE BOARD_NAME               = Sabre_iMX6QP_1GB
-  DEFINE IMX_FAMILY               = IMX6DQP
-  DEFINE IMX_CHIP_TYPE            = QUADPLUS
+  DEFINE IMX_FAMILY               = IMX6QP
   DEFINE DRAM_SIZE                = DRAM_1GB
   DEFINE CONFIG_DUMP_SYMBOL_INFO  = TRUE
   BOARD_DIR                       = NXP/$(BOARD_NAME)
@@ -35,7 +34,7 @@
 #
 ################################################################################
 [BuildOptions]
-  GCC:*_*_*_CC_FLAGS = -D$(BOARD_NAME) -DCPU_$(IMX_FAMILY) -DSOCTYPE_$(IMX_CHIP_TYPE) -Wno-unused-local-typedefs
+  GCC:*_*_*_CC_FLAGS = -D$(BOARD_NAME) -DCPU_$(IMX_FAMILY) -Wno-unused-local-typedefs
 
 [BuildOptions.common.EDKII.DXE_CORE,BuildOptions.common.EDKII.DXE_DRIVER,BuildOptions.common.EDKII.UEFI_DRIVER,BuildOptions.common.EDKII.UEFI_APPLICATION]
   GCC:*_*_*_DLINK_FLAGS = -z common-page-size=0x1000

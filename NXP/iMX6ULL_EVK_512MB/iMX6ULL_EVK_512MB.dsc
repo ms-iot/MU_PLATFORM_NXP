@@ -23,7 +23,6 @@
 [Defines]
   DEFINE BOARD_NAME               = iMX6ULL_EVK_512MB
   DEFINE IMX_FAMILY               = IMX6ULL
-  DEFINE IMX_CHIP_TYPE            = SOLO
   DEFINE DRAM_SIZE                = DRAM_512MB
   DEFINE CONFIG_DUMP_SYMBOL_INFO  = TRUE
   DEFINE CONFIG_L2CACHE_OFF       = TRUE
@@ -40,7 +39,7 @@
 #
 ################################################################################
 [BuildOptions]
-  GCC:*_*_*_CC_FLAGS = -D$(BOARD_NAME) -DCPU_$(IMX_FAMILY) -DSOCTYPE_$(IMX_CHIP_TYPE) -Wno-unused-local-typedefs
+  GCC:*_*_*_CC_FLAGS = -D$(BOARD_NAME) -DCPU_$(IMX_FAMILY) -Wno-unused-local-typedefs
 
 [BuildOptions.common.EDKII.DXE_CORE,BuildOptions.common.EDKII.DXE_DRIVER,BuildOptions.common.EDKII.UEFI_DRIVER,BuildOptions.common.EDKII.UEFI_APPLICATION]
   GCC:*_*_*_DLINK_FLAGS = -z common-page-size=0x1000
