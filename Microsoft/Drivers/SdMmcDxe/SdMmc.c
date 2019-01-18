@@ -1,6 +1,6 @@
 /** @file
 *
-*  Copyright (c) Microsoft Corporation. All rights reserved.
+*  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
 *  Copyright (c) 2011-2014, ARM Limited. All rights reserved.
 *
 *  This program and the accompanying materials
@@ -17,17 +17,17 @@
 
 #include <Protocol/BlockIo.h>
 #include <Protocol/DevicePath.h>
-#include <Protocol/Sdhc.h>
 #include <Protocol/RpmbIo.h>
+#include <Protocol/Sdhc.h>
 
-#include <Library/DebugLib.h>
-#include <Library/UefiLib.h>
-#include <Library/TimerLib.h>
 #include <Library/BaseLib.h>
 #include <Library/BaseMemoryLib.h>
-#include <Library/MemoryAllocationLib.h>
-#include <Library/UefiBootServicesTableLib.h>
+#include <Library/DebugLib.h>
 #include <Library/DevicePathLib.h>
+#include <Library/MemoryAllocationLib.h>
+#include <Library/TimerLib.h>
+#include <Library/UefiBootServicesTableLib.h>
+#include <Library/UefiLib.h>
 
 #include "SdMmcHw.h"
 #include "SdMmc.h"
@@ -108,7 +108,7 @@ InsertSdhcInstance (
 VOID
 RemoveSdhcInstance (
   IN SDHC_INSTANCE  *HostInst
-)
+  )
 {
   RemoveEntryList (&(HostInst->Link));
 }
@@ -130,9 +130,12 @@ CreateSdhcInstance (
   IN EFI_SDHC_PROTOCOL  *HostExt
   )
 {
-  EFI_STATUS Status;
-  SDHC_INSTANCE *HostInst = NULL;
+  SDHC_DEVICE_PATH  *DevicePath;
+  SDHC_INSTANCE     *HostInst;
+  GUID              SdhcDevicePathGuid = SDHC_DEVICE_PATH_GUID;
+  EFI_STATUS        Status;
 
+  HostInst = NULL;
   HostInst = AllocateZeroPool (sizeof (SDHC_INSTANCE));
   if (HostInst == NULL) {
     Status = EFI_OUT_OF_RESOURCES;
@@ -166,7 +169,6 @@ CreateSdhcInstance (
   HostInst->RpmbIoProtocolInstalled = FALSE;
 
   // Initialize BlockIo Protocol.
-
   HostInst->BlockIo.Media = AllocateCopyPool (sizeof (EFI_BLOCK_IO_MEDIA), &gSdhcMediaTemplate);
   if (HostInst->BlockIo.Media == NULL) {
     Status = EFI_OUT_OF_RESOURCES;
@@ -180,23 +182,19 @@ CreateSdhcInstance (
   HostInst->BlockIo.FlushBlocks = BlockIoFlushBlocks;
 
   // Initialize DevicePath Protocol.
-
-  SDHC_DEVICE_PATH *DevicePath = &HostInst->DevicePath;
+  DevicePath = &HostInst->DevicePath;
 
   // Initialize device path based on SDHC DeviceId and delay SlotNode initialization
   // until the card in Slot0 is type identified.
-
   DevicePath->SdhcNode.Header.Type = HARDWARE_DEVICE_PATH;
   DevicePath->SdhcNode.Header.SubType = HW_VENDOR_DP;
   *((UINT16*) &DevicePath->SdhcNode.Header.Length) = SDHC_NODE_PATH_LENGTH;
   DevicePath->SdhcId = HostInst->HostExt->SdhcId;
-  GUID SdhcDevicePathGuid = SDHC_DEVICE_PATH_GUID;
   CopyGuid (&DevicePath->SdhcNode.Guid, &SdhcDevicePathGuid);
 
   SetDevicePathEndNode (&DevicePath->EndNode);
 
   // Initialize RpmbIo Protocol.
-
   HostInst->RpmbIo.Revision = EFI_RPMB_IO_PROTOCOL_REVISION;
   HostInst->RpmbIo.AuthenticatedRead = RpmbIoAuthenticatedRead;
   HostInst->RpmbIo.AuthenticatedWrite = RpmbIoAuthenticatedWrite;
@@ -205,7 +203,6 @@ CreateSdhcInstance (
 
   // Don't publish any protocol yet, until the SDHC device is fully initialized and
   // ready for IO.
-
   ++gNextSdhcInstanceId;
 
   Status = EFI_SUCCESS;
@@ -287,9 +284,9 @@ SdMmcDriverSupported (
   IN EFI_DEVICE_PATH_PROTOCOL     *RemainingDevicePath
   )
 {
-  EFI_STATUS Status;
-  EFI_SDHC_PROTOCOL *HostExt;
-  EFI_DEV_PATH_PTR Node;
+  EFI_SDHC_PROTOCOL   *HostExt;
+  EFI_DEV_PATH_PTR    Node;
+  EFI_STATUS          Status;
 
   // Check RemainingDevicePath validation.
   if (RemainingDevicePath != NULL) {
@@ -365,9 +362,9 @@ SdMmcDriverStart (
   IN EFI_DEVICE_PATH_PROTOCOL     *RemainingDevicePath
   )
 {
-  EFI_STATUS Status;
-  SDHC_INSTANCE *HostInst;
-  EFI_SDHC_PROTOCOL *HostExt;
+  EFI_SDHC_PROTOCOL   *HostExt;
+  SDHC_INSTANCE       *HostInst;
+  EFI_STATUS          Status;
 
   LOG_TRACE ("SdMmcDriverStart()");
 
@@ -437,9 +434,11 @@ SdMmcDriverStop (
   IN EFI_HANDLE                   *ChildHandleBuffer
   )
 {
-  EFI_STATUS Status = EFI_SUCCESS;
-  LIST_ENTRY *CurrentLink;
-  SDHC_INSTANCE *HostInst;
+  LIST_ENTRY      *CurrentLink;
+  SDHC_INSTANCE   *HostInst;
+  EFI_STATUS      Status;
+
+  Status = EFI_SUCCESS;
 
   LOG_TRACE ("SdMmcDriverStop()");
 
@@ -472,9 +471,14 @@ SoftReset (
   IN SDHC_INSTANCE  *HostInst
   )
 {
-  EFI_SDHC_PROTOCOL *HostExt = HostInst->HostExt;
-  EFI_STATUS Status;
-  CHAR16 *DevicePathText = NULL;
+  SDHC_DEVICE_PATH    *DevicePath;
+  CHAR16              *DevicePathText;
+  EFI_SDHC_PROTOCOL   *HostExt;
+  MMC_EXT_CSD_PARTITION_CONFIG PartConfig;
+  EFI_STATUS          Status;
+
+  HostExt = HostInst->HostExt;
+  DevicePathText = NULL;
 
   ASSERT (HostInst->HostExt != NULL);
   LOG_TRACE ("Performing Soft-Reset for SDHC%d", HostExt->SdhcId);
@@ -542,7 +546,7 @@ SoftReset (
   // Update SlotNode subtype based on the card type identified.
   // Note that we only support 1 slot per SDHC, i.e It is assumed that no more
   // than 1 SD/MMC card connected to the same SDHC block on the system.
-  SDHC_DEVICE_PATH *DevicePath = &HostInst->DevicePath;
+  DevicePath = &HostInst->DevicePath;
   if (HostInst->CardInfo.CardFunction == CardFunctionSd) {
     DevicePath->SlotNode.SD.Header.Type = MESSAGING_DEVICE_PATH;
     DevicePath->SlotNode.SD.Header.SubType = MSG_SD_DP;
@@ -584,8 +588,7 @@ SoftReset (
 
   HostInst->BlockIoProtocolInstalled = TRUE;
 
-  Status =
-    gBS->InstallMultipleProtocolInterfaces (
+  Status = gBS->InstallMultipleProtocolInterfaces (
       &HostInst->MmcHandle,
       &gEfiDevicePathProtocolGuid,
       &HostInst->DevicePath,
@@ -602,10 +605,8 @@ SoftReset (
   HostInst->DevicePathProtocolInstalled = TRUE;
 
   if (HostInst->CardInfo.CardFunction == CardFunctionMmc) {
-
     if (!IsRpmbInstalledOnTheSystem ()) {
-      Status =
-        gBS->InstallMultipleProtocolInterfaces (
+      Status = gBS->InstallMultipleProtocolInterfaces (
           &HostInst->MmcHandle,
           &gEfiRpmbIoProtocolGuid,
           &HostInst->RpmbIo,
@@ -627,11 +628,9 @@ SoftReset (
       // ready the MMC EXT_CSD everytime we do partition switch to have
       // an updated current partition. SdhostSwitchPartitionMmc will keep
       // track of that variable.
-
-      MMC_EXT_CSD_PARTITION_CONFIG partConfig;
-      partConfig.AsUint8 = HostInst->CardInfo.Registers.Mmc.ExtCsd.PartitionConfig;
+      PartConfig.AsUint8 = HostInst->CardInfo.Registers.Mmc.ExtCsd.PartitionConfig;
       HostInst->CurrentMmcPartition =
-        (MMC_EXT_CSD_PARTITION_ACCESS) partConfig.Fields.PARTITION_ACCESS;
+        (MMC_EXT_CSD_PARTITION_ACCESS) PartConfig.Fields.PARTITION_ACCESS;
 
     } else {
       LOG_ERROR (
@@ -652,8 +651,7 @@ Exit:
   // of one or more card features
   if (EFI_ERROR (Status)) {
     if (HostInst->RpmbIoProtocolInstalled) {
-      Status =
-        gBS->UninstallMultipleProtocolInterfaces (
+      Status = gBS->UninstallMultipleProtocolInterfaces (
           HostInst->MmcHandle,
           &gEfiRpmbIoProtocolGuid,
           &HostInst->RpmbIo,
@@ -669,8 +667,7 @@ Exit:
     }
 
     if (HostInst->DevicePathProtocolInstalled) {
-      Status =
-        gBS->UninstallMultipleProtocolInterfaces (
+      Status = gBS->UninstallMultipleProtocolInterfaces (
           HostInst->MmcHandle,
           &gEfiDevicePathProtocolGuid,
           &HostInst->DevicePath,
@@ -700,12 +697,12 @@ CheckCardsCallback (
   IN VOID       *Context
   )
 {
-  LIST_ENTRY *CurrentLink;
-  SDHC_INSTANCE *HostInst;
-  EFI_STATUS Status;
-  BOOLEAN IsCardPresent;
-  BOOLEAN CardEjected;
-  BOOLEAN CardInserted;
+  LIST_ENTRY      *CurrentLink;
+  SDHC_INSTANCE   *HostInst;
+  BOOLEAN         CardInserted;
+  BOOLEAN         CardEjected;
+  BOOLEAN         IsCardPresent;
+  EFI_STATUS      Status;
 
   // For each registered SDHC instance
   CurrentLink = gSdhcInstancePool.ForwardLink;
@@ -723,7 +720,6 @@ CheckCardsCallback (
     // T       F            Reset
     // F       T            Reset
     // F       F            No action
-
     CardEjected = HostInst->BlockIo.Media->MediaPresent && !IsCardPresent;
     if (CardEjected) {
       LOG_INFO ("Card ejected from SDHC%d slot", HostInst->HostExt->SdhcId);
@@ -751,13 +747,13 @@ IsRpmbInstalledOnTheSystem (
   VOID
   )
 {
-  EFI_STATUS Status;
-  EFI_RPMB_IO_PROTOCOL rpmbIo;
+  EFI_RPMB_IO_PROTOCOL  RpmbIo;
+  EFI_STATUS            Status;
 
   Status = gBS->LocateProtocol (
     &gEfiRpmbIoProtocolGuid,
     NULL,
-    (VOID **) &rpmbIo);
+    (VOID **) &RpmbIo);
   if (EFI_ERROR (Status)) {
     return FALSE;
   }
@@ -796,8 +792,7 @@ UninstallAllProtocols (
   }
 
   if (HostInst->RpmbIoProtocolInstalled) {
-    Status =
-      gBS->UninstallMultipleProtocolInterfaces (
+    Status = gBS->UninstallMultipleProtocolInterfaces (
         HostInst->MmcHandle,
         &gEfiRpmbIoProtocolGuid,
         &HostInst->RpmbIo,
@@ -816,8 +811,7 @@ UninstallAllProtocols (
   }
 
   if (HostInst->DevicePathProtocolInstalled) {
-    Status =
-      gBS->UninstallMultipleProtocolInterfaces (
+    Status = gBS->UninstallMultipleProtocolInterfaces (
         HostInst->MmcHandle,
         &gEfiDevicePathProtocolGuid,
         &HostInst->DevicePath,

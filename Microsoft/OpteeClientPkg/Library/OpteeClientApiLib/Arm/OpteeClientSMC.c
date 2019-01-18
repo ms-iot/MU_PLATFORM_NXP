@@ -47,7 +47,6 @@
 #undef BIT32
 #include "Optee/optee_msg.h"
 
-
 // typedef used optee internal structs to avoid prefexing variables declaration with
 // struct keyword everywhere.
 typedef struct optee_msg_param_tmem optee_msg_param_tmem_t;
@@ -277,42 +276,50 @@ SetMsgParams (
   UINTN Index;
 
   for (Index = 0; Index < TEEC_CONFIG_PAYLOAD_REF_COUNT; Index++) {
-
-    uint32_t attr = TEEC_PARAM_TYPE_GET (Operation->paramTypes, Index);
+    UINT32 attr;
 
     // Translate the supported memory attribute from TEEC_MEMREF_TEMP_* to
     // OPTEE_MSG_ATTR_TYPE_TMEM_* They are defined in the same sequence in both
-    // headers, and the C_ASSERTs below guarantee that.
+    // headers, and the compile time asserts below guarantee that.
     C_ASSERT (TEEC_MEMREF_TEMP_OUTPUT == TEEC_MEMREF_TEMP_INPUT + 1);
     C_ASSERT (TEEC_MEMREF_TEMP_INOUT == TEEC_MEMREF_TEMP_OUTPUT + 1);
-    C_ASSERT (OPTEE_MSG_ATTR_TYPE_TMEM_OUTPUT == OPTEE_MSG_ATTR_TYPE_TMEM_INPUT + 1);
-    C_ASSERT (OPTEE_MSG_ATTR_TYPE_TMEM_INOUT == OPTEE_MSG_ATTR_TYPE_TMEM_OUTPUT + 1);
     C_ASSERT (TEEC_VALUE_OUTPUT == TEEC_VALUE_INPUT + 1);
     C_ASSERT (TEEC_VALUE_INOUT == TEEC_VALUE_OUTPUT + 1);
+    C_ASSERT (OPTEE_MSG_ATTR_TYPE_TMEM_OUTPUT == OPTEE_MSG_ATTR_TYPE_TMEM_INPUT + 1);
+    C_ASSERT (OPTEE_MSG_ATTR_TYPE_TMEM_INOUT == OPTEE_MSG_ATTR_TYPE_TMEM_OUTPUT + 1);
     C_ASSERT (OPTEE_MSG_ATTR_TYPE_VALUE_OUTPUT == OPTEE_MSG_ATTR_TYPE_VALUE_INPUT + 1);
     C_ASSERT (OPTEE_MSG_ATTR_TYPE_VALUE_INOUT == OPTEE_MSG_ATTR_TYPE_VALUE_OUTPUT + 1);
 
+    attr = TEEC_PARAM_TYPE_GET (Operation->paramTypes, Index);
+
     switch (attr) {
+    case TEEC_NONE:
+      attr = OPTEE_MSG_ATTR_TYPE_NONE;
+      MsgParam[Index].attr = attr;
+      break;
+
     case TEEC_VALUE_INPUT:
     case TEEC_VALUE_OUTPUT:
     case TEEC_VALUE_INOUT:
       attr = OPTEE_MSG_ATTR_TYPE_VALUE_INPUT + (attr - TEEC_VALUE_INPUT);
+      MsgParam[Index].attr = attr;
+      MsgParam[Index].u.value.a = Operation->params[Index].value.a;
+      MsgParam[Index].u.value.b = Operation->params[Index].value.b;
       break;
 
     case TEEC_MEMREF_TEMP_INPUT:
     case TEEC_MEMREF_TEMP_OUTPUT:
     case TEEC_MEMREF_TEMP_INOUT:
       attr = OPTEE_MSG_ATTR_TYPE_TMEM_INPUT + (attr - TEEC_MEMREF_TEMP_INPUT);
+      MsgParam[Index].attr = attr;
+      MsgParam[Index].u.tmem.buf_ptr = (uintptr_t)Operation->params[Index].tmpref.buffer;
+      MsgParam[Index].u.tmem.size = Operation->params[Index].tmpref.size;
       break;
 
     default:
+      ASSERT ("unsupported TEEC attr type" == NULL);
       break;
     }
-
-    // This assumes all parameters resolve to two uint32 values.
-    MsgParam[Index].attr = attr;
-    MsgParam[Index].u.value.a = Operation->params[Index].value.a;
-    MsgParam[Index].u.value.b = Operation->params[Index].value.b;
   }
 }
 
@@ -331,10 +338,32 @@ GetMsgParams (
   UINTN Index;
 
   for (Index = 0; Index < TEEC_CONFIG_PAYLOAD_REF_COUNT; Index++) {
+    UINT32 attr;
 
-    // This assumes all parameters resolve to two uint32 values.
-    Operation->params[Index].value.a = (uint32_t) MsgParam[Index].u.value.a;
-    Operation->params[Index].value.b = (uint32_t) MsgParam[Index].u.value.b;
+    attr = TEEC_PARAM_TYPE_GET (Operation->paramTypes, Index);
+
+    switch (attr) {
+    case TEEC_NONE:
+      break;
+
+    case TEEC_VALUE_INPUT:
+    case TEEC_VALUE_OUTPUT:
+    case TEEC_VALUE_INOUT:
+      Operation->params[Index].value.a = MsgParam[Index].u.value.a;
+      Operation->params[Index].value.b = MsgParam[Index].u.value.b;
+      break;
+
+    case TEEC_MEMREF_TEMP_INPUT:
+    case TEEC_MEMREF_TEMP_OUTPUT:
+    case TEEC_MEMREF_TEMP_INOUT:
+      Operation->params[Index].tmpref.buffer = (void *)(uintptr_t)MsgParam[Index].u.tmem.buf_ptr;
+      Operation->params[Index].tmpref.size = (UINTN)MsgParam[Index].u.tmem.size;
+      break;
+
+    default:
+      ASSERT ("unsupported TEEC attr type" == NULL);
+      break;
+    }
   }
 }
 
@@ -399,4 +428,3 @@ OpteeSmcCall (
 
   return TeecResult;
 }
-

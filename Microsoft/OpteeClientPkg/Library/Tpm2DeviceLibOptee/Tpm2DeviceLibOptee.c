@@ -22,6 +22,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/Tpm2DeviceLib.h>
 #include <Library/OpteeClientApiLib.h>
 #include <Library/tee_client_api.h>
+#include <Library/Tcg2PhysicalPresenceLib.h>
 
 #include <Protocol/TrEEProtocol.h>
 #include <Protocol/RpmbIo.h>
@@ -192,7 +193,8 @@ Tpm2RequestUseTpmEnd:
 VOID
 EFIAPI
 Tpm2RelinquishUseTpm (
-  VOID
+  IN      EFI_EVENT                 Event,
+  IN      VOID                      *Context
   )
 {
   //
@@ -271,20 +273,34 @@ Tpm2DeviceLibOpTEEEntry (
   IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
-  EFI_STATUS Status;
+  EFI_EVENT     Event;
+  EFI_STATUS    Status;
 
   FTPM_PRINT("%a: Entry\n", __func__);
 
   Tpm2AcpiControlAreaInit(ImageHandle);
-  
+
   Status = OpteeClientApiInitialize(ImageHandle);
   if (EFI_ERROR(Status) != FALSE) {
     FTPM_PRINT_ERROR("%a: Failed to init OpTEE Lib %x\n",
                      __func__, Status);
   }
 
+  Tcg2PhysicalPresenceLibProcessRequest(NULL);
+
+  // Relinquish TPM on ExitBootServices.
+  //
+  // Note: To avoid race condition with SecurityPkg ExitBootServices measurements,
+  // use TPL=TPL_CALLBACK to ensure SecurityPkg callback (TPL=TPL_NOTIFY) is
+  // finished before we unload the TPM
+  Status = gBS->CreateEventEx (
+                EVT_NOTIFY_SIGNAL,
+                TPL_CALLBACK,
+                Tpm2RelinquishUseTpm,
+                NULL,
+                &gEfiEventExitBootServicesGuid,
+                &Event
+                );
+
   return Status;
 }
-
-
-

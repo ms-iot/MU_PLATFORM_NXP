@@ -5,7 +5,7 @@
 #  Global Platform TEE Client API specification for the trusted OS normal world
 #  client side interface.
 #
-#  Copyright (c) 2015, Microsoft Corporation. All rights reserved.
+#  Copyright (c) 2015-2018, Microsoft Corporation. All rights reserved.
 #
 #  This program and the accompanying materials
 #  are licensed and made available under the terms and conditions of the BSD License
@@ -29,7 +29,7 @@
   OpteeClientApiLib.c
   OpteeClientMem.c
 
-[Sources.Arm]
+[Sources]
   Arm/OpteeClientSMC.c
   Arm/OpteeClientRPC.c
 
@@ -39,7 +39,6 @@
   ArmPkg/ArmPkg.dec
   Microsoft/OpteeClientPkg/OpteeClientPkg.dec
   Microsoft/MsPkg.dec
-  StdLib/StdLib.dec
 
 [LibraryClasses]
   BaseLib
