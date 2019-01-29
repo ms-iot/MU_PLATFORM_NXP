@@ -21,6 +21,9 @@ Device(RHPX)
 
   Name(_CRS, ResourceTemplate()
   {
+    // Index 0
+    I2CSerialBus(0xFFFF,, 0,, "\\_SB.I2C2",,,,)
+
     // There is no dedicated GPIO pin on EVK board. Here is an example for adding GPIO pin.
     // Sample PIN3 of J1703, PAD UART2_RTS_BB, GPIO bank0 IO25
     GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 25 }
@@ -32,6 +35,9 @@ Device(RHPX)
     ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
     Package()
     {
+      // I2C bus
+      Package(2) { "bus-I2C-I2C2", Package() { 0 }},
+
       // GPIO Pin Count and supported drive modes
       Package (2) { "GPIO-PinCount", 124 },
       Package (2) { "GPIO-UseDescriptorPinNumbers", 1 },
