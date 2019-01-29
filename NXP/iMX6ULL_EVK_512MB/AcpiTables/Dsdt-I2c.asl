@@ -1,7 +1,7 @@
-/*
-* iMX6 ULL DSDT
+/** @file
+* Description: iMX6ULL I2C Controllers
 *
-*  Copyright (c) 2018 Microsoft Corporation. All rights reserved.
+*  Copyright (c) 2018, Microsoft Corporation. All rights reserved.
 *
 *  This program and the accompanying materials
 *  are licensed and made available under the terms and conditions of the BSD License
@@ -12,17 +12,19 @@
 *  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 *
 */
-#include "Dsdt-Common.h"
 
-DefinitionBlock ("DSDT.aml", "DSDT", 5, "MSFT", "EDK2", 1)
+// I2C2 is exposed on connector J1704
+Device (I2C2)
 {
-  Scope (\_SB_)
-  {
-    include("Dsdt-Platform.asl")
-    include("Dsdt-Gpio.asl")
-    include("Dsdt-Usb.asl")
-    include("Dsdt-Sdhc.asl")
-    include("Dsdt-I2c.asl")
-    include("Dsdt-Rhp.asl")
-  } // \_SB_
+  Name (_HID, "NXP0104")
+  Name (_UID, 0x2)
+
+  Method (_STA) {
+    Return(0xf)
+  }
+
+  Name (_CRS, ResourceTemplate () {
+      MEMORY32FIXED(ReadWrite, 0x021A4000, 0x14, )
+      Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 69 }
+  })
 }

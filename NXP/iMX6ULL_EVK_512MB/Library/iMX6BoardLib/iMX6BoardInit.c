@@ -227,6 +227,36 @@ typedef enum {
 
 } IMX_EHCI_PADCFG;
 
+typedef enum {
+  IMX_PAD_CFG_UART5_TX_I2C2_SCL = _IMX_MAKE_PADCFG_INPSEL (
+                                  IMX_SRE_FAST,
+                                  IMX_DSE_40_OHM,
+                                  IMX_SPEED_MEDIUM,
+                                  IMX_ODE_ENABLE,
+                                  IMX_PKE_ENABLE,
+                                  IMX_PUE_PULL,
+                                  IMX_PUS_100K_OHM_PU,
+                                  IMX_HYS_ENABLED,
+                                  IMX_SION_ENABLED,
+                                  IMX_IOMUXC_UART5_TX_DATA_ALT2_I2C2_SCL,
+                                  IOMUXC_I2C2_SCL_SELECT_INPUT,
+                                  UART5_TX_DATA_ALT2),
+
+  IMX_PAD_CFG_UART5_RX_I2C2_SDA = _IMX_MAKE_PADCFG_INPSEL (
+                                  IMX_SRE_FAST,
+                                  IMX_DSE_40_OHM,
+                                  IMX_SPEED_MEDIUM,
+                                  IMX_ODE_ENABLE,
+                                  IMX_PKE_ENABLE,
+                                  IMX_PUE_PULL,
+                                  IMX_PUS_100K_OHM_PU,
+                                  IMX_HYS_ENABLED,
+                                  IMX_SION_ENABLED,
+                                  IMX_IOMUXC_UART5_RX_DATA_ALT2_I2C2_SDA,
+                                  IOMUXC_I2C2_SDA_SELECT_INPUT,
+                                  UART5_RX_DATA_ALT2),
+} IMX_I2C_PADCFG;
+
 VOID EnetInit ()
 {
   // Apply ENET pin-muxing configurations
@@ -315,6 +345,9 @@ VOID EhciInit ()
 **/
 VOID I2cInit ()
 {
+  // Configure I2C2
+  ImxPadConfig (IMX_PAD_UART5_TX_DATA, IMX_PAD_CFG_UART5_TX_I2C2_SCL); // sion 1
+  ImxPadConfig (IMX_PAD_UART5_RX_DATA, IMX_PAD_CFG_UART5_RX_I2C2_SDA); // sion 1
 }
 
 /**
