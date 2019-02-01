@@ -65,4 +65,4 @@
 
   # UART1
   giMXPlatformTokenSpaceGuid.PcdSerialRegisterBase|0x30860000
-
+  giMXPlatformTokenSpaceGuid.PcdKdUartInstance|1

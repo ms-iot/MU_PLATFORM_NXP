@@ -41,6 +41,7 @@
   MdePkg/MdePkg.dec
   Microsoft/OpteeClientPkg/OpteeClientPkg.dec
   iMX7Pkg/iMX7Pkg.dec
+  iMXPlatformPkg/iMXPlatformPkg.dec
 
 [FixedPcd]
   gArmPlatformTokenSpaceGuid.PcdCoreCount
@@ -48,3 +49,4 @@
   gArmTokenSpaceGuid.PcdGicInterruptInterfaceBase
   gOpteeClientPkgTokenSpaceGuid.PcdTpm2AcpiBufferBase
   gOpteeClientPkgTokenSpaceGuid.PcdTpm2AcpiBufferSize
+  giMXPlatformTokenSpaceGuid.PcdKdUartInstance
