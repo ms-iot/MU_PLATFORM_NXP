@@ -23,14 +23,6 @@ DefinitionBlock("DsdtTable.aml", "DSDT", 5, "MSFT", "EDK2", 1) {
   Scope(_SB) {
     include("Dsdt-Platform.asl")
     include("Dsdt-Sdhc.asl")
-//    include("Dsdt-Gpio.asl")
     include("Dsdt-Usb.asl")
-//    include("Dsdt-Spi.asl")
-//    include("Dsdt-I2c.asl")
-//    include("Dsdt-Uart.asl")
-//    include("Dsdt-Rhp.asl")
-//    include("Dsdt-Enet.asl")
-//    include("Dsdt-Audio.asl")
-//    include("Dsdt-TrEE.asl")
   }
 }

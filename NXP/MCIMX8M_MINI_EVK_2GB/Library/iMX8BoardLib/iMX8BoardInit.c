@@ -113,86 +113,6 @@ ArmPlatformGetPlatformPpiList (
   *PpiList = gPlatformPpiTable;
 }
 
-#if 0
-typedef enum {
-  IMX_PAD_SAI2_MCLK_SAI2_MCLK = _IMX_MAKE_PADCFG (
-                                IMX_DSE_6_45_OHM,
-                                IMX_SRE_2_FAST,
-                                IMX_ODE_0_Open_Drain_Disabled,
-                                IMX_PUE_1_Pull_Up_Enabled,
-                                IMX_HYS_ENABLED,
-                                IMX_LVTTL_0_LVTTL_Disabled,
-                                IMX_SION_DISABLED,
-                                IMX_IOMUXC_SAI2_MCLK_ALT0_SAI2_MCLK),
-
-  IMX_PAD_SAI2_TXFS_SAI2_TX_SYNC = _IMX_MAKE_PADCFG (
-                                   IMX_DSE_6_45_OHM,
-                                   IMX_SRE_2_FAST,
-                                   IMX_ODE_0_Open_Drain_Disabled,
-                                   IMX_PUE_1_Pull_Up_Enabled,
-                                   IMX_HYS_ENABLED,
-                                   IMX_LVTTL_0_LVTTL_Disabled,
-                                   IMX_SION_DISABLED,
-                                   IMX_IOMUXC_SAI2_TXFS_ALT0_SAI2_TX_SYNC),
-
-  IMX_PAD_SAI2_TXC_SAI2_TX_BCLK =  _IMX_MAKE_PADCFG (
-                                  IMX_DSE_6_45_OHM,
-                                  IMX_SRE_2_FAST,
-                                  IMX_ODE_0_Open_Drain_Disabled,
-                                  IMX_PUE_1_Pull_Up_Enabled,
-                                  IMX_HYS_ENABLED,
-                                  IMX_LVTTL_0_LVTTL_Disabled,
-                                  IMX_SION_DISABLED,
-                                  IMX_IOMUXC_SAI2_TXC_ALT0_SAI2_TX_BCLK),
-
-  IMX_PAD_SAI2_TXD0_SAI2_DATA0 = _IMX_MAKE_PADCFG (
-                                 IMX_DSE_6_45_OHM,
-                                 IMX_SRE_2_FAST,
-                                 IMX_ODE_0_Open_Drain_Disabled,
-                                 IMX_PUE_1_Pull_Up_Enabled,
-                                 IMX_HYS_ENABLED,
-                                 IMX_LVTTL_0_LVTTL_Disabled,
-                                 IMX_SION_DISABLED,
-                                 IMX_IOMUXC_SAI2_TXD0_ALT0_SAI2_TX_DATA0),
-
-  IMX_PAD_GPIO1_IO08_GPIO1_IO08 = _IMX_MAKE_PADCFG (
-                                  IMX_DSE_6_45_OHM,
-                                  IMX_SRE_2_FAST,
-                                  IMX_ODE_0_Open_Drain_Disabled,
-                                  IMX_PUE_1_Pull_Up_Enabled,
-                                  IMX_HYS_ENABLED,
-                                  IMX_LVTTL_0_LVTTL_Disabled,
-                                  IMX_SION_DISABLED,
-                                  IMX_IOMUXC_GPIO1_IO08_ALT0_GPIO1_IO08),
-} IMX_AUDIO_PADCFG;
-
-/**
-  Initalize the Audio system
-**/
-VOID
-AudioInit (VOID)
-{
-  EFI_STATUS status;
-
-  // Mux the SAI2 pins to wm8524 codec
-  ImxPadConfig (IMX_PAD_SAI2_MCLK, IMX_PAD_SAI2_MCLK_SAI2_MCLK);
-  ImxPadConfig (IMX_PAD_SAI2_TXFS, IMX_PAD_SAI2_TXFS_SAI2_TX_SYNC);
-  ImxPadConfig (IMX_PAD_SAI2_TXC, IMX_PAD_SAI2_TXC_SAI2_TX_BCLK);
-  ImxPadConfig (IMX_PAD_SAI2_TXD0, IMX_PAD_SAI2_TXD0_SAI2_DATA0);
-
-  // unmute audio
-  ImxPadConfig (IMX_PAD_GPIO1_IO08,  IMX_PAD_GPIO1_IO08_GPIO1_IO08);
-  ImxGpioDirection (IMX_GPIO_BANK1, 8, IMX_GPIO_DIR_OUTPUT);
-  ImxGpioWrite (IMX_GPIO_BANK1, 8, IMX_GPIO_HIGH);
-
-  // enable the AUDIO_PLL - 44,100 Hz * 256
-  status = ImxSetSAI2ClockRate (11289600);
-  if (EFI_ERROR (status)) {
-    DebugPrint (DEBUG_ERROR, "AudioInit - ImxSetAudioMclkClockRate failed");
-  }
-}
-#endif
-
 /**
   Initialize controllers that must setup at the early stage
 **/
@@ -213,7 +133,6 @@ ArmPlatformInitialize (
 
   // Initialize peripherals
   ImxUngateActiveClock ();
-//  AudioInit ();
 
   return RETURN_SUCCESS;
 }
@@ -228,4 +147,3 @@ ArmPlatformGetBootMode (VOID)
 {
   return BOOT_WITH_FULL_CONFIGURATION;
 }
-
