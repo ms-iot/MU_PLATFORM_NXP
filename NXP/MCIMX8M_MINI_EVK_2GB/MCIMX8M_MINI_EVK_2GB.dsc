@@ -1,7 +1,7 @@
 #
-# NXP iMX8M Quad EVK board description
+# NXP iMX8M MINI EVK board description
 #
-# The board is iMX8M with 4GB DRAM
+# The board is iMX8M_MINI with 2GB DRAM
 #
 #  Copyright (c) 2018, Microsoft Corporation. All rights reserved.
 #  Copyright (c) 2013-2018, ARM Limited. All rights reserved.
@@ -22,11 +22,11 @@
 #
 ################################################################################
 [Defines]
-  DEFINE BOARD_NAME       = MCIMX8M_EVK_4GB
-  DEFINE IMX_FAMILY       = IMX8MQ
+  DEFINE BOARD_NAME       = MCIMX8M_MINI_EVK_2GB
+  DEFINE IMX_FAMILY       = IMX8MM
 
   PLATFORM_NAME           = iMX8
-  PLATFORM_GUID           = F01954EE-8AC4-45BC-80E5-511EAE64C38C
+  PLATFORM_GUID           = 63DF721C-2030-47F0-BACB-1682E96A2A0C
   PLATFORM_VERSION        = 0.1
   DSC_SPECIFICATION       = 0x00010019
   OUTPUT_DIRECTORY        = Build/$(BOARD_NAME)
@@ -90,13 +90,12 @@
   # FirmwareRevision 0.1
   gEfiMdeModulePkgTokenSpaceGuid.PcdFirmwareRevision|0x00000001
 
-  # System memory size (4GB)
-  # Limit to 3GB of DRAM at the top of the 32bit address space
+  # System memory size (2GB)
 !if $(CONFIG_OPTEE) == TRUE
   # OpTEE is loaded at top of memory by Arm-TF. Reduce memory size to avoid collision.
-  gArmTokenSpaceGuid.PcdSystemMemorySize|0xBE000000
+  gArmTokenSpaceGuid.PcdSystemMemorySize|0x7E000000
 !else
-  gArmTokenSpaceGuid.PcdSystemMemorySize|0xC0000000
+  gArmTokenSpaceGuid.PcdSystemMemorySize|0x80000000
 !endif
 
   #
@@ -109,7 +108,7 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareBase|0x30378000
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareSize|0x00004000
 
-  # i.MX8M Quad
+  # i.MX8M Mini
   gArmPlatformTokenSpaceGuid.PcdCoreCount|4
   gArmPlatformTokenSpaceGuid.PcdClusterCount|1
 
@@ -120,18 +119,21 @@
   #
 
   ## iMXPlatformPackage - Serial Terminal
-  giMXPlatformTokenSpaceGuid.PcdSerialRegisterBase|0x30860000
+  giMXPlatformTokenSpaceGuid.PcdSerialRegisterBase|0x30A60000
+
+  ## iMXPlatformPackage - Debug UART instance UART4 0x30A60000
+  giMXPlatformTokenSpaceGuid.PcdKdUartInstance|4
 
   # uSDHCx | iMX8M EVK Connections
   #-------------------------------------
-  # uSDHC1 | eMMC
+  # uSDHC1 | N/A
   # uSDHC2 | SD Card slot
-  # uSDHC3 | N/A
+  # uSDHC3 | eMMC
   # uSDHC4 | N/A
   #
-  giMXPlatformTokenSpaceGuid.PcdSdhc1Enable|TRUE
+  giMXPlatformTokenSpaceGuid.PcdSdhc1Enable|FALSE
   giMXPlatformTokenSpaceGuid.PcdSdhc2Enable|TRUE
-  giMXPlatformTokenSpaceGuid.PcdSdhc3Enable|FALSE
+  giMXPlatformTokenSpaceGuid.PcdSdhc3Enable|TRUE
   giMXPlatformTokenSpaceGuid.PcdSdhc4Enable|FALSE
 
   giMXPlatformTokenSpaceGuid.PcdSdhc1CardDetectSignal|0xFF00

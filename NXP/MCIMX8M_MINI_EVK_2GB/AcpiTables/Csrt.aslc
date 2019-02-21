@@ -1,0 +1,86 @@
+/*++
+*  Copyright (c) Microsoft Corporation. All rights reserved.
+*
+*  This program and the accompanying materials
+*  are licensed and made available under the terms and conditions of the BSD License
+*  which accompanies this distribution.  The full text of the license may be found at
+*  http://opensource.org/licenses/bsd-license.php
+*
+*  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+
+Module Name:
+
+  Csrt.aslc
+
+Abstract:
+
+  NXP i.MX8M MINI Core System Resource Table
+  Reference : https://acpica.org/sites/acpica/files/CSRT.doc
+
+Environment:
+
+  Firmware UEFI ACPI 5.0.
+
+Revision History:
+
+--*/
+
+#include "iMX8.h"
+#include "iMX8Platform.h"
+
+#include <Library/AcpiLib.h>
+#include <IndustryStandard/Acpi.h>
+
+#pragma pack(push, 1)
+
+// SmartDMA (SDMA) Controller Resource Group
+enum IMX_SDMA_CORE_CLOCK_RATIO {
+  IMX_SDMA_CORE_CLOCK_TWICE_CORE_FREQ,
+  IMX_SDMA_CORE_CLOCK_EQUALS_CORE_FREQ
+};
+
+// SDMA controller descriptor
+typedef struct {
+  EFI_ACPI_5_0_CSRT_RESOURCE_DESCRIPTOR_HEADER Header;
+  UINT32 ChipType; // IMX_CHIP_TYPE
+  UINT64 RegistersBaseAddress;
+  UINT64 IoMuxGPR0Address;
+  UINT32 Interrupt;
+  UINT32 SdmaCoreClockRatio; // IMX_SDMA_CORE_CLOCK_RATIO
+} RD_SDMA;
+
+// SDMA controller group descriptor
+typedef struct {
+  EFI_ACPI_5_0_CSRT_RESOURCE_GROUP_HEADER Header;
+  RD_SDMA Sdma[3];
+} RG_SDMA;
+
+// CSRT structure for this platform
+typedef struct {
+  EFI_ACPI_DESCRIPTION_HEADER CsrtHeader;
+  RG_SDMA SdmaResourceGroup;
+} EFI_ACPI_CSRT_TABLE;
+
+#pragma pack(pop)
+
+EFI_ACPI_CSRT_TABLE Csrt =
+{
+  // CSRT Header
+  {
+    EFI_ACPI_5_0_CORE_SYSTEM_RESOURCE_TABLE_SIGNATURE,  // Signature "CSRT"
+    sizeof(EFI_ACPI_CSRT_TABLE),                        // Length
+    EFI_ACPI_5_0_CSRT_REVISION,                         // Revision
+    0x00,                                               // Checksum calculated at runtime
+    EFI_ACPI_OEM_ID,                                    // OEMID is a 6 bytes long field
+    EFI_ACPI_OEM_TABLE_ID,                              // OEM table identification (8 bytes long)
+    EFI_ACPI_OEM_REVISION,                              // OEM revision number
+    EFI_ACPI_CREATOR_ID,                                // ASL compiler vendor ID
+    EFI_ACPI_CREATOR_REVISION,                          // ASL compiler revision number
+  },
+
+};
+
+// Reference the table being generated to prevent the optimizer from removing the
+// data structure from the executable
+VOID* CONST ReferenceAcpiTable = &Csrt;
