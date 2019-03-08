@@ -29,9 +29,6 @@ Device(RHPX)
 
     // Index 2
     I2CSerialBus(0xFFFF,, 0,, "\\_SB.I2C3",,,,)
-
-    // Index 3
-    I2CSerialBus(0xFFFF,, 0,, "\\_SB.I2C4",,,,)
   })
 
   Name(_DSD, Package()
@@ -40,6 +37,7 @@ Device(RHPX)
     Package()
     {
       // I2C buses 2-3
+      Package(2) { "bus-I2C-I2C1", Package() { 0 }},
       Package(2) { "bus-I2C-I2C2", Package() { 1 }},
       Package(2) { "bus-I2C-I2C3", Package() { 2 }},
     }

@@ -22,7 +22,7 @@ Device (I2C1)
 
   Method (_STA)
   {
-    Return(0x0)
+    Return(0xf)
   }
 
   Method (_CRS, 0x0, NotSerialized)
