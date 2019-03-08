@@ -22,12 +22,9 @@ Device(RHPX)
   Name(_CRS, ResourceTemplate()
   {
     // Index 0
-    I2CSerialBus(0xFFFF,, 0,, "\\_SB.I2C1",,,,)
-
-    // Index 1
     I2CSerialBus(0xFFFF,, 0,, "\\_SB.I2C2",,,,)
 
-    // Index 2
+    // Index 1
     I2CSerialBus(0xFFFF,, 0,, "\\_SB.I2C3",,,,)
   })
 
@@ -37,9 +34,8 @@ Device(RHPX)
     Package()
     {
       // I2C buses 2-3
-      Package(2) { "bus-I2C-I2C1", Package() { 0 }},
-      Package(2) { "bus-I2C-I2C2", Package() { 1 }},
-      Package(2) { "bus-I2C-I2C3", Package() { 2 }},
+      Package(2) { "bus-I2C-I2C2", Package() { 0 }},
+      Package(2) { "bus-I2C-I2C3", Package() { 1 }},
     }
   })
 }
