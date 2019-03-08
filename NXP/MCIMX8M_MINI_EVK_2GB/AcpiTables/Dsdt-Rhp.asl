@@ -1,7 +1,7 @@
 /** @file
 * Description: NXP iMX8M Mini EVK Resource Hub Proxy
 *
-*  Copyright (c) 2018, Microsoft Corporation. All rights reserved.
+*  Copyright (c) 2019, Microsoft Corporation. All rights reserved.
 *
 *  This program and the accompanying materials
 *  are licensed and made available under the terms and conditions of the BSD License
@@ -39,11 +39,9 @@ Device(RHPX)
     ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
     Package()
     {
-      // I2C buses 1-3
-      Package(2) { "bus-I2C-I2C1", Package() { 0 }},
+      // I2C buses 2-3
       Package(2) { "bus-I2C-I2C2", Package() { 1 }},
       Package(2) { "bus-I2C-I2C3", Package() { 2 }},
-      Package(2) { "bus-I2C-I2C4", Package() { 3 }},
     }
   })
 }
