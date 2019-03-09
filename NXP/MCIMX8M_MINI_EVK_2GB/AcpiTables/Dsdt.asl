@@ -24,5 +24,7 @@ DefinitionBlock("DsdtTable.aml", "DSDT", 5, "MSFT", "EDK2", 1) {
     include("Dsdt-Platform.asl")
     include("Dsdt-Sdhc.asl")
     include("Dsdt-Usb.asl")
+    include("Dsdt-I2c.asl")
+    include("Dsdt-Rhp.asl")
   }
 }
