@@ -26,6 +26,62 @@ Device(RHPX)
 
     // Index 1
     I2CSerialBus(0xFFFF,, 0,, "\\_SB.I2C3",,,,)
+
+    // GPIO3_IO16 NAND_READY_B - SYS_STATUS LED
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 80 } // 2 * 32 + 16
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 80 }
+
+    // GPIO3_IO20 PAD_SIA5_RXC - J1003 pin 40
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 84 } // 2 * 32 + 20
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 84 }
+
+    // GPIO3_IO21 PAD_SIA5_RXD0 - J1003 pin 38
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 85 } // 2 * 32 + 21
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 85 }
+
+    // GPIO3_IO22 PAD_SIA5_RXD1 - J1003 pin 37
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 86 } // 2 * 32 + 22
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 86 }
+
+    // GPIO3_IO23 PAD_SIA5_RXD2 - J1003 pin 36
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 87 } // 2 * 32 + 23
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 87 }
+
+    // GPIO3_IO24 PAD_SIA5_RXD3 - J1003 pin 35
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 88 } // 2 * 32 + 24
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 88 }
+
+    // GPIO5_IO06 PAD_ECSPI1_SCLK - J1003 pin 10 (UART3_RXD)
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 134 } // 4 * 32 + 6
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 134 }
+
+    // GPIO5_IO07 PAD_ECSPI1_MOSI - J1003 pin 8 (UART3_TXD)
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 135 } // 4 * 32 + 7
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 135 }
+
+    // GPIO5_IO08 PAD_ECSPI1_MISO - J1003 pin 7 (UART3_CTS)
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 136 } // 4 * 32 + 8
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 136 }
+
+    // GPIO5_IO09 PAD_ECSPI1_SS0 - J1003 pin 11 (UART3_RTS)
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 137 } // 4 * 32 + 9
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 137 }
+
+    // GPIO5_IO10 PAD_ECSPI2_SCLK - J1003 pin 23
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 138 } // 4 * 32 + 10
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 138 }
+
+    // GPIO5_IO11 PAD_ECSPI2_MOSI - J1003 pin 19
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 139 } // 4 * 32 + 11
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 139 }
+
+    // GPIO5_IO12 PAD_ECSPI2_MISO - J1003 pin 21
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 140 } // 4 * 32 + 12
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 140 }
+
+    // GPIO5_IO13 PAD_ECSPI2_SS0 - J1003 pin 24
+    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 141 } // 4 * 32 + 13
+    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 141 }
   })
 
   Name(_DSD, Package()
@@ -36,6 +92,13 @@ Device(RHPX)
       // I2C buses 2-3
       Package(2) { "bus-I2C-I2C2", Package() { 0 }},
       Package(2) { "bus-I2C-I2C3", Package() { 1 }},
+
+      // GPIO Pin Count and supported drive modes
+      Package (2) { "GPIO-PinCount", 157 },
+      Package (2) { "GPIO-UseDescriptorPinNumbers", 1 },
+
+      // InputHighImpedance, InputPullUp, InputPullDown, OutputCmos
+      Package (2) { "GPIO-SupportedDriveModes", 0x0F },
     }
   })
 }
