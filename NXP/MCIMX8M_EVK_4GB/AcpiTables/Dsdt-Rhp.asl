@@ -31,12 +31,12 @@ Device(RHPX)
     I2CSerialBus(0xFFFF,, 0,, "\\_SB.I2C3",,,,)
 
     // GPIO5_IO16 PAD_I2C2_SCL - J801 pin 1
-    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 144 } // 4 * 32 + 16
-    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 144 }
+    GpioIO(Shared, PullNone, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 144 } // 4 * 32 + 16
+    GpioInt(Edge, ActiveBoth, Shared, PullNone, 0, "\\_SB.GPIO",) { 144 }
 
     // GPIO5_IO17 PAD_I2C2_SDA - J801 pin 3
-    GpioIO(Shared, PullUp, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 145 } // 4 * 32 + 17
-    GpioInt(Edge, ActiveBoth, Shared, PullUp, 0, "\\_SB.GPIO",) { 145 }
+    GpioIO(Shared, PullNone, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 145 } // 4 * 32 + 17
+    GpioInt(Edge, ActiveBoth, Shared, PullNone, 0, "\\_SB.GPIO",) { 145 }
   })
 
   Name(_DSD, Package()

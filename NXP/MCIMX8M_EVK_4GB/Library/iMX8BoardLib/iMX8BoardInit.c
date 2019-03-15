@@ -23,7 +23,7 @@
 
 #include "iMX8.h"
 #include "iMX8ClkPwr.h"
-#include "iMX8IoMux.h"
+#include "iMX8MIoMux.h"
 
 ARM_CORE_INFO iMX8Ppi[] =
 {
