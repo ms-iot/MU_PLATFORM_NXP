@@ -23,6 +23,7 @@ DefinitionBlock ("DSDT.aml", "DSDT", 5, "MSFT", "EDK2", 1)
     include("Dsdt-Usb.asl")
     include("Dsdt-Sdhc.asl")
     include("Dsdt-I2c.asl")
+    include("Dsdt-Uart.asl")
     include("Dsdt-Rhp.asl")
   } // \_SB_
 }
