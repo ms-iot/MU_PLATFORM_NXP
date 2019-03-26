@@ -108,7 +108,7 @@ Device (SPI3)
   }
   Name (_CRS, ResourceTemplate () {
       MEMORY32FIXED(ReadWrite, 0x30840000, 0x4000, )
-      Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 65}
+      Interrupt(ResourceConsumer, Level, ActiveHigh, Exclusive) { 65 }
   })
 }
 

@@ -134,12 +134,12 @@ Device(RHPX)
       // SPI buses 1-2
       // Reference clock is 24 MHz
       Package(2) { "bus-SPI-SPI1", Package() { 2 }},
-      Package(2) { "SPI1-MinClockInHz", 23 },                              // 23 Hz
+      Package(2) { "SPI1-MinClockInHz", 46 },                              // 46 Hz
       Package(2) { "SPI1-MaxClockInHz", 12000000 },                        // 12 MHz
       Package(2) { "SPI1-SupportedDataBitLengths", Package() { 8,16,32 }}, // Data bit length
 
       Package(2) { "bus-SPI-SPI2", Package() { 3 }},
-      Package(2) { "SPI2-MinClockInHz", 23 },                              // 23 Hz
+      Package(2) { "SPI2-MinClockInHz", 46 },                              // 46 Hz
       Package(2) { "SPI2-MaxClockInHz", 12000000 },                        // 12 MHz
       Package(2) { "SPI2-SupportedDataBitLengths", Package() { 8,16,32 }}, // Data bit length
 
