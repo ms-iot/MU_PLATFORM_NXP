@@ -27,6 +27,44 @@ Device(RHPX)
     // Index 1
     I2CSerialBus(0xFFFF,, 0,, "\\_SB.I2C3",,,,)
 
+    // Index 2
+    SPISerialBus (          // SCLK - GPIO5_IO06 (134) - J1003 pin 10
+                            // MOSI - GPIO5_IO07 (135) - J1003 pin 8
+                            // MISO - GPIO5_IO08 (136) - J1003 pin 7
+                            // SS0  - GPIO5_IO09 (137) - J1003 pin 11
+      0,                    // Device selection (CE0)
+      PolarityLow,          // Device selection polarity
+      FourWireMode,         // wiremode
+      0,                    // databit len - placeholder
+      ControllerInitiated,  // slave mode
+      0,                    // connection speed - placeholder
+      ClockPolarityLow,     // clock polarity
+      ClockPhaseFirst,      // clock phase
+      "\\_SB.SPI1",         // ResourceSource: SPI bus controller name
+      0,                    // ResourceSourceIndex
+                            // Resource usage
+                            // DescriptorName: creates name for offset of resource descriptor
+    )                       // Vendor Data
+
+    // Index 3
+    SPISerialBus (          // SCLK - GPIO5_IO10 (138) - J1003 pin 23
+                            // MOSI - GPIO5_IO11 (139) - J1003 pin 19
+                            // MISO - GPIO5_IO12 (140) - J1003 pin 21
+                            // SS0  - GPIO5_IO13 (141) - J1003 pin 24
+      0,                    // Device selection (CE0)
+      PolarityLow,          // Device selection polarity
+      FourWireMode,         // wiremode
+      0,                    // databit len - placeholder
+      ControllerInitiated,  // slave mode
+      0,                    // connection speed - placeholder
+      ClockPolarityLow,     // clock polarity
+      ClockPhaseFirst,      // clock phase
+      "\\_SB.SPI2",         // ResourceSource: SPI bus controller name
+      0,                    // ResourceSourceIndex
+                            // Resource usage
+                            // DescriptorName: creates name for offset of resource descriptor
+    )                       // Vendor Data
+
     // GPIO3_IO16 NAND_READY_B - SYS_STATUS LED
     GpioIO(Shared, PullDown, 0, 0, IoRestrictionNone, "\\_SB.GPIO", 0, ResourceConsumer, , ) { 80 } // 2 * 32 + 16
     GpioInt(Edge, ActiveBoth, Shared, PullDown, 0, "\\_SB.GPIO",) { 80 }
@@ -92,6 +130,18 @@ Device(RHPX)
       // I2C buses 2-3
       Package(2) { "bus-I2C-I2C2", Package() { 0 }},
       Package(2) { "bus-I2C-I2C3", Package() { 1 }},
+
+      // SPI buses 1-2
+      // Reference clock is 24 MHz
+      Package(2) { "bus-SPI-SPI1", Package() { 2 }},
+      Package(2) { "SPI1-MinClockInHz", 46 },                              // 46 Hz
+      Package(2) { "SPI1-MaxClockInHz", 12000000 },                        // 12 MHz
+      Package(2) { "SPI1-SupportedDataBitLengths", Package() { 8,16,32 }}, // Data bit length
+
+      Package(2) { "bus-SPI-SPI2", Package() { 3 }},
+      Package(2) { "SPI2-MinClockInHz", 46 },                              // 46 Hz
+      Package(2) { "SPI2-MaxClockInHz", 12000000 },                        // 12 MHz
+      Package(2) { "SPI2-SupportedDataBitLengths", Package() { 8,16,32 }}, // Data bit length
 
       // GPIO Pin Count and supported drive modes
       Package (2) { "GPIO-PinCount", 157 },
