@@ -82,14 +82,14 @@ Since mu_environment has a dependency on mu_python_library, it should be updated
 - `sudo apt-get install gcc g++ make python3 python3-pip git mono-devel`
     - Minimum Python version is 3.6
     - Minimum git version 2.11
+- `git clone https://github.com/ms-iot/MU_PLATFORM_NXP`
 - Install pip modules for build:
-    - `pip3 install -r requirments.txt`
-- `git clone https://windowspartners.visualstudio.com/MSCoreUEFI/MSCoreUEFI%20Team/_git/NXP_iMX_Platform`
+    - `pip3 install -r requirements.txt`
 - Change into the directory you just cloned and run:
     - `git submodule update --init --recursive`
 - Download [Linaro AARCH 64 GCC 7.2.1](https://releases.linaro.org/components/toolchain/binaries/7.2-2017.11/aarch64-linux-gnu/)
     - Set GCC5_AARCH64_PREFIX to this path
-        - `tar -xf gcc-linaro-6.4.1-2017.11-x86_64_arm-linux-gnueabihf.tar.xz`
+        - `tar -xf gcc-linaro-7.2.1-2017.11-x86_64_aarch64-linux-gnu.tar.gz`
         - `export GCC5_AARCH64_PREFIX=$PWD/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-`
 - `python3 NXP/MCIMX8M_EVK_4GB/PlatformBuild.py --setup`
     - This fetches any dependencies via NuGet and synchronizes submodules
