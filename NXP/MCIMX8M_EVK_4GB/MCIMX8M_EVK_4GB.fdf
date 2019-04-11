@@ -99,5 +99,6 @@ READ_LOCK_STATUS   = TRUE
   INF MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
   INF $(BOARD_DIR)/Drivers/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
 
+!include FrontpageFdf.inc
 !include iMX8Pkg/iMX8CommonFdf.inc
 

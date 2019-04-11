@@ -17,3 +17,6 @@
 [submodule "Silicon/ARM/NXP"]
 	path = Silicon/ARM/NXP
 	url = https://github.com/ms-iot/MU_SILICON_NXP.git
+[submodule "Common/MU_OEM_SAMPLE"]
+	path = Common/MU_OEM_SAMPLE
+	url = https://windowspartners.visualstudio.com/MSCoreUEFI/_git/mu_oem_sample
