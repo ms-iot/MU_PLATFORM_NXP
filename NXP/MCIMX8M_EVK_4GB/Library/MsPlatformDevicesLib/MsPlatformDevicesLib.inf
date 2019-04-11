@@ -1,0 +1,41 @@
+## @file
+#  MsPlatformDevicesLib.inf
+#
+#  Description:    Supplies the device specific connect lists, and SdCard device paths
+#
+#  Copyright (c) 2018, Microsoft Corporation.
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = MsPlatformDevicesLib
+  FILE_GUID                      = 098D46D2-58B8-4F17-AAEC-CA7E32C052E5
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = MsPlatformDevicesLib | DXE_DRIVER DXE_RUNTIME_DRIVER UEFI_APPLICATION UEFI_DRIVER
+
+#
+#  VALID_ARCHITECTURES           = AARCH64
+#
+
+[Sources]
+  MsPlatformDevicesLib.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  MsCorePkg/MsCorePkg.dec
+  PcBdsPkg/PcBdsPkg.dec
+
+[LibraryClasses]
+  DebugLib
+  DevicePathLib
+  PcdLib
+  UefiBootServicesTableLib
+
+[Pcd]
+  gEfiMdePkgTokenSpaceGuid.PcdUartDefaultBaudRate ## CONSUMES
+  gEfiMdePkgTokenSpaceGuid.PcdUartDefaultDataBits ## CONSUMES
+  gEfiMdePkgTokenSpaceGuid.PcdUartDefaultParity   ## CONSUMES
+  gEfiMdePkgTokenSpaceGuid.PcdUartDefaultStopBits ## CONSUMES
