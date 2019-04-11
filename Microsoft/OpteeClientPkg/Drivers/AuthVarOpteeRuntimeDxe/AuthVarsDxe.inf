@@ -1,0 +1,95 @@
+## @file
+#  Runtime DXE part corresponding to OpTEE authenticated variable trusted application
+#
+#  This module installs variable arch protocol and variable write arch protocol to provide
+#  variable service. This module works together with OpTEE authenticated variable trusted
+#  application.
+#
+#  Caution: This module requires additional review when modified.
+#  This driver will have external input - variable data.
+#  This external input must be validated carefully to avoid security issues such as
+#  buffer overflow or integer overflow.
+#
+# Copyright (c) Microsoft Corporation. All rights reserved.
+#
+# This program and the accompanying materials are licensed and made available under the
+# terms and conditions of the BSD License which accompanies this distribution.
+# The full text of the license may be found at
+# http://opensource.org/licenses/bsd-license.php
+#
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = VariableAuthOpteeRuntimeDxe
+  FILE_GUID                      = 8f92f7bd-4c40-46af-8d41-1fc50f45808e
+  MODULE_TYPE                    = DXE_RUNTIME_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = VariableAuthOpteeRuntimeInitialize
+
+[Sources]
+  AuthVarsDxe.c
+  Measurement.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  SecurityPkg/SecurityPkg.dec
+  Microsoft/OpteeClientPkg/OpteeClientPkg.dec
+  StdLib/StdLib.dec
+  Microsoft/MsPkg.dec
+
+[LibraryClasses]
+  MemoryAllocationLib
+  BaseLib
+  UefiBootServicesTableLib
+  DebugLib
+  UefiRuntimeLib
+  DxeServicesTableLib
+#  DxeServicesLib
+  UefiDriverEntryPoint
+  PcdLib
+  OpteeClientApiLib
+  TpmMeasurementLib
+  PerformanceLib
+
+[Protocols]
+  gEfiVariableWriteArchProtocolGuid                                 ## PRODUCES
+  gEfiVariableArchProtocolGuid                                      ## PRODUCES
+  gEdkiiVariableLockProtocolGuid                                    ## PRODUCES
+  gEdkiiVarCheckProtocolGuid                                        ## PRODUCES
+
+[Guids]
+  gEfiEventVirtualAddressChangeGuid                                 ## CONSUMES       ## Event
+  gEfiEventExitBootServicesGuid                                     ## CONSUMES       ## Event
+  gEfiEndOfDxeEventGroupGuid                                        ## CONSUMES       ## Event
+
+  ## SOMETIMES_CONSUMES   ## Variable:L"PK"
+  ## SOMETIMES_CONSUMES   ## Variable:L"KEK"
+  ## SOMETIMES_CONSUMES   ## Variable:L"SecureBoot"
+  gEfiGlobalVariableGuid
+
+  ## SOMETIMES_CONSUMES   ## Variable:L"DB"
+  ## SOMETIMES_CONSUMES   ## Variable:L"DBX"
+  gEfiImageSecurityDatabaseGuid
+
+  gEfiCustomModeEnableGuid                                          ## CONSUMES
+  gEfiSecureBootEnableDisableGuid                                   ## CONSUMES
+
+  gOpteeAuthVarTaGuid
+
+[Pcd]
+  gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize                 ## CONSUMES
+  gEfiMdeModulePkgTokenSpaceGuid.PcdMaxHardwareErrorVariableSize    ## CONSUMES
+
+  gOpteeClientPkgTokenSpaceGuid.PcdTrustZoneSharedMemoryBase
+  gOpteeClientPkgTokenSpaceGuid.PcdTrustZoneSharedMemorySize
+
+  gMsPkgTokenSpaceGuid.PcdSecureBootEnable
+  gMsPkgTokenSpaceGuid.PcdStorageMediaPartitionDevicePath
+
+[Depex]
+TRUE
