@@ -84,7 +84,7 @@ Since mu_environment has a dependency on mu_python_library, it should be updated
     - Minimum git version 2.11
 - `git clone https://github.com/ms-iot/MU_PLATFORM_NXP`
 - Install pip modules for build:
-    - `pip3 install -r requirements.txt`
+    - `pip3 install -r requirements.txt --upgrade`
 - Change into the directory you just cloned and run:
     - `git submodule update --init --recursive`
 - Download [Linaro AARCH 64 GCC 7.2.1](https://releases.linaro.org/components/toolchain/binaries/7.2-2017.11/aarch64-linux-gnu/)
