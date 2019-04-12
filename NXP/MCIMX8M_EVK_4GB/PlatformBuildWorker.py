@@ -28,7 +28,6 @@ class PlatformBuilder(UefiBuilder):
     def SetPlatformEnv(self):
         logging.debug("PlatformBuilder SetPlatformEnv")
 
-        self.env.SetValue("CONF_TEMPLATE_DIR", "NXP", "Conf template directory hardcoded - temporary and should go away")
 
         self.env.SetValue("BLD_*_SHIP_MODE", "FALSE", "PROFILE VALUE")
         self.env.SetValue("ACTIVE_PLATFORM", "NXP/MCIMX8M_EVK_4GB/MCIMX8M_EVK_4GB.dsc", "Platform Hardcoded")

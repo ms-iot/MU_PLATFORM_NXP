@@ -60,7 +60,7 @@ NXP
 
 ## [mu_python_library](https://pypi.org/project/mu-python-library/)
 
-Python files describing miscellanious components (EDKII, TPM, etc.)
+Python files describing miscellaneous components (EDKII, TPM, etc.)
 
 ## [mu_environment](https://pypi.org/project/mu-environment/)
 
@@ -79,21 +79,18 @@ Since mu_environment has a dependency on mu_python_library, it should be updated
 
 # Setup Info for iMX8
 
-- `sudo apt-get install gcc g++ make python3 python3-pip git`
+- `sudo apt-get install gcc g++ make python3 python3-pip git mono-devel`
     - Minimum Python version is 3.6
     - Minimum git version 2.11
+- `git clone https://github.com/ms-iot/MU_PLATFORM_NXP`
 - Install pip modules for build:
-    - `pip3 install mu_environment`
-- `git clone https://windowspartners.visualstudio.com/MSCoreUEFI/MSCoreUEFI%20Team/_git/NXP_iMX_Platform`
+    - `pip3 install -r requirements.txt --upgrade`
 - Change into the directory you just cloned and run:
     - `git submodule update --init --recursive`
-    - Python3 is not yet compatible with EDK2 in Linux
 - Download [Linaro AARCH 64 GCC 7.2.1](https://releases.linaro.org/components/toolchain/binaries/7.2-2017.11/aarch64-linux-gnu/)
-    - Set GCC5_BIN to this path
-        - export GCC5_BIN=/home/maknutse/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-linux-gnu/bin/
-- Compile BaseTools:
-    - `cd MU_BASECORE`
-    - `make -C BaseTools`
+    - Set GCC5_AARCH64_PREFIX to this path
+        - `tar -xf gcc-linaro-7.2.1-2017.11-x86_64_aarch64-linux-gnu.tar.gz`
+        - `export GCC5_AARCH64_PREFIX=$PWD/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-`
 - `python3 NXP/MCIMX8M_EVK_4GB/PlatformBuild.py --setup`
     - This fetches any dependencies via NuGet and synchronizes submodules
 - `rm -r Build; rm -r Conf; python3 NXP/MCIMX8M_EVK_4GB/PlatformBuild.py TOOL_CHAIN_TAG=GCC5 BUILDREPORTING=TRUE BUILDREPORT_TYPES="PCD"`
