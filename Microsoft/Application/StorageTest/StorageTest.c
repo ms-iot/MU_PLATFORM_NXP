@@ -12,7 +12,8 @@
 *
 **/
 
-#include "EdkTest.h"
+#include <Uefi.h>
+#include <Library/BaseCryptLib.h>
 #include <Library/DebugLib.h>
 #include <Library/DevicePathLib.h>
 #include <Library/MemoryAllocationLib.h>
@@ -21,14 +22,7 @@
 #include <Library/UefiLib.h>
 #include <Protocol/ShellParameters.h>
 #include <Protocol/SimpleFileSystem.h>
-#include <setjmp.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <Uefi.h>
-#include <wchar.h>
+#include <EdkTest.h>
 
 MODULE ("Storage FAT media functional tests");
 
@@ -45,20 +39,15 @@ EFI_FILE_PROTOCOL *File;
 UINT8 *WriteBuffer;
 UINT8 *ReadBuffer;
 
-VOID
-RandomBytes (
-  IN UINTN    BufferSize,
-  OUT UINT8   *Buffer
+UINT32
+Rand (
+  VOID
   )
 {
-  UINTN Index;
+  UINT32 val;
 
-  ASSERT (Buffer != NULL);
-
-  for (Index = 0; Index < BufferSize; ++Index) {
-    // Generate random number between 0 and 255 inclusive
-    Buffer[Index] = (UINT8) (rand() % 256);
-  }
+  RandomBytes((UINT8 *) &val, sizeof(val));
+  return val;
 }
 
 VOID
@@ -126,12 +115,12 @@ TestRandomWriteRead (
 
     for (j = 0; j < 100 / (i + 1); ++j) {
       SET_LOG_LEVEL (TestLogError);
-      FilePos = (rand() % SIZE_1KB);
+      FilePos = (Rand() % SIZE_1KB);
       VERIFY_SUCCEEDED (File->SetPosition (File, FilePos));
       VERIFY_SUCCEEDED (File->GetPosition (File, &ActualFilePos));
       VERIFY_ARE_EQUAL (UINT64, FilePos, ActualFilePos);
 
-      RandomBytes (BufferSizes[i], WriteBuffer);
+      RandomBytes (WriteBuffer, BufferSizes[i]);
 
       WriteBufferSize = BufferSizes[i];
       VERIFY_SUCCEEDED (File->Write (File, &WriteBufferSize, WriteBuffer));
@@ -170,6 +159,7 @@ TestSetup (
   File = NULL;
   WriteBuffer = NULL;
   ReadBuffer = NULL;
+  RandomSeed (NULL, 0);
   return TRUE;
 }
 
