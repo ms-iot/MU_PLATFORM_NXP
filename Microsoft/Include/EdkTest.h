@@ -20,10 +20,6 @@
 #include <Library/DebugLib.h>
 #include <Library/TimerLib.h>
 
-#include <setjmp.h>
-#include <stddef.h>
-#include <stdlib.h>
-
 #ifndef C_ASSERT
 #define C_ASSERT(e) _Static_assert(e, #e)
 #endif // C_ASSERT

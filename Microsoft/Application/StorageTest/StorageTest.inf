@@ -22,13 +22,15 @@
   StorageTest.c
 
 [Packages]
+  CryptoPkg/CryptoPkg.dec
+  MdeModulePkg/MdeModulePkg.dec
   MdePkg/MdePkg.dec
   Microsoft/MsPkg.dec
   ShellPkg/ShellPkg.dec
-  StdLib/StdLib.dec
 
 [LibraryClasses]
+  BaseCryptLib
+  BaseLib
   DebugLib
-  LibC
-  LibStdio
+  ShellCEntryLib
   UefiLib
