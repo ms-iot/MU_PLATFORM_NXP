@@ -47,6 +47,7 @@ Rand (
   UINT32 val;
 
   RandomBytes((UINT8 *) &val, sizeof(val));
+  val = val % 32768;
   return val;
 }
 
