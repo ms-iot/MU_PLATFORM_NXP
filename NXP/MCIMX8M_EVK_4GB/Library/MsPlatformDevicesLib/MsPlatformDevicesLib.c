@@ -51,12 +51,14 @@ typedef struct {
 
 static GRAPHICS_DEVICE_PATH DisplayDevicePath = {
   {
-    HARDWARE_DEVICE_PATH,
-    HW_VENDOR_DP,
+    {
+      HARDWARE_DEVICE_PATH,
+      HW_VENDOR_DP,
       {
         (UINT8)(sizeof(VENDOR_DEVICE_PATH)),
         (UINT8)((sizeof(VENDOR_DEVICE_PATH)) >> 8)
       },
+    },
     GRAPHICS_DEVICE_PATH_GUID
   },
   gEndEntire

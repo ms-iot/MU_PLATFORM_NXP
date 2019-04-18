@@ -57,8 +57,10 @@
   ArmPlatformLib|$(BOARD_DIR)/Library/iMX8BoardLib/iMX8BoardLib.inf
   MsPlatformDevicesLib|NXP/MCIMX8M_EVK_4GB/Library/MsPlatformDevicesLib/MsPlatformDevicesLib.inf
   DfciDeviceIdSupportLib|NXP/MCIMX8M_EVK_4GB/Library/DfciDeviceIdSupportLib/Imx8DeivceIdSupportLib.inf
+  PlatformThemeLib|NXP/MCIMX8M_EVK_4GB/Library/PlatformThemeLib/PlatformThemeLib.inf
 
 [Components.common]
+  NXP/MCIMX8M_EVK_4GB/Buttons/Buttons.inf
   #
   # ACPI Support
   #
@@ -179,4 +181,3 @@
   # Use system default resolution
   gEfiMdeModulePkgTokenSpaceGuid.PcdVideoHorizontalResolution|0
   gEfiMdeModulePkgTokenSpaceGuid.PcdVideoVerticalResolution|0
-
