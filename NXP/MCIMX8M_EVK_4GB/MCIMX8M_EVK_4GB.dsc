@@ -42,11 +42,12 @@
 #
 ################################################################################
 
-#!include iMX8Pkg/iMX8ConfigDsc.inc
 
 # Include common peripherals
-!include Silicon/ARM/NXP/iMX8Pkg/iMX8CommonDsc.inc
+!include iMX8Pkg/iMX8CommonDsc.inc
+!if $(CONFIG_FRONTPAGE) == TRUE
 !include FrontpageDsc.inc
+!endif
 
 ################################################################################
 #
