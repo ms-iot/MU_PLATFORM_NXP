@@ -58,11 +58,15 @@ InitializeDevice (
   // SD/MMC cards on reset start in default normal speed mode
   HostInst->CardInfo.CurrentSpeedMode = CardSpeedModeNormalSpeed;
 
+  LOG_TRACE ("SoftwareReset()");
+
   Status = HostExt->SoftwareReset (HostExt, SdhcResetTypeAll);
   if (EFI_ERROR (Status)) {
     LOG_ERROR ("HostExt->SoftwareReset() failed. %r", Status);
     return Status;
   }
+
+  LOG_TRACE ("SetClock()");
 
   Status = HostExt->SetClock (HostExt, SD_IDENT_MODE_CLOCK_FREQ_HZ);
   if (EFI_ERROR (Status)) {
@@ -456,7 +460,7 @@ SdhcSendCommand (
   }
 
   // SWITCH command can change card state to prog, we should wait the card to
-  // transfer back to tran state and rais the READY_FOR_DATA flag to make sure
+  // transfer back to tran state and raise the READY_FOR_DATA flag to make sure
   // that switch operation was completed successfully
   if (CmdsAreEqual (Cmd, &CmdSwitchMmc) ||
       CmdsAreEqual (Cmd, &CmdSwitchSd)) {
@@ -568,6 +572,8 @@ SdhcQueryCardType (
 {
   EFI_STATUS Status;
 
+  LOG_TRACE ("SdhcQueryCardType()");
+
   Status = SdhcGoIdleState (HostInst);
   if (EFI_ERROR (Status)) {
     return Status;
@@ -656,6 +662,8 @@ SdhcSendCid (
   UINT32      CmdArg;
   EFI_STATUS  Status;
 
+  LOG_TRACE ("SdhcSendCid()");
+
   CmdArg = HostInst->CardInfo.RCA << 16;
 
   Status = SdhcSendCommand (HostInst, &CmdSendCid, CmdArg);
@@ -701,6 +709,8 @@ SdhcSendCsd (
   UINT32      Mult;
   UINT64      NumBlocks;
   EFI_STATUS  Status;
+
+  LOG_TRACE ("SdhcSendCsd()");
 
   CmdArg = HostInst->CardInfo.RCA << 16;
   Status = SdhcSendCommand (HostInst, &CmdSendCsd, CmdArg);
@@ -762,6 +772,8 @@ SdhcSelectDevice (
 {
   UINT32 CmdArg;
 
+  LOG_TRACE ("SdhcSelectDevice()");
+
   CmdArg = HostInst->CardInfo.RCA << 16;
   return SdhcSendCommand (HostInst, &CmdSelect, CmdArg);
 }
@@ -801,6 +813,8 @@ SdhcSendCidAll (
   IN SDHC_INSTANCE  *HostInst
   )
 {
+  LOG_TRACE ("SdhcSendCidAll()");
+
   return SdhcSendCommand (HostInst, &CmdSendCidAll, 0);
 }
 
@@ -811,6 +825,8 @@ SdhcSendRelativeAddr (
 {
   UINT32      CmdArg;
   EFI_STATUS  Status;
+
+  LOG_TRACE ("SdhcSendRelativeAddr()");
 
   CmdArg = 0;
   // Unlike SD memory, MMC cards don't publish their RCA, instead it should be
@@ -1303,6 +1319,8 @@ SdhcSwitchBusWidthMmc (
   EFI_STATUS          Status;
   MMC_SWITCH_CMD_ARG  SwitchCmdArg;
 
+  LOG_TRACE ("SdhcSwitchBusWidthMmc()");
+
   HostExt = HostInst->HostExt;
   BusWidth = SdBusWidth8Bit;
   ExtCsd = &HostInst->CardInfo.Registers.Mmc.ExtCsd;
@@ -1395,6 +1413,8 @@ SdhcSwitchSpeedModeMmc (
   MMC_SWITCH_CMD_ARG  CmdArg;
   EFI_STATUS          Status;
 
+  LOG_TRACE ("SdhcSwitchSpeedModeMmc()");
+
   CmdArg.AsUint32 = 0;
   CmdArg.Fields.Access = MmcSwitchCmdAccessTypeWriteByte;
   CmdArg.Fields.Index = MmcExtCsdBitIndexHsTiming;
@@ -1421,6 +1441,8 @@ SdhcSwitchSpeedModeMmc (
     return EFI_PROTOCOL_ERROR;
   }
 
+  LOG_TRACE ("SdhcSwitchSpeedModeMmc() Succeeded");
+
   return EFI_SUCCESS;
 }
 
@@ -1432,6 +1454,8 @@ SdhcSendExtCsdMmc (
   MMC_EXT_CSD   *ExtCsd;
   UINT32        CmdArg;
   EFI_STATUS    Status;
+
+  LOG_TRACE ("SdhcSendExtCsdMmc()");
 
   CmdArg = HostInst->CardInfo.RCA << 16;
   ExtCsd = &HostInst->CardInfo.Registers.Mmc.ExtCsd;
