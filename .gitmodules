@@ -12,7 +12,7 @@
 	branch = release/201903
 [submodule "Silicon/ARM/MU_TIANO"]
 	path = Silicon/ARM/MU_TIANO
-	url = https://github.com/Microsoft/mu_silicon_arm_tiano.git
+	url = https://github.com/mknutsen/mu_silicon_arm_tiano.git
 	branch = release/201903
 [submodule "Silicon/ARM/NXP"]
 	path = Silicon/ARM/NXP

@@ -33,11 +33,11 @@ MODULE_PKG_PATHS = os.pathsep.join(os.path.join(WORKSPACE_PATH, pkg_name) for pk
 # Supported Profiles and Settings based on the profile.  This allows easier grouping
 # of settings.  Add var name as the key and value as value.
 #
-gProfile = {
-    "SECURE": {"BLD_*_CONFIG_AUTH_VAR" : "TRUE", "BLD_*_CONFIG_SECURE_BOOT" : "TRUE",  "BLD_*_CONFIG_MEASURED_BOOT" : "TRUE"},
-    "DEV": {"BLD_*_CONFIG_AUTH_VAR" : "FALSE", "BLD_*_CONFIG_SECURE_BOOT" : "FALSE",  "BLD_*_CONFIG_MEASURED_BOOT" : "FALSE",},
-    "FRONTPAGE": {"BLD_*_CONFIG_AUTH_VAR" : "FALSE", "BLD_*_CONFIG_SECURE_BOOT" : "FALSE",  "BLD_*_CONFIG_USB" :"TRUE","BLD_*_CONFIG_MEASURED_BOOT" : "FALSE", "BLD_*_CONFIG_FRONTPAGE" : "TRUE"},
-    }
+# gProfile = {
+#     "SECURE": {"BLD_*_CONFIG_AUTH_VAR" : "TRUE", "BLD_*_CONFIG_SECURE_BOOT" : "TRUE",  "BLD_*_CONFIG_MEASURED_BOOT" : "TRUE"},
+#     "DEV": {"BLD_*_CONFIG_AUTH_VAR" : "FALSE", "BLD_*_CONFIG_SECURE_BOOT" : "FALSE",  "BLD_*_CONFIG_MEASURED_BOOT" : "FALSE",},
+#     "FRONTPAGE": {"BLD_*_CONFIG_AUTH_VAR" : "FALSE", "BLD_*_CONFIG_SECURE_BOOT" : "FALSE",  "BLD_*_CONFIG_USB" :"TRUE","BLD_*_CONFIG_MEASURED_BOOT" : "FALSE", "BLD_*_CONFIG_FRONTPAGE" : "TRUE"},
+#     }
 
 #--------------------------------------------------------------------------------------------------------
 # Subclass the UEFI builder and add platform specific functionality.
@@ -50,56 +50,56 @@ class PlatformBuilder(UefiBuilder):
     def SetPlatformEnv(self):
         logging.debug("PlatformBuilder SetPlatformEnv")
 
-        #CHECK FOR PROFILE USAGE. SET TO DEV IF NONE IS SPECIFIED.
-        profile = self.env.GetValue("PROFILE")
-        if((profile == None) or (profile.upper() == "DEFAULT")):
-            profile = "DEV"
-        profile = profile.upper()
-        logging.critical("BUILD PROFILE SET: %s" % profile)
-        p = gProfile[profile]
-        if(p != None):
-            for k,v in p.items():
-                logging.debug("Setting %s = %s by using profile %s" % (k, v, self.env.GetValue("PROFILE")))
-                self.env.SetValue(k, v, "PROFILE VALUE")
-        else:
-            #catch case user requested a profile that doesn't exist
-            logging.critical("Profile: %s doesn't exist." % profile)
-            return -1
-        #END OF PROFILE SUPPORT
+        # #CHECK FOR PROFILE USAGE. SET TO DEV IF NONE IS SPECIFIED.
+        # profile = self.env.GetValue("PROFILE")
+        # if((profile == None) or (profile.upper() == "DEFAULT")):
+        #     profile = "DEV"
+        # profile = profile.upper()
+        # logging.critical("BUILD PROFILE SET: %s" % profile)
+        # p = gProfile[profile]
+        # if(p != None):
+        #     for k,v in p.items():
+        #         logging.debug("Setting %s = %s by using profile %s" % (k, v, self.env.GetValue("PROFILE")))
+        #         self.env.SetValue(k, v, "PROFILE VALUE")
+        # else:
+        #     #catch case user requested a profile that doesn't exist
+        #     logging.critical("Profile: %s doesn't exist." % profile)
+        #     return -1
+        # #END OF PROFILE SUPPORT
 
-        self.env.SetValue("BLD_*_CONFIG_HEADLESS", "TRUE", "Display surface will be drawn by default")
+        # self.env.SetValue("BLD_*_CONFIG_HEADLESS", "TRUE", "Display surface will be drawn by default")
 
-        # Useful if working with Lauterbach JTAG. Will dump to console the complete
-        # command to copy and past into the Lauterbach command line to load symbols
-        # for each module.
-        # Use in conjunction with Informational debug messages:
-        # DEBUG_INFO      0x00000040
-        self.env.SetValue("BLD_*_CONFIG_DUMP_SYMBOL_INFO", "TRUE", "On by default")
-        # Enable if PSCI is implemented
-        self.env.SetValue("BLD_*_CONFIG_MPCORE", "TRUE", "Off by default")
-        # Disable the USB stack by default. It currently has issues and need to be taken care of
-        self.env.SetValue("BLD_*_CONFIG_USB", "FALSE", "currently has issues")
-        # Disable the PCIexpress stack by default. Enable on demand.
-        self.env.SetValue("BLD_*_CONFIG_PCIE", "TRUE", "Off by default")
-        # States whether OPTEE boot flow is in effect or not. This has the following
-        # implications:
-        # - OPTEE must have been loaded by ATF.
-        # - Specific memory layout that is defined in the platform .dsc file.
-        self.env.SetValue("BLD_*_CONFIG_OPTEE", "TRUE", "Off by default")
-        # Allow collecting performance tracing from OPTEE hot code paths
-        # Performance summary results can be inspected with the shell app Dp.efi
-        self.env.SetValue("BLD_*_CONFIG_OPTEE_PROFILE", "TRUE", "Off by default")
-        # TPM stack for the fTPM
-        self.env.SetValue("BLD_*_CONFIG_MEASURED_BOOT", "TRUE", "Off by default")
-        # UEFI authenticated variable runtime services
-        self.env.SetValue("BLD_*_CONFIG_AUTH_VAR", "TRUE", "Off by default")
-        # If Platform Key (PK) is provisioned, then SecureBoot variables will get
-        # updated to reflect that SecureBoot is enabled. Otherwise, SecureBoot
-        # variables will indicate that the feature is disabled, and the OS will
-        # not boot apply SecureBoot policies
-        self.env.SetValue("BLD_*_CONFIG_SECURE_BOOT", "TRUE", "On by default")
-        # Select to build project MU Frontpage with DFCI and the UEFI Shell
-        self.env.SetValue("BLD_*_CONFIG_FRONTPAGE", "FALSE", "Off by default")
+        # # Useful if working with Lauterbach JTAG. Will dump to console the complete
+        # # command to copy and past into the Lauterbach command line to load symbols
+        # # for each module.
+        # # Use in conjunction with Informational debug messages:
+        # # DEBUG_INFO      0x00000040
+        # self.env.SetValue("BLD_*_CONFIG_DUMP_SYMBOL_INFO", "TRUE", "On by default")
+        # # Enable if PSCI is implemented
+        # self.env.SetValue("BLD_*_CONFIG_MPCORE", "TRUE", "Off by default")
+        # # Disable the USB stack by default. It currently has issues and need to be taken care of
+        # self.env.SetValue("BLD_*_CONFIG_USB", "FALSE", "currently has issues")
+        # # Disable the PCIexpress stack by default. Enable on demand.
+        # self.env.SetValue("BLD_*_CONFIG_PCIE", "TRUE", "Off by default")
+        # # States whether OPTEE boot flow is in effect or not. This has the following
+        # # implications:
+        # # - OPTEE must have been loaded by ATF.
+        # # - Specific memory layout that is defined in the platform .dsc file.
+        # self.env.SetValue("BLD_*_CONFIG_OPTEE", "TRUE", "Off by default")
+        # # Allow collecting performance tracing from OPTEE hot code paths
+        # # Performance summary results can be inspected with the shell app Dp.efi
+        # self.env.SetValue("BLD_*_CONFIG_OPTEE_PROFILE", "TRUE", "Off by default")
+        # # TPM stack for the fTPM
+        # self.env.SetValue("BLD_*_CONFIG_MEASURED_BOOT", "TRUE", "Off by default")
+        # # UEFI authenticated variable runtime services
+        # self.env.SetValue("BLD_*_CONFIG_AUTH_VAR", "TRUE", "Off by default")
+        # # If Platform Key (PK) is provisioned, then SecureBoot variables will get
+        # # updated to reflect that SecureBoot is enabled. Otherwise, SecureBoot
+        # # variables will indicate that the feature is disabled, and the OS will
+        # # not boot apply SecureBoot policies
+        # self.env.SetValue("BLD_*_CONFIG_SECURE_BOOT", "TRUE", "On by default")
+        # # Select to build project MU Frontpage with DFCI and the UEFI Shell
+        self.env.SetValue("BLD_*_CONFIG_FRONTPAGE", "TRUE", "Off by default")
         self.env.SetValue("BUILDREPORTING", "TRUE", "Enabling build report")
         self.env.SetValue("BUILDREPORT_TYPES", "PCD DEPEX FLASH BUILD_FLAGS LIBRARY FIXED_ADDRESS HASH", "Setting build report types")
 
