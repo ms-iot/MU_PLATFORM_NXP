@@ -44,6 +44,10 @@
 
 
 # Include common peripherals
+!include iMX8Pkg/iMX8CommonDsc.inc
+!if $(CONFIG_FRONTPAGE) == TRUE
+!include FrontpageDsc.inc
+!endif
 
 ################################################################################
 #
