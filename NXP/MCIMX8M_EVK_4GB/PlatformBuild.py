@@ -74,30 +74,30 @@ class PlatformBuilder(UefiBuilder):
         # # for each module.
         # # Use in conjunction with Informational debug messages:
         # # DEBUG_INFO      0x00000040
-        self.env.SetValue("BLD_*_CONFIG_DUMP_SYMBOL_INFO", "FALSE", "On by default")
+        self.env.SetValue("BLD_*_CONFIG_DUMP_SYMBOL_INFO", "TRUE", "On by default")
         # # Enable if PSCI is implemented
-        self.env.SetValue("BLD_*_CONFIG_MPCORE", "FALSE", "On by default")
+        self.env.SetValue("BLD_*_CONFIG_MPCORE", "TRUE", "On by default")
         # # Disable the USB stack by default. It currently has issues and need to be taken care of
-        self.env.SetValue("BLD_*_CONFIG_USB", "TRUE", "currently has issues")
+        self.env.SetValue("BLD_*_CONFIG_USB", "FALSE", "currently has issues")
         # # Disable the PCIexpress stack by default. Enable on demand.
         self.env.SetValue("BLD_*_CONFIG_PCIE", "FALSE", "Off by default")
         # # States whether OPTEE boot flow is in effect or not. This has the following
         # # implications:
         # # - OPTEE must have been loaded by ATF.
         # # - Specific memory layout that is defined in the platform .dsc file.
-        self.env.SetValue("BLD_*_CONFIG_OPTEE", "FALSE", "On by default")
+        self.env.SetValue("BLD_*_CONFIG_OPTEE", "TRUE", "On by default")
         # # Allow collecting performance tracing from OPTEE hot code paths
         # # Performance summary results can be inspected with the shell app Dp.efi
-        self.env.SetValue("BLD_*_CONFIG_OPTEE_PROFILE", "FALSE", "On by default")
+        self.env.SetValue("BLD_*_CONFIG_OPTEE_PROFILE", "TRUE", "On by default")
         # # TPM stack for the fTPM
-        self.env.SetValue("BLD_*_CONFIG_MEASURED_BOOT", "FALSE", "On by default")
+        self.env.SetValue("BLD_*_CONFIG_MEASURED_BOOT", "TRUE", "On by default")
         # # UEFI authenticated variable runtime services
-        self.env.SetValue("BLD_*_CONFIG_AUTH_VAR", "FALSE", "On by default")
+        self.env.SetValue("BLD_*_CONFIG_AUTH_VAR", "TRUE", "On by default")
         # # If Platform Key (PK) is provisioned, then SecureBoot variables will get
         # # updated to reflect that SecureBoot is enabled. Otherwise, SecureBoot
         # # variables will indicate that the feature is disabled, and the OS will
         # # not boot apply SecureBoot policies
-        self.env.SetValue("BLD_*_CONFIG_SECURE_BOOT", "FALSE", "On by default")
+        self.env.SetValue("BLD_*_CONFIG_SECURE_BOOT", "TRUE", "On by default")
         # # Select to build project MU Frontpage with DFCI and the UEFI Shell
         self.env.SetValue("BLD_*_CONFIG_FRONTPAGE", "TRUE", "Off by default")
         self.env.SetValue("BUILDREPORTING", "TRUE", "Enabling build report")
