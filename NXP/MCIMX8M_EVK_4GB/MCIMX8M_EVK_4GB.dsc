@@ -61,7 +61,6 @@
   PlatformThemeLib|NXP/MCIMX8M_EVK_4GB/Library/PlatformThemeLib/PlatformThemeLib.inf
 
 [Components.common]
-  NXP/MCIMX8M_EVK_4GB/Buttons/Buttons.inf
   #
   # ACPI Support
   #
