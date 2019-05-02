@@ -3,7 +3,7 @@ DfciDeviceidSupportLib.c
 
 This library provides access to platform data the becomes the DFCI DeviceId.
 
-Copyright (c) 2018, Microsoft Corporation
+Copyright (c) 2019, Microsoft Corporation
 
 All rights reserved.
 
