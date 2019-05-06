@@ -118,22 +118,22 @@ class PlatformBuilder(UefiBuilder):
         logging.debug("PlatformBuilder SetPlatformEnvAfterTarget")
 
         value = os.path.join(self.env.GetValue("BUILD_OUT_TEMP"), self.env.GetValue("TOOL_CHAIN_TAG"))
-        self.env.SetValue("BUILD_OUTPUT_BASE", value, "Computed in HUMMINGBOARD_EDGE_IMX6Q_2GB Build")
+        self.env.SetValue("BUILD_OUTPUT_BASE", value, "Computed in MCIMX8M_EVK_4GB Build")
 
         # Output FD file
         key = "OUTPUT_FD"
         value = os.path.join(self.env.GetValue("BUILD_OUTPUT_BASE"), "FV", "ClientBios.fd")
-        self.env.SetValue(key, value, "Computed in HUMMINGBOARD_EDGE_IMX6Q_2GB Build")
+        self.env.SetValue(key, value, "Computed in MCIMX8M_EVK_4GB Build")
 
         # Output ROM directory
         key = "OUTPUT_ROM_DIR"
         value = os.path.join(self.env.GetValue("BUILD_OUTPUT_BASE"), "ROM")
-        self.env.SetValue(key, value, "Computed in HUMMINGBOARD_EDGE_IMX6Q_2GB Build")
+        self.env.SetValue(key, value, "Computed in MCIMX8M_EVK_4GB Build")
 
         # Output FV file
         key = "OUTPUT_FV"
         value = os.path.join(self.env.GetValue("BUILD_OUTPUT_BASE"), "FV", "FV_UNCOMPRESSED.Fv")
-        self.env.SetValue(key, value, "Computed in HUMMINGBOARD_EDGE_IMX6Q_2GB Build")
+        self.env.SetValue(key, value, "Computed in MCIMX8M_EVK_4GB Build")
 
 
         # Capsule

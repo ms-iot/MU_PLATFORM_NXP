@@ -1,16 +1,16 @@
 /*++
 
-    Copyright (C) 2019 Microsoft Corporation. All Rights Reserved.
+  Copyright (C) 2019 Microsoft Corporation. All Rights Reserved.
 
 Module Name:
 
-    MsPlatformDevicesLib.c
+  MsPlatformDevicesLib.c
 
 Abstract:
 
-    This module will provide the device path to the SDCard, the list of
-    devices that must always be connected, and the list of devices that
-    need to be connected for ConIn OnDemand.
+  This module will provide the device path to the SDCard, the list of
+  devices that must always be connected, and the list of devices that
+  need to be connected for ConIn OnDemand.
 
 --*/
 
@@ -191,8 +191,7 @@ static BDS_CONSOLE_CONNECT_ENTRY   gPlatformConsoles[] = {
 /**
  * GetSdCardDevicePath
  *
- * Returns the device path of an internal SD Card slot that is
- * excluded from being bootable.
+ * Not pertinent to this platform.
  *
  * @return EFI_DEVICE_PATH_PROTOCOL
  */
@@ -200,7 +199,7 @@ EFI_DEVICE_PATH_PROTOCOL *
 EFIAPI
 GetSdCardDevicePath (VOID) {
 
-    return NULL;  // No SdCard on this platform
+    return NULL;
 }
 
 /**
