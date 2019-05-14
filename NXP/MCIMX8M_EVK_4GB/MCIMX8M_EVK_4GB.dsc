@@ -56,9 +56,6 @@
 ################################################################################
 [LibraryClasses.common]
   ArmPlatformLib|$(BOARD_DIR)/Library/iMX8BoardLib/iMX8BoardLib.inf
-  MsPlatformDevicesLib|NXP/MCIMX8M_EVK_4GB/Library/MsPlatformDevicesLib/MsPlatformDevicesLib.inf
-  DfciDeviceIdSupportLib|NXP/MCIMX8M_EVK_4GB/Library/DfciDeviceIdSupportLib/Imx8DeviceIdSupportLib.inf
-  PlatformThemeLib|NXP/MCIMX8M_EVK_4GB/Library/PlatformThemeLib/PlatformThemeLib.inf
 
 [Components.common]
   #
