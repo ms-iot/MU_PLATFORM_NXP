@@ -21,3 +21,4 @@
 [submodule "Silicon/ARM/NXP"]
 	path = Silicon/ARM/NXP
 	url = https://github.com/ms-iot/MU_SILICON_NXP.git
+	branch = origin/master
