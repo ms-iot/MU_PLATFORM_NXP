@@ -11,11 +11,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 ## About
 
-This document will walkthrough the layout of a "typical" project Mu repo using iMX8 as a sample platform.
+This document provides a brief introduction to Project MU as well as information about building a UEFI image for the iMX8. There's more to booting an iMX8 than UEFI; additional documentation for those steps is provided [here](https://github.com/ms-iot/imx-iotcore/blob/public_preview/Documentation/build-arm64-firmware.md).
 
-[Repo Link](https://github.com/microsoft/mu)
 
-## TL;DR
+## Building with MU TL;DR
 
 1. Run `git submodule update --init --recursive` to check out all the submodules.
 2. Run `python {Platform}/{Device}/PlatformBuild.py --setup` to set up the build environment. Includes fetching Nuget dependencies and synchronizing submodules.
@@ -31,42 +30,43 @@ This is platform repo, which is the root repository in which all the other submo
 
 Silicon code provided from a manufacturer is kept in its own submodule so it can be maintained seperately from platform code.
 
-## [MU_BASECORE](https://github.com/Microsoft/mu_basecore)
+## [MU_BASECORE](https://microsoft.github.io/mu/dyn/mu_basecore/RepoDetails/)
 
 This is the main repo. Contains the guts of the build system as well as core UEFI code, forked from TianoCore.
 
-## [Silicon/ARM/MU_TIANO](https://github.com/Microsoft/mu_silicon_arm_tiano)
+## [Silicon/ARM/MU_TIANO](https://microsoft.github.io/mu/dyn/mu_silicon_arm_tiano/RepoDetails/)
 
-Silicon code from TianoCore has been broken out into indivudal submodules. iMX8 is ARM, so we need this submodule. An Intel project would include [Intel/MU_TIANO](https://github.com/Microsoft/mu_silicon_intel_tiano).
+Silicon code from TianoCore has been broken out into indivudal submodules. iMX8 is ARM, so we need this submodule. An Intel project would include [Intel/MU_TIANO](https://microsoft.github.io/mu/dyn/mu_silicon_intel_tiano/RepoDetails/).
 
-## [Common/MU_TIANO](https://github.com/Microsoft/mu_tiano_plus )
+## [Common/MU_TIANO](https://microsoft.github.io/mu/dyn/mu_tiano_plus/RepoDetails/)
 
 Additional, optional libraries and tools forked from TianoCore.
 
-## [Common/MU](https://github.com/Microsoft/mu_plus)
+## [Common/MU](https://microsoft.github.io/mu/dyn/mu_plus/RepoDetails/)
 
 Additional, optional libraries and tools we've added to make MU great!
 
+## [Common/MU_OEM_SAMPLE](https://microsoft.github.io/mu/dyn/mu_tiano_plus/RepoDetails/)
+
+This module is a sample implementation of a FrontPage and several BDS support libraries. This module is intended to be forked and customized.
+
 # Build Environment
 
-Part of Project Mu is a major improvement to the build environment in TianoCore
-Documentation of the build system is still on its way.
+Part of Project Mu is moving towards a fully Python build environment. We currently have three published Python modules, using pip, that encompass setting up the build environment, logging, and running CI builds.
 
-## Conf
-
-NXP
+Documentation of the build system is still in progress on the [Project MU](https://microsoft.github.io/mu/) page under Code Repositories.
 
 # Pip modules
 
-## [mu_python_library](https://pypi.org/project/mu-python-library/)
+## [mu_python_library](https://microsoft.github.io/mu/dyn/mu_pip_python_library/RepoDetails/)
 
 Python files describing miscellaneous components (EDKII, TPM, etc.)
 
-## [mu_environment](https://pypi.org/project/mu-environment/)
+## [mu_environment](https://microsoft.github.io/mu/dyn/mu_pip_environment/RepoDetails/)
 
 This is the code that PlatformBuild.py calls in to that sets up the build environment.
 
-## [mu_build](https://pypi.org/project/mu-build/)
+## [mu_build](https://microsoft.github.io/mu/dyn/mu_pip_build/RepoDetails/)
 
 Command line interface that fetches dependencies and builds each module specified by a descriptor file. See [MU_BASECORE](https://github.com/Microsoft/mu_basecore/blob/release/201808/RepoDetails.md) as an example.
 

@@ -14,6 +14,11 @@
 	path = Silicon/ARM/MU_TIANO
 	url = https://github.com/Microsoft/mu_silicon_arm_tiano.git
 	branch = release/201903
+[submodule "Common/MU_OEM_SAMPLE"]
+	path = Common/MU_OEM_SAMPLE
+	url = https://github.com/Microsoft/mu_oem_sample.git
+	branch = release/201903
 [submodule "Silicon/ARM/NXP"]
 	path = Silicon/ARM/NXP
 	url = https://github.com/ms-iot/MU_SILICON_NXP.git
+	branch = origin/master
