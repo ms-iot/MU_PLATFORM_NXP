@@ -39,7 +39,6 @@
   MdeModulePkg/MdeModulePkg.dec
   SecurityPkg/SecurityPkg.dec
   Microsoft/OpteeClientPkg/OpteeClientPkg.dec
-  StdLib/StdLib.dec
   Microsoft/MsPkg.dec
 
 [LibraryClasses]
@@ -49,7 +48,6 @@
   DebugLib
   UefiRuntimeLib
   DxeServicesTableLib
-#  DxeServicesLib
   UefiDriverEntryPoint
   PcdLib
   OpteeClientApiLib

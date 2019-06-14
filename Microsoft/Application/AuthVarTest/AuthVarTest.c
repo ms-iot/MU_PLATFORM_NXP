@@ -294,7 +294,7 @@ SetAndCheckVariable(
   )
 {
   UINTN ActualDataSize = DataCheckSize;
-  UINTN ActualVarAttributes;
+  UINT32 ActualVarAttributes;
 
   // Note: Stomps on mActualImageData
   SET_LOG_LEVEL(TestLogError);
@@ -348,7 +348,7 @@ DeleteAndCheckVariable(
 {
   UINTN DataSize = 0;
   UINTN ActualDataSize = 0;
-  UINTN ActualVarAttributes;
+  UINT32 ActualVarAttributes;
 
   VERIFY_SUCCEEDED (gRT->SetVariable (
                             VariableName,
@@ -654,7 +654,7 @@ VerifyNameHandling (
 
   mImageData = AllocateZeroPool (DataSize);
   VERIFY_IS_NOT_NULL (mImageData);
-  RandomBytes (DataSize, mImageData);
+  RandomBytes (mImageData, DataSize);
 
   mActualImageData = AllocatePool(DataSize);
   VERIFY_IS_NOT_NULL(mActualImageData);
@@ -785,7 +785,7 @@ VerifyNameHandling (
     mImageData = NULL;
     mImageData = AllocateZeroPool (DataSize);
     VERIFY_IS_NOT_NULL (mImageData);
-    RandomBytes (DataSize, mImageData);
+    RandomBytes (mImageData, DataSize);
 
     // Make sure none of the other variables are confused with
     // this one.
@@ -868,7 +868,7 @@ VerifyQuery (
 
     mImageData = AllocateZeroPool (LargerVariableSize);
     VERIFY_IS_NOT_NULL (mImageData);
-    RandomBytes (LargerVariableSize, mImageData);
+    RandomBytes (mImageData, LargerVariableSize);
     mActualImageData = AllocatePool(LargerVariableSize);
     VERIFY_IS_NOT_NULL(mActualImageData);
 
@@ -976,7 +976,7 @@ VerifyOverflow (
 
   mImageData = AllocateZeroPool (LargerVariableSize);
   VERIFY_IS_NOT_NULL (mImageData);
-  RandomBytes (LargerVariableSize, mImageData);
+  RandomBytes (mImageData, LargerVariableSize);
 
   for(OverflowCount = 0; OverflowCount < OverflowGoal; OverflowCount++)
   {
@@ -1112,7 +1112,7 @@ TestInvalidAuthVars (
   mImageData = AllocateZeroPool (ImageSize);
   VERIFY_IS_NOT_NULL (mImageData);
 
-  RandomBytes (ImageSize, mImageData);
+  RandomBytes (mImageData, ImageSize);
 
   LOG_COMMENT ("Verifying garbage authenticated variable %s\n",\
                 mSecureBootVariables[0].VariableName

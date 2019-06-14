@@ -27,12 +27,12 @@
 
 [FD.iMXBoard_EFI]
 BaseAddress   = 0x50004000|gArmTokenSpaceGuid.PcdFdBaseAddress  # The base address of the Firmware
-Size          = 0x000F8000|gArmTokenSpaceGuid.PcdFdSize         # The size in bytes of the FLASH Device
+Size          = 0x001F8000|gArmTokenSpaceGuid.PcdFdSize         # The size in bytes of the FLASH Device
 ErasePolarity = 1
 
 # The entries below must match Size above: BlockSize * NumBlocks = Size
 BlockSize     = 0x00001000
-NumBlocks     = 0xF8
+NumBlocks     = 0x1F8
 
 ################################################################################
 #
@@ -50,7 +50,7 @@ NumBlocks     = 0xF8
 #
 ################################################################################
 
-0x00000000|0x000F8000
+0x00000000|0x001F8000
 gArmTokenSpaceGuid.PcdFvBaseAddress|gArmTokenSpaceGuid.PcdFvSize
 FV = FVMAIN_COMPACT
 

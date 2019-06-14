@@ -95,7 +95,7 @@ PeCoffLoaderRelocateImageExtraAction (
 #endif
 #elif __GNUC__
     // This may not work correctly if you generate PE/COFF directlyas then the Offset would not be required
-    DEBUG ((EFI_D_LOAD | EFI_D_INFO, "Data.load.elf %a /reloc .text at 0x%p /nocode /noclear\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp)), (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders)));
+    DEBUG ((EFI_D_LOAD | EFI_D_INFO, "Data.load.elf %a /reloc H:0x%p /nocode /noclear\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp)), (UINTN)(ImageContext->ImageAddress)));
 #else
     DEBUG ((EFI_D_LOAD | EFI_D_INFO, "Loading driver at 0x%11p EntryPoint=0x%11p\n", (VOID *)(UINTN) ImageContext->ImageAddress, FUNCTION_ENTRY_POINT (ImageContext->EntryPoint)));
 #endif
