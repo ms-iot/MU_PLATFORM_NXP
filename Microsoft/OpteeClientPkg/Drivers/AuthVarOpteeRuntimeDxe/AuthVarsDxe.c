@@ -51,6 +51,10 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 
 #include <limits.h>
 
+#ifndef min
+# define min(a,b) ((a) < (b) ? (a) : (b))
+#endif
+
 /*
 Performance Tokens
 */
@@ -1384,6 +1388,7 @@ VOID AuthVarHexDump(UINT8 *buffer, UINT32 size) {
   CHAR8 string[10000];
   CHAR8 *ptr = string;
   UINT32 i = 0;
+  size = min(size, (sizeof(string) - 1) / 2);
   for(i = 0; i < size; i++) {
     UINT8 byteH = buffer[i] >> 4;
     UINT8 byteL = buffer[i] & 0xF;
@@ -1391,7 +1396,7 @@ VOID AuthVarHexDump(UINT8 *buffer, UINT32 size) {
     *(ptr++) = BitsToChar(byteL);
   }
   *ptr = '\0';
-  DEBUG((DEBUG_ERROR, "0x%x:", (UINT32)buffer));
+  DEBUG((DEBUG_ERROR, "0x%p:", buffer));
   DEBUG((DEBUG_ERROR, string));
 }
 
