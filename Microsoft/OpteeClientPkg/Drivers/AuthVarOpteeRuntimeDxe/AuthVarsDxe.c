@@ -644,8 +644,8 @@ OpteeRuntimeGetNextVariableName(
       // so in order to turn this into the size of the *data* required we need
       // to subtract header.
       //
-      ASSERT(ResultSize >= sizeof(VARIABLE_GET_RESULT));
-      *VariableNameSize = ResultSize - sizeof(VARIABLE_GET_RESULT);
+      ASSERT(ResultSize >= sizeof(VARIABLE_GET_NEXT_RESULT));
+      *VariableNameSize = ResultSize - sizeof(VARIABLE_GET_NEXT_RESULT);
 
     } else if (Status == EFI_SUCCESS) {
       LOG_TRACE("Get Next Variable Success");

@@ -149,6 +149,10 @@ VerifyVariableEnumerable (
       Found ? L"YES" : L"NO");
   }
   VERIFY_ARE_EQUAL (BOOLEAN, ExpectedFound, Found);
+  if (mEnumVariableName) {
+    FreePool(mEnumVariableName);
+    mEnumVariableName = NULL;
+  }
 }
 
 VOID
