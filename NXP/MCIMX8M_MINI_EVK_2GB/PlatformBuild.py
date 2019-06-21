@@ -98,7 +98,7 @@ class PlatformBuilder(UefiBuilder):
         # # not boot apply SecureBoot policies
         self.env.SetValue("BLD_*_CONFIG_SECURE_BOOT", "TRUE", "On by default")
         # # Select to build project MU Frontpage with DFCI and the UEFI Shell
-        self.env.SetValue("BLD_*_CONFIG_FRONTPAGE", "TRUE", "Off by default")
+        self.env.SetValue("BLD_*_CONFIG_FRONTPAGE", "FALSE", "Off by default")
         self.env.SetValue("BUILDREPORTING", "TRUE", "Enabling build report")
         self.env.SetValue("BUILDREPORT_TYPES", "PCD DEPEX FLASH BUILD_FLAGS LIBRARY FIXED_ADDRESS HASH", "Setting build report types")
 
