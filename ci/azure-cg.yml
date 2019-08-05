@@ -10,7 +10,7 @@ jobs:
       matrix:
         NXPEVK_iMX8M_4GB:
           Target: NXPEVK_iMX8M_4GB
-		  
+
     steps:
     - task: ComponentGovernanceComponentDetection@0
 
