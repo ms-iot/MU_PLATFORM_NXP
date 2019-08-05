@@ -1,0 +1,60 @@
+trigger:
+- public_preview
+
+jobs:
+  - job: Build8
+    displayName: Build iMX 8
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    strategy:
+      matrix:
+        NXPEVK_iMX8M_4GB:
+          Target: NXPEVK_iMX8M_4GB
+		  
+    steps:
+    - task: ComponentGovernanceComponentDetection@0
+
+    - script: |
+        sudo apt-get update
+        sudo apt-get install build-essential device-tree-compiler bison flex swig iasl uuid-dev wget git bc libssl-dev zlib1g-dev gcc g++ make python3 mono-devel
+      displayName: Download tools
+
+    - script: |
+        sudo apt-get install python python-dev python-crypto python-wand python3-pip python3-setuptools
+        sudo apt-get install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget libsqlite3-dev
+      displayName: Install Python components
+
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.7' 
+        addToPath: true
+        
+    - script: |
+        python3 --version
+        pip3 install --upgrade pip
+        pip3 install --upgrade setuptools
+        pip3 install mu_environment
+
+    - script: |
+        wget https://releases.linaro.org/components/toolchain/binaries/7.2-2017.11/aarch64-linux-gnu/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-linux-gnu.tar.xz
+        tar xf gcc-linaro-7.2.1-2017.11-x86_64_aarch64-linux-gnu.tar.xz
+      displayName: Download gcc
+
+    - script: |
+        pushd ..
+        git clone --recursive https://github.com/ms-iot/mu_platform_nxp
+        popd
+      displayName: Clone repos
+
+    - script: |
+        pushd ../mu_platform_nxp
+        export GCC5_AARCH64_PREFIX=$(Build.SourcesDirectory)/gcc-linaro-7.2.1-2017.11-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
+        sudo pip3 install -r requirements.txt --upgrade
+        python3 NXP/MCIMX8M_EVK_4GB/PlatformBuild.py --setup
+
+        cd MU_BASECORE
+        make -C BaseTools
+        cd ..
+
+        python3 NXP/MCIMX8M_EVK_4GB/PlatformBuild.py TOOL_CHAIN_TAG=GCC5 BUILDREPORTING=TRUE BUILDREPORT_TYPES="PCD" TARGET=RELEASE MAX_CONCURRENT_THREAD_NUMBER=20 BLD_*_CONFIG_NOT_SECURE_UEFI=1
+      displayName: Build UEFI
