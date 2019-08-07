@@ -1,0 +1,59 @@
+{
+    "Registrations": [
+        {
+            "component": {
+                "type": "git",
+                "git": {
+                    "repositoryUrl": "https://github.com/Microsoft/mu_plus.git",
+                    "commitHash": "6fe8e0cec25434c9e746e306cda885801a7141bc"
+                }
+            }
+        },
+        {
+            "component": {
+                "type": "git",
+                "git": {
+                    "repositoryUrl": "https://github.com/Microsoft/mu_oem_sample.git",
+                    "commitHash": "bc8add5ffc85943393887349125509583756355c"
+                }
+            }
+        },
+        {
+            "component": {
+                "type": "git",
+                "git": {
+                    "repositoryUrl": "https://github.com/Microsoft/mu_tiano_plus.git",
+                    "commitHash": "c6a0ad30012bae30fb9bb06e9b3caa975ac631a7"
+                }
+            }
+        },
+        {
+            "component": {
+                "type": "git",
+                "git": {
+                    "repositoryUrl": "https://github.com/Microsoft/mu_basecore.git",
+                    "commitHash": "97b39c0a8a7fb9d949310f93615835891862f7b0"
+                }
+            }
+        },
+        {
+            "component": {
+                "type": "git",
+                "git": {
+                    "repositoryUrl": "https://github.com/Microsoft/mu_silicon_arm_tiano.git",
+                    "commitHash": "6c366af7a3772450cb137faa50656f77f204e4b1"
+                }
+            }
+        },
+        {
+            "component": {
+                "type": "git",
+                "git": {
+                    "repositoryUrl": "https://github.com/ms-iot/MU_SILICON_NXP.git",
+                    "commitHash": "65fae2fc9d1cbe6ccebed4a0b5a9b119ba0d37c5"
+                }
+            }
+        }
+    ],
+    "Version": 1
+}
