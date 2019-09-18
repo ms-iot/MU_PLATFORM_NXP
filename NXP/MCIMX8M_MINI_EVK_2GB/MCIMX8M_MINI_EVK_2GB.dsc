@@ -116,10 +116,10 @@
   #
 
   ## iMXPlatformPackage - Serial Terminal
-  giMXPlatformTokenSpaceGuid.PcdSerialRegisterBase|0x30A60000
+  giMXPlatformTokenSpaceGuid.PcdSerialRegisterBase|0x30890000
 
-  ## iMXPlatformPackage - Debug UART instance UART4 0x30A60000
-  giMXPlatformTokenSpaceGuid.PcdKdUartInstance|4
+  ## iMXPlatformPackage - Debug UART instance UART2 0x30890000
+  giMXPlatformTokenSpaceGuid.PcdKdUartInstance|2
 
   # uSDHCx | iMX8M EVK Connections
   #-------------------------------------
