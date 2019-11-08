@@ -9,6 +9,24 @@ All rights reserved. Redistribution and use in source and binary forms, with or 
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+## IoT Core NXP BSP Repository Support Notice
+
+This repository is no longer supported and is now read-only. The BSP and documentation for the iMX6, iMX7 and iMX8 processors for Windows 10 IoT is now published by NXP [here](https://www.nxp.com/design/software/embedded-software/windows-10-iot-core-for-i.mx-applications-processors:IMXWIN10IOT). Support for the BSP is available in NXP's [community forums](https://community.nxp.com/community/imx/content?filterID=contentstatus%5Bpublished%5D%7Ecategory%5Bwindows%5D).
+
+The following repositories have been archived and made read-only on GitHub. If you have a fork of any of these repositories they will remain active, but no new updates will be supplied by Microsoft. Development has stopped in these repositories and all future work will be released by NXP in their BSP.
+
+The repositories to be archived are:
+https://github.com/ms-iot/imx-iotcore
+https://github.com/ms-iot/u-boot
+https://github.com/ms-iot/edk2
+https://github.com/ms-iot/imx-edk2-platforms
+https://github.com/ms-iot/mu_platform_nxp
+https://github.com/ms-iot/mu_silicon_nxp
+
+The NXP BSP only has board support for NXP EVK and Sabre devices. For other previously supported devices, contact the manufacturer for further support.
+
+All trusted application binaries in this repository have been removed. The sources in this repository can still be built, but to generate a usable image, the trusted application firmware must be manually built and added according to the instructions on the NXP website.
+
 ## About
 
 This document provides a brief introduction to Project MU as well as information about building a UEFI image for the iMX8. There's more to booting an iMX8 than UEFI; additional documentation for those steps is provided [here](https://github.com/ms-iot/imx-iotcore/blob/public_preview/Documentation/build-arm64-firmware.md).
