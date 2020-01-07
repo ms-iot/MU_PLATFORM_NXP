@@ -445,7 +445,7 @@ OpteeRpcCmdRpmb (
       RpmbDevInfo = (rpmb_dev_info_t *)(UINTN) MsgParam[1].u.tmem.buf_ptr;
 
       C_ASSERT (sizeof(RpmbDevInfo->cid) == sizeof(RpmbProtocol->Cid));
-      memcpy (RpmbDevInfo->cid, RpmbProtocol->Cid, RPMB_EMMC_CID_SIZE);
+      CopyMem (RpmbDevInfo->cid, RpmbProtocol->Cid, RPMB_EMMC_CID_SIZE);
       RpmbDevInfo->rel_wr_sec_c = (uint8_t) RpmbProtocol->ReliableSectorCount;
       RpmbDevInfo->rpmb_size_mult = (uint8_t) RpmbProtocol->RpmbSizeMult;
       RpmbDevInfo->ret_code = RPMB_CMD_GET_DEV_INFO_RET_OK;
